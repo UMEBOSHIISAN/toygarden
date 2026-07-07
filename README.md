@@ -25,6 +25,10 @@ contracts/      型・スキーマ（依存ゼロの葉）
 **一方向依存のみ**（app → core → contracts）。app 同士は依存しない。合体もの（pomodoro-forge 等）も
 app 層で core を複数 import して作る。連携は `contracts/events` の `PlayEvent` 型経由の疎結合。
 
+![event-loom mission control](demo/event-loom.gif)
+
+> `npm run loom` — 1本の EventBus に現実的なイベント列を流し、**疎結合な2つの購読者**（色付きティッカー＋種別カウンタ）が同時に反応する。この共通言語 `PlayEvent` がキットの芯。
+
 ## 部品カタログ（packages/）
 
 | package | 責務 | 状態 |
