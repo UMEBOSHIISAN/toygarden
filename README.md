@@ -77,9 +77,13 @@ npm install       # 依存導入（typescript + vitest のみ）
 npm run typecheck # tsc --noEmit（型で守る）
 npm test          # vitest run（core を真面目に、app は smoke）
 npm run check     # 両方
+
+npm run aquarium  # ASCII水槽が泳ぐ（Ctrl+Cで終了）
+npm run symphony  # このリポジトリの git 履歴を 8bit 曲(WAV)に変換
 ```
 
 実機なしで全部動く（`core-device` の既定は mock ドライバ）。
+`aquarium` と `symphony` は "実行アプリ化済み" の完走サンプル（他アプリを動かす時の参考）。
 
 ## 新しい遊び / デバイスの足し方
 

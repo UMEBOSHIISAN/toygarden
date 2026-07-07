@@ -15,7 +15,9 @@
     "test:watch": "vitest",
     "check": "npm run typecheck && npm test",
     "build:aquarium": "esbuild apps/ascii-aquarium/src/cli.ts --bundle --platform=node --format=esm --outfile=dist/aquarium.mjs",
-    "aquarium": "npm run build:aquarium && node dist/aquarium.mjs"
+    "aquarium": "npm run build:aquarium && node dist/aquarium.mjs",
+    "build:symphony": "esbuild apps/commit-symphony/src/cli.ts --bundle --platform=node --format=esm --outfile=dist/symphony.mjs",
+    "symphony": "npm run build:symphony && node dist/symphony.mjs"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
