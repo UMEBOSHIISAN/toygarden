@@ -1,5 +1,9 @@
 # umeplay 🎛️
 
+![umeplay aquarium](demo/aquarium.gif)
+
+> `npm run aquarium` — 大小の魚が泳ぎ、泡が昇り、海藻が揺れる ASCII 水槽。7つの core を組むだけで生えた遊びの一つ。
+
 UMEBOSHI の遊び枠プラットフォーム。個々の遊び（`apps/`）を、再利用可能な部品（`packages/core-*`）と
 共通の接続規約（`contracts/`）で組み立てる **modular monorepo**。
 
