@@ -14,12 +14,14 @@ const CYAN = "\x1b[36m";
 const BLUE = "\x1b[34m";
 const GREEN = "\x1b[32m";
 const DIM = "\x1b[2m";
+const MAGENTA = "\x1b[35m";
 
 /** 文字単位で色付け（枠・空白はそのまま）。 */
 function colorize(frame: string): string {
   let out = "";
   for (const ch of frame) {
-    if (ch === "o") out += DIM + ch + RESET;
+    if (ch === "≡") out += MAGENTA + ch + RESET; // 鯨の胴
+    else if (ch === "o") out += DIM + ch + RESET;
     else if (ch === "~" || ch === "-") out += BLUE + ch + RESET;
     else if (ch === ")" || ch === "(") out += GREEN + ch + RESET;
     else if (ch === "<" || ch === ">" || ch === "=" || ch === "°") out += CYAN + ch + RESET;
