@@ -27,6 +27,8 @@ function colorize(frame: string, night: boolean): string {
     if (ch === "O") out += YELLOW + ch + RESET; // 月（夜でも明るく光る）
     else if (ch === "*") out += YELLOW + ch + RESET; // きらめき / 星（常に明るい）
     else if (ch === "@" || ch === "V") out += wrap(RED, ch); // カニ
+    else if (ch === "#") out += wrap(GREEN, ch); // ウミガメの甲羅
+    else if (ch === "»" || ch === "«") out += wrap(BLUE, ch); // 水流
     else if (ch === "≡") out += wrap(MAGENTA, ch); // 鯨の胴
     else if (ch === "o") out += DIM + ch + RESET; // 泡
     else if (ch === "~" || ch === "-") out += wrap(BLUE, ch); // 水面

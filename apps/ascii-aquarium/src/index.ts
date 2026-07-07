@@ -1,9 +1,8 @@
 import type { PlayEvent } from "@umeplay/contracts";
 
 /**
- * ascii-aquarium — ターミナル常駐の ASCII 水槽（secretary-tui スクリーンセーバー枠）。
- * 大小の魚が泳ぎ、泡が昇り、海藻が揺れ、餌やりで魚が増える。
- * たまに鯨が潜り、魚がきらめき(光る)、カニが底を横歩きし、ときどき夜になる。
+ * ascii-aquarium — ターミナル常駐の ASCII 水槽。
+ * 魚・泡・海藻に加え、鯨🐋・カニ🦀・きらめき✨・夜🌙・ウミガメ🐢・水流🌊・ふぐ🐡。
  * すべて純関数（seed ベースの決定的乱数）でテスト可能。実行は cli.ts。
  */
 
@@ -19,7 +18,7 @@ export interface Cell {
   x: number;
   y: number;
 }
-export interface Whale {
+export interface Mover {
   x: number;
   y: number;
   dir: Dir;
@@ -28,27 +27,34 @@ export interface Crab {
   x: number;
   dir: Dir;
 }
+export interface Puffer {
+  x: number;
+  y: number;
+  dir: Dir;
+  inflated: boolean;
+}
 export interface Aquarium {
   width: number;
   height: number;
   fish: Fish[];
   bubbles: Cell[];
   sparkles: Cell[];
-  whale: Whale | null;
+  whale: Mover | null;
+  turtle: Mover | null;
   crab: Crab;
+  puffer: Puffer;
+  current: number; // -1=左流れ / 0=無 / 1=右流れ
   night: boolean;
   tick: number;
   seed: number;
 }
 
-// 小→大の魚バリエーション（すべて < > = ° で構成＝表示時にシアン着色される）
 const FISH_RIGHT = ["><>", ">°>", "><=>", "><=°>", "><==>", "><===°>"];
-// 鯨（胴の ≡ はマゼンタ着色して目立たせる）
-const WHALE_RIGHT = "<°≡≡≡≡≡≡≡≡≡≡>";
-const WHALE_SPEED = 1;
+const WHALE_RIGHT = "<°≡≡≡≡≡≡≡≡≡≡>"; // ≡ = マゼンタ胴
+const TURTLE_RIGHT = "°(###)>"; // # = 緑の甲羅
 const CRAB = "V@V"; // @ = 甲羅(赤), V = 脚
+const WHALE_SPEED = 1;
 
-/** 決定的乱数（mulberry32 系）。同じ入力なら同じ値 → step が純関数になる。 */
 function rand(n: number): number {
   let t = (n + 0x6d2b79f5) | 0;
   t = Math.imul(t ^ (t >>> 15), t | 1);
@@ -66,6 +72,10 @@ function flip(glyph: string): string {
     .join("");
 }
 
+function pufferGlyph(inflated: boolean): string {
+  return inflated ? "*<°°°>*" : "<°>";
+}
+
 export function initAquarium(width = 50, height = 13, count = 7): Aquarium {
   const fish: Fish[] = Array.from({ length: count }, (_, i) => ({
     id: i,
@@ -81,19 +91,26 @@ export function initAquarium(width = 50, height = 13, count = 7): Aquarium {
     bubbles: [],
     sparkles: [],
     whale: null,
+    turtle: null,
     crab: { x: Math.floor(width / 2), dir: 1 },
+    puffer: { x: Math.floor(width * 0.3), y: Math.floor(height / 2), dir: 1, inflated: false },
+    current: 0,
     night: false,
     tick: 0,
     seed: 1,
   };
 }
 
-/** 1ステップ: 魚・泡・海藻・鯨・きらめき・カニ・昼夜を進める。 */
+/** 1ステップ: 全生態を進める。 */
 export function step(a: Aquarium): Aquarium {
   const tick = a.tick + 1;
+
+  // 水流: 170tick周期の最初の20tickだけ発生（左右交互）
+  const current = tick % 170 < 20 ? (Math.floor(tick / 170) % 2 === 0 ? 1 : -1) : 0;
+
   const fish = a.fish.map((f) => {
     let dir = f.dir;
-    let x = f.x + dir;
+    let x = f.x + dir + current; // 水流ぶん流される
     const len = fishLen(f.kind);
     if (x < 1) {
       x = 1;
@@ -110,11 +127,10 @@ export function step(a: Aquarium): Aquarium {
     return { id: f.id, x, y, dir, kind: f.kind };
   });
 
-  // 泡: 上昇して消える。底＋魚の口元からこまめに湧く。
+  // 泡
   let bubbles = a.bubbles.map((b) => ({ x: b.x, y: b.y - 1 })).filter((b) => b.y >= 1);
   if (rand(a.seed + tick * 17) < 0.7) {
-    const bx = 1 + Math.floor(rand(a.seed + tick) * (a.width - 2));
-    bubbles = [...bubbles, { x: bx, y: a.height - 2 }];
+    bubbles = [...bubbles, { x: 1 + Math.floor(rand(a.seed + tick) * (a.width - 2)), y: a.height - 2 }];
   }
   for (const f of fish) {
     if (rand(a.seed + tick * 13 + f.id * 5) < 0.12) {
@@ -123,7 +139,7 @@ export function step(a: Aquarium): Aquarium {
     }
   }
 
-  // きらめき: たまに1匹の魚の周りが光る（1tickで消えて再生＝twinkle）
+  // きらめき
   let sparkles: Cell[] = [];
   if (fish.length && rand(a.seed + tick * 53) < 0.5) {
     const f = fish[Math.floor(rand(a.seed + tick * 59) * fish.length)];
@@ -133,22 +149,34 @@ export function step(a: Aquarium): Aquarium {
     ].filter((s) => s.x > 0 && s.x < a.width - 1 && s.y > 0 && s.y < a.height - 1);
   }
 
-  // 鯨: いなければ低確率で水面に出現、いれば潜りながら横切り、画面外で消える。
+  // 鯨（水面から潜って横切る）
   const wLen = WHALE_RIGHT.length;
-  const diveFloor = a.height - 3;
   let whale = a.whale;
   if (whale) {
     const wx = whale.x + whale.dir * WHALE_SPEED;
     const off = whale.dir === 1 ? wx > a.width : wx + wLen < 0;
-    const wy = tick % 3 === 0 ? Math.min(diveFloor, whale.y + 1) : whale.y;
+    const wy = tick % 3 === 0 ? Math.min(a.height - 3, whale.y + 1) : whale.y;
     whale = off ? null : { x: wx, y: wy, dir: whale.dir };
   } else if (rand(a.seed + tick * 41) < 0.08) {
     const dir: Dir = rand(a.seed + tick * 43) > 0.5 ? 1 : -1;
-    const wx = dir === 1 ? 1 - wLen : a.width - 1;
-    whale = { x: wx, y: 1, dir };
+    whale = { x: dir === 1 ? 1 - wLen : a.width - 1, y: 1, dir };
   }
 
-  // カニ: 底を左右に横歩き（端で反転）
+  // ウミガメ（ゆっくり2tickに1歩・中〜下層を横切る）
+  const tLen = TURTLE_RIGHT.length;
+  let turtle = a.turtle;
+  if (turtle) {
+    const move = tick % 2 === 0 ? turtle.dir : 0;
+    const tx = turtle.x + move;
+    const off = turtle.dir === 1 ? tx > a.width : tx + tLen < 0;
+    turtle = off ? null : { x: tx, y: turtle.y, dir: turtle.dir };
+  } else if (rand(a.seed + tick * 61) < 0.04) {
+    const dir: Dir = rand(a.seed + tick * 67) > 0.5 ? 1 : -1;
+    const ty = Math.floor(a.height / 2) + Math.floor(rand(a.seed + tick * 71) * 3);
+    turtle = { x: dir === 1 ? 1 - tLen : a.width - 1, y: ty, dir };
+  }
+
+  // カニ（底を横歩き）
   let cx = a.crab.x + a.crab.dir;
   let cdir = a.crab.dir;
   if (cx < 1) {
@@ -161,10 +189,24 @@ export function step(a: Aquarium): Aquarium {
   }
   const crab: Crab = { x: cx, dir: cdir };
 
-  // 昼夜: 120tick周期で ~25tick 夜になる（約14秒周期）
+  // ふぐ（70tick周期で20tick膨らむ・膨張時は幅が広がる）
+  const pInflated = tick % 70 >= 50;
+  const pLen = pInflated ? 7 : 3;
+  let pdir = a.puffer.dir;
+  let px = a.puffer.x + pdir + current;
+  if (px < 1) {
+    px = 1;
+    pdir = 1;
+  }
+  if (px + pLen > a.width - 1) {
+    px = a.width - 1 - pLen;
+    pdir = -1;
+  }
+  const puffer: Puffer = { x: px, y: a.puffer.y, dir: pdir, inflated: pInflated };
+
   const night = tick % 120 >= 95;
 
-  return { ...a, fish, bubbles, sparkles, whale, crab, night, tick };
+  return { ...a, fish, bubbles, sparkles, whale, turtle, crab, puffer, current, night, tick };
 }
 
 /** 餌やり: task.done で新しい魚が左から入ってくる。 */
@@ -185,19 +227,25 @@ function glyph(kind: number, dir: Dir): string {
   return dir === 1 ? r : flip(r);
 }
 
+function draw(grid: string[][], x: number, y: number, s: string, W: number, H: number): void {
+  for (let i = 0; i < s.length; i++) {
+    const px = x + i;
+    if (px > 0 && px < W && y > 0 && y < H - 1) grid[y][px] = s[i];
+  }
+}
+
 /** 水槽をボックス枠付きの複数行文字列に。 */
 export function render(a: Aquarium): string {
   const { width: W, height: H } = a;
   const grid: string[][] = Array.from({ length: H }, () => new Array<string>(W).fill(" "));
 
   for (let x = 0; x < W; x++) {
-    grid[0][x] = x % 2 === 0 ? "~" : "-"; // 水面
-    grid[H - 1][x] = "."; // 砂底
+    grid[0][x] = x % 2 === 0 ? "~" : "-";
+    grid[H - 1][x] = ".";
   }
-  // 夜: 月(O)と星(*)を散らす
+  // 夜: 月と星
   if (a.night) {
-    const moonX = W - 5;
-    if (grid[1][moonX] === " ") grid[1][moonX] = "O"; // 月
+    if (grid[1][W - 5] === " ") grid[1][W - 5] = "O";
     const stars: [number, number][] = [
       [5, 1],
       [11, 2],
@@ -206,46 +254,38 @@ export function render(a: Aquarium): string {
       [Math.floor(W * 0.58), 1],
       [Math.floor(W * 0.66), 3],
     ];
-    for (const [sx, sy] of stars) {
-      if (sy > 0 && sy < H - 1 && grid[sy][sx] === " ") grid[sy][sx] = "*";
+    for (const [sx, sy] of stars) if (sy > 0 && sy < H - 1 && grid[sy][sx] === " ") grid[sy][sx] = "*";
+  }
+  // 水流の流れマーク
+  if (a.current !== 0) {
+    const arrow = a.current === 1 ? "»" : "«";
+    for (const fy of [2, Math.floor(H / 2), H - 4]) {
+      for (let fx = 2; fx < W - 2; fx += 6) {
+        if (fy > 0 && fy < H - 1 && grid[fy][fx] === " ") grid[fy][fx] = arrow;
+      }
     }
   }
-  // 海藻3株・tick で左右に揺れる
+  // 海藻3株・揺れる
   for (const sx of [3, Math.floor(W / 2), W - 5]) {
-    for (let y = H - 2; y > H - 6 && y > 0; y--) {
-      grid[y][sx] = (y + a.tick) % 2 === 0 ? ")" : "(";
-    }
+    for (let y = H - 2; y > H - 6 && y > 0; y--) grid[y][sx] = (y + a.tick) % 2 === 0 ? ")" : "(";
   }
-  for (const b of a.bubbles) {
-    if (b.y > 0 && b.y < H - 1 && b.x > 0 && b.x < W) grid[b.y][b.x] = "o";
-  }
-  for (const f of a.fish) {
-    const g = glyph(f.kind, f.dir);
-    for (let i = 0; i < g.length; i++) {
-      const x = f.x + i;
-      if (x > 0 && x < W && f.y > 0 && f.y < H - 1) grid[f.y][x] = g[i];
-    }
-  }
-  // 鯨（最前面・潜り始めは潮吹き）
+  for (const b of a.bubbles) if (b.y > 0 && b.y < H - 1 && b.x > 0 && b.x < W) grid[b.y][b.x] = "o";
+  for (const f of a.fish) draw(grid, f.x, f.y, glyph(f.kind, f.dir), W, H);
+  // ふぐ
+  draw(grid, a.puffer.x, a.puffer.y, pufferGlyph(a.puffer.inflated), W, H);
+  // ウミガメ
+  if (a.turtle) draw(grid, a.turtle.x, a.turtle.y, a.turtle.dir === 1 ? TURTLE_RIGHT : flip(TURTLE_RIGHT), W, H);
+  // 鯨（潮吹き）
   if (a.whale) {
     const wg = a.whale.dir === 1 ? WHALE_RIGHT : flip(WHALE_RIGHT);
     const headX = a.whale.x + Math.floor(wg.length / 2);
     if (a.whale.y <= 2 && a.whale.y - 1 > 0 && headX > 0 && headX < W) grid[a.whale.y - 1][headX] = "o";
-    for (let i = 0; i < wg.length; i++) {
-      const x = a.whale.x + i;
-      if (x > 0 && x < W && a.whale.y > 0 && a.whale.y < H - 1) grid[a.whale.y][x] = wg[i];
-    }
+    draw(grid, a.whale.x, a.whale.y, wg, W, H);
   }
   // きらめき
-  for (const s of a.sparkles) {
-    if (s.y > 0 && s.y < H - 1 && s.x > 0 && s.x < W) grid[s.y][s.x] = "*";
-  }
-  // カニ（砂のすぐ上を横歩き・最前面）
-  const crabRow = H - 2;
-  for (let i = 0; i < CRAB.length; i++) {
-    const x = a.crab.x + i;
-    if (x > 0 && x < W && crabRow > 0 && crabRow < H - 1) grid[crabRow][x] = CRAB[i];
-  }
+  for (const s of a.sparkles) if (s.y > 0 && s.y < H - 1 && s.x > 0 && s.x < W) grid[s.y][s.x] = "*";
+  // カニ（最前面・底のすぐ上）
+  draw(grid, a.crab.x, H - 2, CRAB, W, H);
 
   const top = `╭${"─".repeat(W)}╮`;
   const bot = `╰${"─".repeat(W)}╯`;
