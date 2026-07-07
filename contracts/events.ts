@@ -15,7 +15,8 @@ export type PlayEvent =
   | { kind: "worker.route"; taxonomy: string; worker: Agent; confidence: number }
   | { kind: "gate.pending"; label: string } // human-gate 待ち
   | { kind: "deploy.success" }
-  | { kind: "task.done"; project: string };
+  | { kind: "task.done"; project: string }
+  | { kind: "focus.activity"; activity: string; at: number }; // focus-cam ログ由来（at = epoch ms）
 
 export type PlayEventKind = PlayEvent["kind"];
 

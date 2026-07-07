@@ -14,10 +14,13 @@ export default defineConfig({
       "@umeplay/core-chiptune": resolve(root, "packages/core-chiptune/src/index.ts"),
       "@umeplay/core-tui": resolve(root, "packages/core-tui/src/index.ts"),
       "@umeplay/core-worker-data": resolve(root, "packages/core-worker-data/src/index.ts"),
+      "@umeplay/core-focus-log": resolve(root, "packages/core-focus-log/src/index.ts"),
     },
   },
   test: {
     include: ["**/*.test.ts"],
     exclude: ["**/node_modules/**"],
+    // node:sqlite は新しい組込みで vite が解決に失敗するため external 指定
+    server: { deps: { external: [/node:sqlite/] } },
   },
 });

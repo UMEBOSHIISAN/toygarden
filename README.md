@@ -28,6 +28,7 @@ app 層で core を複数 import して作る。連携は `contracts/events` の
 | `core-chiptune` | 8bit 音生成（矩形波PCM/WAV/モチーフ） | ✅ P1 |
 | `core-tui` | ターミナルUI基盤（レーン/バッジ/ANSI） | ✅ P1 |
 | `core-worker-data` | worker配車/collapse データ供給（read-only） | ✅ P1 |
+| `core-focus-log` | focus-cam ログ(sqlite)を read-only 供給。node:sqlite・後付け部品 | ✅ |
 
 ## 遊び（apps/）— 全10本 ✅ P2/P3
 
