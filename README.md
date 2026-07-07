@@ -3,6 +3,9 @@
 UMEBOSHI の遊び枠プラットフォーム。個々の遊び（`apps/`）を、再利用可能な部品（`packages/core-*`）と
 共通の接続規約（`contracts/`）で組み立てる **modular monorepo**。
 
+**本体の価値は"組み立てキット"そのもの**: 7つの core を掛け合わせるだけで無数の遊びが生える。
+下の「試作品カタログ」は、同じ部品から10通りの遊びが出てくることの実証。これ自体が OSS の芯。
+
 > 名前は仮。あとで変えられる。設計の正本: `~/play_platform_design.md`
 
 ## 3層アーキテクチャ
@@ -47,6 +50,25 @@ app 層で core を複数 import して作る。連携は `contracts/events` の
 
 `demo/wiring.test.ts` = 1本のイベントを4アプリが疎結合で受ける実証。
 `demo/showcase.test.ts` = 全アプリの実レンダリングを出力。
+
+## 試作品カタログ（apps/・部品の掛け合わせ10パターン）
+
+「この core × この core → こんなのが出来る」の実証。挙動確認より "組み合わせの幅" を見せるための試作品（typecheck 通過済み・実行仕上げは今後）。
+
+| prototype | 掛け合わせ | → 出来るもの |
+|---|---|---|
+| `commit-symphony` | git-observe × chiptune | git log を 8bit の曲(WAV)に。AI 共著は1オクターブ上 |
+| `focus-forge` | focus-log × chiptune × device | 実測の集中で鉱石を鍛える（自己申告でない pomodoro） |
+| `collapse-siren` | worker-data × chiptune × events | 崩壊率が上がると不協和音サイレン |
+| `git-weather` | git-observe × device | リポジトリの churn を天気で表示 |
+| `focus-aquarium` | focus-log × 描画 | 一日の focus 記録を魚の群れに |
+| `routing-radar` | worker-data × tui | 配車の当たり具合を confidence バーで一覧 |
+| `event-loom` | events × tui | どんな PlayEvent も1本の色付きティッカーに織る汎用ビューア |
+| `commit-constellation` | git-observe × device | リポジトリの著者を星座に（寄与量=明るさ） |
+| `chiptune-clock` | chiptune × device | 時刻を 8bit の鐘で告げる置時計 |
+| `focus-tally` | focus-log × tui | 今日何をしたかを端末の棒グラフに |
+
+どれも `apps/<name>/src/index.ts` の1ファイル。既存を一切壊さず追加できる = このキットの拡張性そのもの。
 
 ## 使い方
 
