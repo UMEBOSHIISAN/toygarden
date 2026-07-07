@@ -15,16 +15,23 @@ const BLUE = "\x1b[34m";
 const GREEN = "\x1b[32m";
 const DIM = "\x1b[2m";
 const MAGENTA = "\x1b[35m";
+const RED = "\x1b[31m";
+const YELLOW = "\x1b[33m";
 
-/** 文字単位で色付け（枠・空白はそのまま）。 */
-function colorize(frame: string): string {
+/** 文字単位で色付け（枠・空白はそのまま）。夜は全体を暗く・魚を青みに。 */
+function colorize(frame: string, night: boolean): string {
+  const wrap = (color: string, ch: string): string => (night ? DIM : "") + color + ch + RESET;
+  const fishColor = night ? BLUE : CYAN;
   let out = "";
   for (const ch of frame) {
-    if (ch === "≡") out += MAGENTA + ch + RESET; // 鯨の胴
-    else if (ch === "o") out += DIM + ch + RESET;
-    else if (ch === "~" || ch === "-") out += BLUE + ch + RESET;
-    else if (ch === ")" || ch === "(") out += GREEN + ch + RESET;
-    else if (ch === "<" || ch === ">" || ch === "=" || ch === "°") out += CYAN + ch + RESET;
+    if (ch === "O") out += YELLOW + ch + RESET; // 月（夜でも明るく光る）
+    else if (ch === "*") out += YELLOW + ch + RESET; // きらめき / 星（常に明るい）
+    else if (ch === "@" || ch === "V") out += wrap(RED, ch); // カニ
+    else if (ch === "≡") out += wrap(MAGENTA, ch); // 鯨の胴
+    else if (ch === "o") out += DIM + ch + RESET; // 泡
+    else if (ch === "~" || ch === "-") out += wrap(BLUE, ch); // 水面
+    else if (ch === ")" || ch === "(") out += wrap(GREEN, ch); // 海藻
+    else if (ch === "<" || ch === ">" || ch === "=" || ch === "°") out += wrap(fishColor, ch);
     else out += ch;
   }
   return out;
@@ -52,13 +59,14 @@ if (live) {
   process.on("SIGTERM", cleanup);
   setInterval(() => {
     process.stdout.write(CLEAR);
-    process.stdout.write(`  ${CYAN}~ umeplay aquarium ~${RESET}  ${DIM}(Ctrl+C で終了)${RESET}\n`);
-    process.stdout.write(colorize(render(tank)) + "\n");
+    const moon = tank.night ? `  ${DIM}~ 夜 ~${RESET}` : "";
+    process.stdout.write(`  ${CYAN}~ umeplay aquarium ~${RESET}  ${DIM}(Ctrl+C で終了)${RESET}${moon}\n`);
+    process.stdout.write(colorize(render(tank), tank.night) + "\n");
     advance(0.12);
   }, 120);
 } else {
   for (let i = 0; i < frames; i++) {
-    process.stdout.write(colorize(render(tank)) + "\n\n");
+    process.stdout.write(colorize(render(tank), tank.night) + "\n\n");
     advance(i % 3 === 2 ? 1 : 0);
   }
 }
