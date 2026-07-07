@@ -13,10 +13,13 @@
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "test": "vitest run",
     "test:watch": "vitest",
-    "check": "npm run typecheck && npm test"
+    "check": "npm run typecheck && npm test",
+    "build:aquarium": "esbuild apps/ascii-aquarium/src/cli.ts --bundle --platform=node --format=esm --outfile=dist/aquarium.mjs",
+    "aquarium": "npm run build:aquarium && node dist/aquarium.mjs"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
+    "esbuild": "^0.21.5",
     "typescript": "^5.6.0",
     "vitest": "^2.1.0"
   }

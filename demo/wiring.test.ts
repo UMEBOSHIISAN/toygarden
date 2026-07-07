@@ -16,7 +16,7 @@ describe("wiring: one event stream fans out to independent apps", () => {
 
     let constellation = initState();
     let pet = initPet();
-    let tank = initAquarium(20, 2);
+    let tank = initAquarium(20, 9, 2);
     const soundsPlayed: string[] = [];
 
     // それぞれ独立に購読（互いの存在を知らない）

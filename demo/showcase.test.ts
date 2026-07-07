@@ -36,7 +36,7 @@ function showcase(): string {
   out.push(`${face(pet)}  mood:${pet.mood} energy:${pet.energy}`);
 
   out.push("\n== ascii-aquarium (3 frames) ==");
-  let tank = initAquarium(30, 3);
+  let tank = initAquarium(30, 9, 3);
   tank = feed(tank, { kind: "task.done", project: "投稿" });
   for (let i = 0; i < 3; i++) {
     out.push(renderTank(tank));
