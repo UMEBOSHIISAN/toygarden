@@ -1,0 +1,10 @@
+{
+  "name": "@umeplay/ume-tamagotchi",
+  "version": "0.0.0",
+  "type": "module",
+  "main": "src/index.ts",
+  "dependencies": {
+    "@umeplay/contracts": "*",
+    "@umeplay/core-device": "*"
+  }
+}

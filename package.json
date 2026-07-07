@@ -1,0 +1,23 @@
+{
+  "name": "umeplay",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "description": "UMEBOSHI 遊び枠プラットフォーム — apps/ を core-* 部品で組む modular monorepo",
+  "workspaces": [
+    "contracts",
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "check": "npm run typecheck && npm test"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.6.0",
+    "vitest": "^2.1.0"
+  }
+}

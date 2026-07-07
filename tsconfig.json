@@ -1,0 +1,7 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true
+  },
+  "include": ["contracts", "packages", "apps", "demo", "vitest.config.ts"]
+}

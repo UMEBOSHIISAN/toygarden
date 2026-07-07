@@ -1,0 +1,9 @@
+{
+  "name": "@umeplay/secretary-today",
+  "version": "0.0.0",
+  "type": "module",
+  "main": "src/index.ts",
+  "dependencies": {
+    "@umeplay/core-tui": "*"
+  }
+}

@@ -1,0 +1,28 @@
+import { describe, it, expect } from "vitest";
+import { initPet, applyEvent, face } from "../src/index.js";
+
+describe("ume-tamagotchi", () => {
+  it("posting (task.done 投稿) raises mood most", () => {
+    const p = applyEvent(initPet(), { kind: "task.done", project: "投稿" });
+    expect(p.mood).toBe(65);
+  });
+
+  it("pending gates drain energy", () => {
+    let p = initPet();
+    p = applyEvent(p, { kind: "gate.pending", label: "承認待ち" });
+    p = applyEvent(p, { kind: "gate.pending", label: "承認待ち" });
+    expect(p.energy).toBe(30);
+  });
+
+  it("face reflects low energy first", () => {
+    expect(face({ name: "うめこ", mood: 90, energy: 10 })).toBe("(´;ω;`)");
+    expect(face({ name: "うめこ", mood: 90, energy: 80 })).toBe("(*^▽^*)");
+  });
+
+  it("mood/energy stay clamped in 0..100", () => {
+    let p = initPet();
+    for (let i = 0; i < 20; i++) p = applyEvent(p, { kind: "deploy.success" });
+    expect(p.mood).toBe(100);
+    expect(p.energy).toBe(100);
+  });
+});

@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "lib": ["ES2022", "DOM"],
+    "strict": true,
+    "declaration": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "verbatimModuleSyntax": true,
+    "baseUrl": ".",
+    "paths": {
+      "@umeplay/contracts": ["contracts/index.ts"],
+      "@umeplay/core-events": ["packages/core-events/src/index.ts"],
+      "@umeplay/core-device": ["packages/core-device/src/index.ts"],
+      "@umeplay/core-git-observe": ["packages/core-git-observe/src/index.ts"],
+      "@umeplay/core-chiptune": ["packages/core-chiptune/src/index.ts"],
+      "@umeplay/core-tui": ["packages/core-tui/src/index.ts"],
+      "@umeplay/core-worker-data": ["packages/core-worker-data/src/index.ts"]
+    }
+  }
+}

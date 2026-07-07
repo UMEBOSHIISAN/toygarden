@@ -1,0 +1,10 @@
+{
+  "name": "@umeplay/git-replay",
+  "version": "0.0.0",
+  "type": "module",
+  "main": "src/index.ts",
+  "dependencies": {
+    "@umeplay/core-git-observe": "*",
+    "@umeplay/core-tui": "*"
+  }
+}
