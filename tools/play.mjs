@@ -5,6 +5,7 @@
  *   npm run play tamagotchi                       # 名前は部分一致（apps/ のディレクトリ名）
  *   npm run play aquarium                       # 曖昧一致（TTY なら番号選択・非TTYならエラー）
  *   npm run play random                         # ランダムに1本起動
+ *   npm run play daily                          # 今日の日付をシードに決定論的に1本選んで起動（同じ日は同じ結果）
  *   npm run play routing-slot -- --frames 30    # 追加引数は app の cli にそのまま渡る
  *
  * apps/<name>/src/cli.ts を esbuild でその場バンドル → node 実行。ビルド成果物は dist/ に置く。
@@ -116,10 +117,26 @@ function pickInteractive(hits) {
   });
 }
 
+/**
+ * その日の日付（ローカルタイムの YYYY-MM-DD）をシードに names から1本を決定論的に選ぶ純関数。
+ * 同じ日に何度呼んでも同じ結果になる（日替わりおもちゃ用）。
+ *   pickDaily(["a", "b"], new Date(2026, 6, 8)) → 常に同じ要素
+ */
+function pickDaily(names, date = new Date()) {
+  const dateStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+  let h = 0;
+  for (let i = 0; i < dateStr.length; i++) h = (h * 31 + dateStr.charCodeAt(i)) >>> 0;
+  const ordered = [...names].sort();
+  return ordered[h % ordered.length];
+}
+
 let app;
 if (query === "random") {
   app = all[Math.floor(Math.random() * all.length)];
   console.log(`${YELLOW}🎲 ${app}!${RESET}`);
+} else if (query === "daily") {
+  app = pickDaily(all);
+  console.log(`${YELLOW}📅 きょうのおもちゃ: ${app}${RESET}`);
 } else {
   const hits = all.filter((n) => n.includes(query));
   if (hits.length === 0) {

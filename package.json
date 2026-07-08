@@ -9,7 +9,16 @@
     "packages/*",
     "apps/*"
   ],
+  "bin": {
+    "umeplay": "bin/umeplay.mjs"
+  },
+  "files": [
+    "bin",
+    "tools",
+    "dist/apps"
+  ],
   "scripts": {
+    "prepack": "node bin/prepack.mjs",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -27,7 +36,10 @@
     "play": "node tools/play.mjs",
     "banner": "node tools/banner.mjs",
     "diagram": "node tools/diagram.mjs",
-    "new": "node tools/new-toy.mjs"
+    "new": "node tools/new-toy.mjs",
+    "workshop": "node tools/workshop.mjs",
+    "hello": "node tools/hello.mjs",
+    "tour": "node tools/tour.mjs"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",

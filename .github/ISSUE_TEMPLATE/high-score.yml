@@ -1,0 +1,26 @@
+name: "🏆 スコア自慢 / High score brag"
+description: "collapse-arcade で出した記録を自慢する。ゆるく貼るだけでOK。 / Show off your collapse-arcade score. Just paste it, no pressure."
+title: "🏆 score: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        `npm run play collapse-arcade` で出た「きろくポイント」をそのまま貼ってください。
+        Paste whatever `きろくポイント` line collapse-arcade printed for you.
+  - type: input
+    id: score
+    attributes:
+      label: "スコア / Score"
+      description: "きろくポイントの数字。 / The number from きろくポイント."
+      placeholder: "e.g. 400"
+    validations:
+      required: true
+  - type: textarea
+    id: proof
+    attributes:
+      label: "出力貼り付け or スクショ / Output paste or screenshot"
+      description: "ターミナル出力そのまま、または画像を貼ってください。 / Paste the raw terminal output, or drop a screenshot."
+      placeholder: |
+        きろくポイント ✱ 400  (今回: 400)
+    validations:
+      required: false
