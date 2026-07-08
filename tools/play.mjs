@@ -3,6 +3,7 @@
  *
  *   npm run play                                # おもちゃ箱の一覧（tagline 付き）
  *   npm run play tamagotchi                       # 名前は部分一致（apps/ のディレクトリ名）
+ *   npm run play aquarium                       # 曖昧一致（TTY なら番号選択・非TTYならエラー）
  *   npm run play random                         # ランダムに1本起動
  *   npm run play routing-slot -- --frames 30    # 追加引数は app の cli にそのまま渡る
  *
@@ -12,6 +13,7 @@ import { build } from "esbuild";
 import { readdirSync, existsSync, readFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { spawn } from "node:child_process";
+import readline from "node:readline";
 
 const root = resolve(new URL("..", import.meta.url).pathname);
 const [query, ...rest] = process.argv.slice(2);
@@ -52,6 +54,68 @@ if (!query) {
   process.exit(0);
 }
 
+/**
+ * キー入力1つを「選択 / キャンセル / 無効」に振り分ける純関数。
+ * TTY 有無に依存しないので、ここだけ切り出せば入出力なしで単体検証できる。
+ *   resolveChoice("1", 2) → { kind: "select", index: 0 }
+ *   resolveChoice("q", 2) / resolveChoice("\r", 2) → { kind: "cancel" }
+ *   resolveChoice("9", 2) → { kind: "invalid", input: "9" }
+ */
+function resolveChoice(str, count) {
+  if (str === undefined || str === "q" || str === "\r" || str === "\n" || str === "") {
+    return { kind: "cancel" };
+  }
+  const idx = Number(str);
+  if (!Number.isInteger(idx) || idx < 1 || idx > count) {
+    return { kind: "invalid", input: str };
+  }
+  return { kind: "select", index: idx - 1 };
+}
+
+/**
+ * 曖昧一致時、stdin が TTY のときだけ呼ぶ。番号付き候補（tagline 付き）を出し、
+ * 1キー入力（Enter 不要）で選ばせる。q / Enter 空入力 / Ctrl+C はキャンセル。
+ */
+function pickInteractive(hits) {
+  console.log(`${YELLOW}"${query}" が曖昧:${RESET}`);
+  hits.forEach((n, i) => {
+    const tag = taglines.get(n);
+    console.log(`  ${CYAN}${i + 1})${RESET} ${n}${tag ? DIM + " — " + tag + RESET : ""}`);
+  });
+  process.stdout.write(`${DIM}どれであそぶ? [1-${hits.length}] (q でキャンセル)${RESET} `);
+
+  return new Promise((settle) => {
+    const stdin = process.stdin;
+    const wasRaw = stdin.isRaw;
+    readline.emitKeypressEvents(stdin);
+    stdin.setRawMode(true);
+    stdin.resume();
+
+    const onKey = (str, key) => {
+      stdin.removeListener("keypress", onKey);
+      stdin.setRawMode(wasRaw ?? false);
+      stdin.pause();
+      process.stdout.write("\n");
+
+      if (key?.ctrl && key.name === "c") {
+        console.log("中断した。");
+        process.exit(130);
+      }
+      const choice = resolveChoice(str, hits.length);
+      if (choice.kind === "cancel") {
+        console.log("キャンセルした。");
+        process.exit(0);
+      }
+      if (choice.kind === "invalid") {
+        console.error(`"${choice.input}" は範囲外。`);
+        process.exit(1);
+      }
+      settle(hits[choice.index]);
+    };
+    stdin.on("keypress", onKey);
+  });
+}
+
 let app;
 if (query === "random") {
   app = all[Math.floor(Math.random() * all.length)];
@@ -62,11 +126,15 @@ if (query === "random") {
     console.error(`"${query}" に一致する app がない。候補:\n` + all.map((n) => `  ${n}`).join("\n"));
     process.exit(1);
   }
-  if (hits.length > 1) {
+  const exact = hits.find((n) => n === query);
+  if (hits.length === 1 || exact) {
+    app = exact ?? hits[0];
+  } else if (process.stdin.isTTY) {
+    app = await pickInteractive(hits);
+  } else {
     console.error(`"${query}" が曖昧: ${hits.join(", ")}`);
     process.exit(1);
   }
-  app = hits[0];
 }
 const outfile = join(root, "dist", `${app}.mjs`);
 await build({
