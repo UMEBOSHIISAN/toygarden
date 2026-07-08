@@ -1,11 +1,16 @@
-import { chimeFor } from "./index.ts";
+import { selectDevice } from "@toygarden/core-device";
+import { chimeFor, drawClock } from "./index.ts";
 import { bigClock, bell } from "./demo.ts";
 
 /**
  * chiptune-clock 実行エントリ。実時刻を表示し、正時をまたぐと chimeFor(hour) の鐘を鳴らす（視覚表示のみ）。
  *   node dist/chiptune-clock.mjs             → ライブ時計（1秒毎更新・Ctrl+Cで終了）
  *   node dist/chiptune-clock.mjs --frames 20 → 20フレーム描いて終了（キャプチャ用）
+ *
+ * TOYGARDEN_DEVICE=m5 npm run play chiptune-clock で M5StickC Plus にも同時描画（既定は mock）。
  */
+
+const device = selectDevice();
 
 const RESET = "\x1b[0m";
 const BOLD = "\x1b[1m";
@@ -37,6 +42,8 @@ function frame(colonOn: boolean): string {
   }
   const strikes = chimeFor(hour).notes.length;
   if (ringing && strikesShown < strikes) strikesShown++;
+
+  drawClock(device, hour, minute);
 
   const hh = String(hour).padStart(2, "0");
   const mm = String(minute).padStart(2, "0");

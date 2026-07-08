@@ -1,5 +1,7 @@
 import { basename } from "node:path";
 import { commitsSince, type GitCommit } from "@toygarden/core-git-observe";
+import { selectDevice } from "@toygarden/core-device";
+import { draw } from "./index.ts";
 import { renderScreen } from "./demo.ts";
 
 /**
@@ -7,7 +9,11 @@ import { renderScreen } from "./demo.ts";
  *   node dist/commit-constellation.mjs                     → カレント repo をタイムラプス再生
  *   node dist/commit-constellation.mjs --repo <path> --count 30
  *   node dist/commit-constellation.mjs --once              → 最終状態を1枚だけ出力（スクリプト向け）
+ *
+ * TOYGARDEN_DEVICE=m5 npm run play commit-constellation で M5StickC Plus にも同時描画（既定は mock）。
  */
+
+const device = selectDevice();
 
 const argv = process.argv.slice(2);
 const opt = (name: string, def: string): string => {
@@ -39,6 +45,7 @@ const HIDE = "\x1b[?25l";
 const SHOW = "\x1b[?25h";
 
 if (once) {
+  draw(device, commits);
   process.stdout.write(renderScreen(commits, label) + "\n");
 } else {
   process.stdout.write(HIDE);
@@ -49,7 +56,9 @@ if (once) {
   process.on("SIGINT", done);
   let revealed = 1;
   const timer = setInterval(() => {
-    process.stdout.write(CLEAR + renderScreen(rev.slice(0, revealed), label) + "\n");
+    const window = rev.slice(0, revealed);
+    draw(device, window);
+    process.stdout.write(CLEAR + renderScreen(window, label) + "\n");
     revealed++;
     if (revealed > rev.length) {
       clearInterval(timer);

@@ -1,12 +1,17 @@
+import { selectDevice } from "@toygarden/core-device";
 import { renderScreen } from "./demo.ts";
-import type { Metrics } from "./index.ts";
+import { draw, type Metrics } from "./index.ts";
 
 /**
  * desk-weather 実行エントリ。
  *   node dist/desk-weather.mjs                              → 合成ドリフトをライブ表示（Ctrl+C で終了）
  *   node dist/desk-weather.mjs --dirty 3 --fail 1 --stale 0  → 指定メトリクスを1回だけ描画
  *   node dist/desk-weather.mjs --frames 24                   → 合成ドリフトを24フレームで終了（キャプチャ用）
+ *
+ * TOYGARDEN_DEVICE=m5 npm run play desk-weather で M5StickC Plus にも同時描画（既定は mock）。
  */
+
+const device = selectDevice();
 
 const CLEAR = "\x1b[2J\x1b[H";
 const HIDE = "\x1b[?25l";
@@ -30,6 +35,7 @@ if (dirtyArg !== null || failArg !== null || staleArg !== null) {
     testFailures: Number(failArg ?? 0),
     staleMemory: Number(staleArg ?? 0),
   };
+  draw(device, m);
   process.stdout.write(renderScreen(m, 0) + "\n");
   process.exit(0);
 }
@@ -49,7 +55,9 @@ let tick = 0;
 
 if (frameCount !== null) {
   for (let i = 0; i < frameCount; i++) {
-    process.stdout.write(renderScreen(drift(tick), tick) + "\n\n");
+    const m = drift(tick);
+    draw(device, m);
+    process.stdout.write(renderScreen(m, tick) + "\n\n");
     tick++;
   }
 } else {
@@ -61,7 +69,9 @@ if (frameCount !== null) {
   process.on("SIGINT", done);
   process.on("SIGTERM", done);
   setInterval(() => {
-    process.stdout.write(CLEAR + renderScreen(drift(tick), tick) + "\n");
+    const m = drift(tick);
+    draw(device, m);
+    process.stdout.write(CLEAR + renderScreen(m, tick) + "\n");
     tick++;
   }, 400);
 }

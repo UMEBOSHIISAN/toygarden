@@ -202,13 +202,38 @@ Be clear-eyed about where things stand today:
 | driver | status |
 |---|---|
 | `mock` (`MockDevice`) | ✅ shipped — the default, what CI and every app run against |
-| M5Stack (Basic/Core2, Cardputer, StickC Plus) | 🔌 wanted — commented-out `case`s in `select.ts` are placeholders, no implementation exists |
+| M5StickC Plus (serial) | ✅ shipped (first real driver!) — `M5StickCSerialDevice`, zero-dependency, `TOYGARDEN_DEVICE=m5` or `m5stickc` |
+| M5Stack (Basic/Core2, Cardputer) | 🔌 wanted — commented-out `case`s in `select.ts` are placeholders, no implementation exists |
 | Ajazz AKP153 (Stream Deck–class macropad) | 🔌 wanted — same, placeholder only |
 | your gadget | 🔌 open — anything with a screen and/or a button qualifies |
 
-Nothing above the mock line is implemented. If a README or a GIF anywhere
-implies otherwise, the code in `packages/core-device/src/select.ts` is the
-source of truth: the `switch` has exactly one live `case`.
+The M5StickC Plus driver is the first line item above the mock. If a README
+or a GIF anywhere implies more than that, the code in
+`packages/core-device/src/select.ts` is the source of truth: the `switch` has
+exactly two live `case`s (`mock`, `m5`/`m5stickc`).
+
+### Using the M5StickC Plus driver
+
+```sh
+TOYGARDEN_DEVICE=m5 npm run play ume-tamagotchi
+# or, if the port differs from the default:
+TOYGARDEN_DEVICE=m5 TOYGARDEN_SERIAL_PORT=/dev/cu.usbserial-XXXXXXXX npm run play ume-tamagotchi
+```
+
+`M5StickCSerialDevice` (`packages/core-device/src/devices/m5stickc-serial.ts`)
+talks to the board over its USB-serial port with **zero external
+dependencies** — no `serialport` package. It shells out to `stty -f <port>
+115200 raw -echo` to configure the tty, then opens the port as a plain
+character device with `fs.createWriteStream` / `fs.createReadStream` — the
+same classic macOS trick sketched in §3, made real. Wire format is
+newline-delimited JSON at 115200 baud; `DrawCommand`'s `op` values
+(`clear`/`text`/`rect`) map straight onto the wire protocol, and `led`/`flush`
+are separate one-line messages. Incoming lines are parsed for `{"btn":0|1}`
+button presses (a startup `{"hello":...}` line is ignored).
+
+If the port doesn't exist or `stty` fails (no board plugged in, wrong path,
+permission issue), the driver logs a warning and silently becomes a no-op —
+it never throws, so a missing gadget doesn't take the toy down with it.
 
 That's not a gap to apologize for — it's the design working as intended. The
 mock existing as the *default* is precisely what lets every app and every CI

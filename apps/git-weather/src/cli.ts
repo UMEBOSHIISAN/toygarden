@@ -1,5 +1,7 @@
 import { basename } from "node:path";
 import { commitsSince, type GitCommit } from "@toygarden/core-git-observe";
+import { selectDevice } from "@toygarden/core-device";
+import { draw } from "./index.ts";
 import { renderScreen } from "./demo.ts";
 
 /**
@@ -7,7 +9,11 @@ import { renderScreen } from "./demo.ts";
  *   node dist/git-weather.mjs                       → カレント repo をタイムラプス再生
  *   node dist/git-weather.mjs --repo <path> --count 30
  *   node dist/git-weather.mjs --once                → 直近状態を1枚だけ出力（スクリプト向け）
+ *
+ * TOYGARDEN_DEVICE=m5 npm run play git-weather で M5StickC Plus にも同時描画（既定は mock）。
  */
+
+const device = selectDevice();
 
 const WINDOW = 6;
 
@@ -42,6 +48,7 @@ const HIDE = "\x1b[?25l";
 const SHOW = "\x1b[?25h";
 
 if (once) {
+  draw(device, windows[windows.length - 1]);
   process.stdout.write(renderScreen(windows[windows.length - 1], label, 0) + "\n");
 } else {
   process.stdout.write(HIDE);
@@ -52,6 +59,7 @@ if (once) {
   process.on("SIGINT", done);
   let i = 0;
   const timer = setInterval(() => {
+    draw(device, windows[i]);
     process.stdout.write(CLEAR + renderScreen(windows[i], label, i) + "\n");
     i++;
     if (i >= windows.length) {

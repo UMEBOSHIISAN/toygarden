@@ -18,7 +18,8 @@ HAL の外（`core-tui` 系 app がそのまま動く）。
 | `PanelSize` | interface | `{ width: number; height: number }` |
 | `RGB` | interface | `{ r: number; g: number; b: number }` |
 | `MockDevice` | class（`Device` 実装） | `new MockDevice(size?: PanelSize)` — 実機なしで動く既定デバイス |
-| `selectDevice` | 関数 | `selectDevice(name?: string): Device` — env `TOYGARDEN_DEVICE` でドライバ選択 |
+| `M5StickCSerialDevice` | class（`Device` 実装） | `new M5StickCSerialDevice(port?: string)` — M5StickC Plus 実機ドライバ（依存ゼロ・USB serial・fail-soft） |
+| `selectDevice` | 関数 | `selectDevice(name?: string): Device` — env `TOYGARDEN_DEVICE`（`mock` / `m5` / `m5stickc`）でドライバ選択 |
 
 `Device` インターフェース:
 

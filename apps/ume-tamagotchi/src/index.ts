@@ -42,9 +42,17 @@ export function face(pet: Pet): string {
   return "(・ω・)";
 }
 
+/** 実機パネル用の表情（ASCIIのみ）。小型液晶のフォントは ASCII しか描けない。 */
+export function deviceFace(pet: Pet): string {
+  if (pet.energy < 20) return "(;_;)";
+  if (pet.mood > 70) return "\\(^o^)/";
+  if (pet.mood < 30) return "(-_-)";
+  return "(o_o)";
+}
+
 export function draw(device: Device, pet: Pet): void {
   device.draw({ op: "clear" });
-  device.draw({ op: "text", x: 20, y: 20, text: face(pet) });
-  device.draw({ op: "text", x: 20, y: 48, text: `${pet.name} mood:${pet.mood} e:${pet.energy}` });
+  device.draw({ op: "text", x: 20, y: 20, text: deviceFace(pet) });
+  device.draw({ op: "text", x: 20, y: 48, text: `umeko mood:${pet.mood} e:${pet.energy}` });
   device.flush();
 }

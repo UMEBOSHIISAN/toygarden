@@ -1,12 +1,17 @@
 import type { PlayEvent } from "@toygarden/contracts";
-import { initPet, applyEvent, type Pet } from "./index.ts";
+import { selectDevice } from "@toygarden/core-device";
+import { initPet, applyEvent, draw, type Pet } from "./index.ts";
 import { renderPet } from "./view.ts";
 
 /**
  * ume-tamagotchi 実行エントリ。
  *   node dist/tamagotchi.mjs             → ライブ（Ctrl+C で終了。1日分のイベントをループ再生）
  *   node dist/tamagotchi.mjs --frames 20 → 20フレームで終了（キャプチャ用）
+ *
+ * TOYGARDEN_DEVICE=m5 npm run play ume-tamagotchi で M5StickC Plus にも同時描画（既定は mock）。
  */
+
+const device = selectDevice();
 
 const CLEAR = "\x1b[2J\x1b[H";
 const HIDE = "\x1b[?25l";
@@ -27,10 +32,12 @@ const SCRIPT: { event: PlayEvent; caption: string }[] = [
 function* play(): Generator<string> {
   for (;;) {
     let pet: Pet = initPet("うめこ");
+    draw(device, pet);
     yield renderPet(pet, "きょうも いちにち はじまる");
     yield renderPet(pet, "きょうも いちにち はじまる");
     for (const { event, caption } of SCRIPT) {
       pet = applyEvent(pet, event);
+      draw(device, pet);
       yield renderPet(pet, caption);
       yield renderPet(pet, caption);
     }

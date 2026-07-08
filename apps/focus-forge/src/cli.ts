@@ -1,5 +1,6 @@
 import type { FocusEvent } from "@toygarden/core-focus-log";
-import { forgeFromFocus } from "./index.ts";
+import { selectDevice } from "@toygarden/core-device";
+import { forgeFromFocus, draw } from "./index.ts";
 import { renderForge } from "./view.ts";
 
 /**
@@ -9,7 +10,11 @@ import { renderForge } from "./view.ts";
  *
  * 実データ接続は将来 `readFocusRows()`（core-focus-log）を差し込むだけで済む設計。
  * ここではサンプルの活動ログで forgeFromFocus() を実際に叩いて見せる。
+ *
+ * TOYGARDEN_DEVICE=m5 npm run play focus-forge で M5StickC Plus にも同時描画（既定は mock）。
  */
+
+const device = selectDevice();
 
 const CLEAR = "\x1b[2J\x1b[H";
 const HIDE = "\x1b[?25l";
@@ -37,10 +42,12 @@ function* play(): Generator<string> {
       activity: e.activity,
       hasPhoto: false,
     }));
+    draw(device, { ore: 0, ingots: 0 });
     yield renderForge({ ore: 0, ingots: 0 }, "けいそく かいし", false, false);
     let prevIngots = 0;
     for (let i = 0; i < focusEvents.length; i++) {
       const f = forgeFromFocus(focusEvents.slice(0, i + 1));
+      draw(device, f);
       const harvestFlash = f.ingots > prevIngots;
       const reps = harvestFlash ? 4 : 2;
       for (let r = 0; r < reps; r++) yield renderForge(f, EVENTS[i].caption, EVENTS[i].work, harvestFlash);
