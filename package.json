@@ -24,7 +24,9 @@
     "loom": "npm run build:loom && node dist/loom.mjs",
     "gifs": "node tools/gifcast.mjs",
     "showcase": "node tools/showcase.mjs",
-    "play": "node tools/play.mjs"
+    "play": "node tools/play.mjs",
+    "banner": "node tools/banner.mjs",
+    "new": "node tools/new-toy.mjs"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",

@@ -1,130 +1,164 @@
 # umeplay 🎛️
 
-> **端末で遊びが生える組み立てキット** — A construction kit where terminal toys grow.
+> **A construction kit where terminal toys grow.**
+> 日本語版 → **[README.ja.md](README.ja.md)**
 
-![umeplay aquarium](demo/gifs/ascii-aquarium.gif)
+[![CI](https://github.com/UMEBOSHIISAN/umeplay/actions/workflows/ci.yml/badge.svg)](https://github.com/UMEBOSHIISAN/umeplay/actions/workflows/ci.yml)
+[![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![node](https://img.shields.io/badge/node-%3E%3D22-brightgreen.svg)](package.json)
+[![dependencies: zero](https://img.shields.io/badge/dependencies-zero-brightgreen.svg)](package.json)
+[![demos: rendered from code](https://img.shields.io/badge/demos-rendered%20from%20code-ff69b4.svg)](#demos-that-dont-rot)
 
-> `npm run play aquarium` — task.done イベントで魚が増える ASCII 水槽。夜になると月が出る。
-> **このGIFはスクリーン録画ではない。** コードから決定論的に焼いている（後述）。
+![umeplay](demo/banner.gif)
 
-7つの部品（`packages/core-*`）を、1枚の契約（`contracts/`）でつなぐと、
-水槽が泳ぎ、git 履歴が歌い、机に天気が降る。**アプリを作るんじゃない。部品を掛け合わせると遊びが生える。**
+> **This repository contains not a single screenshot.** Even the banner above is
+> a GIF89a burned from code by our own encoder — run `npm run banner` and you get
+> the same bytes back.
 
-- **依存ゼロ** — ランタイム依存なし。TypeScript + Node だけ（devDeps は tsc / vitest / esbuild のみ）
-- **全部ターミナル** — ビルドもブラウザも実機も不要。`npm run play <名前>` して3秒で動く
-- **デモが腐らない** — README の GIF は `npm run gifs` がコードから再生成する
+umeplay is a **zero-dependency TypeScript monorepo** where **20 terminal toys**
+(an aquarium, a chiptune symphony, a tamagotchi, desk weather…) are assembled
+from **8 reusable `core-*` packages** wired together by a **single event contract**.
+You don't build apps — you cross parts, and play *grows*. It's all in your
+terminal: no build target, no browser, no hardware. `npm install && npm run play aquarium`.
 
-**In English:** umeplay is a zero-dependency TypeScript monorepo where 20 terminal toys
-(aquarium, chiptune, tamagotchi, weather…) are assembled from 8 reusable cores connected by
-a single event contract. Even the demo GIFs are rendered deterministically from code —
-a built-in GIF89a encoder with an 8x8 public-domain bitmap font. `npm install && npm run play aquarium`.
-
-## 使い方
+## Quick start
 
 ```sh
-npm install         # 依存導入（typescript + vitest + esbuild のみ）
-npm run play        # 遊び一覧
-npm run play aquarium   # 名前は部分一致。Ctrl+C で終了
-npm run check       # typecheck + テスト
-npm run gifs        # 全デモGIFをコードから再生成 → demo/gifs/
-npm run showcase    # デモ画面 demo/index.html を再生成
+npm install              # devDeps only: typescript + vitest + esbuild
+npm run play             # list every toy, with taglines
+npm run play aquarium    # names match by substring — Ctrl+C to quit
+npm run play random      # feeling lucky? launch a random one
+npm run check            # typecheck + tests (22 files / 88 tests)
+npm run gifs             # re-render every demo GIF from code → demo/gifs/
+npm run banner           # re-render the hero banner → demo/banner.gif
 ```
 
-実機なしで全部動く（`core-device` の既定は mock ドライバ）。
+Everything runs without hardware (`core-device` defaults to a mock driver).
 
-## 3層アーキテクチャ
+## Three-layer architecture
 
 ```
-apps/*          遊び（薄い・core を組み合わせるだけ）
+apps/*          toys        (thin — just compose cores)
    │ import only ↓
-packages/core-* 部品（再利用単位）
+packages/core-* cores       (the reusable units)
    │ import only ↓
-contracts/      型・スキーマ（依存ゼロの葉）
+contracts/      types/schema (the dependency-free leaf)
 ```
 
-**一方向依存のみ**（app → core → contracts）。app 同士は依存しない。
-連携は `contracts/events.ts` の `PlayEvent` 型経由の疎結合 —
-producer は誰が聞くか知らない。consumer は誰が出したか知らない。
+**One-way dependencies only** (`app → core → contracts`). Apps never import each
+other. They collaborate loosely through the `PlayEvent` type in
+[`contracts/events.ts`](contracts/events.ts): a producer never knows who's
+listening, a consumer never knows who spoke. That shared vocabulary is the spine
+of the whole kit.
 
-![event-loom mission control](demo/gifs/event-loom.gif)
+![event-loom](demo/gifs/event-loom.gif)
 
-> `npm run play event-loom` — 1本の EventBus に現実的なイベント列を流し、**疎結合な2つの購読者**（色付きティッカー＋種別カウンタ）が同時に反応する。この共通言語 `PlayEvent` がキットの芯。
+> `npm run play event-loom` — one `EventBus`, a realistic stream of events, and
+> **two decoupled subscribers** (a colored ticker and a kind-counter) reacting at
+> the same time.
 
-## 部品カタログ（packages/）
+## Parts catalog (`packages/`)
 
-| package | 責務 |
+Eight `core-*` packages. Seven of them compose the toys; the eighth,
+`core-termgif`, is the meta-core that renders every demo GIF (see
+[Demos that don't rot](#demos-that-dont-rot)).
+
+| package | responsibility |
 |---|---|
-| [`core-events`](packages/core-events/) | イベントバス（producer↔consumer を疎結合につなぐ） |
-| [`core-device`](packages/core-device/) | デバイス HAL（M5 / Ajazz AKP153 / mock） |
-| [`core-git-observe`](packages/core-git-observe/) | git 活動量観測（numstat + Co-Authored-By） |
-| [`core-chiptune`](packages/core-chiptune/) | 8bit 音生成（矩形波PCM/WAV/モチーフ） |
-| [`core-tui`](packages/core-tui/) | ターミナルUI基盤（レーン/バッジ/ANSI） |
-| [`core-worker-data`](packages/core-worker-data/) | worker配車/collapse データ供給（read-only） |
-| [`core-focus-log`](packages/core-focus-log/) | focus-cam ログ(sqlite)を read-only 供給 |
-| [`core-termgif`](packages/core-termgif/) | ANSI出力→GIF。デモを腐らせないための部品（GIF89a+LZW+8x8フォント内蔵） |
+| [`core-events`](packages/core-events/) | event bus — decouples producers from consumers |
+| [`core-device`](packages/core-device/) | device HAL (M5 / Ajazz AKP153 / mock) |
+| [`core-git-observe`](packages/core-git-observe/) | git activity observation (numstat + Co-Authored-By) |
+| [`core-chiptune`](packages/core-chiptune/) | 8-bit sound (square-wave PCM / WAV / motifs) |
+| [`core-tui`](packages/core-tui/) | terminal UI primitives (lanes / badges / ANSI) |
+| [`core-worker-data`](packages/core-worker-data/) | worker dispatch / collapse data supply (read-only) |
+| [`core-focus-log`](packages/core-focus-log/) | focus-cam log (sqlite) supplied read-only |
+| [`core-termgif`](packages/core-termgif/) | ANSI output → GIF. The part that keeps demos from rotting (GIF89a + LZW + a built-in 8×8 font) |
 
-## 遊びカタログ（apps/ — 全20本・全部GIF付き）
+## Toy catalog (`apps/` — all 20, all with GIFs)
 
-**全GIFギャラリー → [demo/index.html](demo/index.html)**（`npm run showcase` で再生成）
+**Full gallery → [demo/index.html](demo/index.html)** — self-contained, filter by
+core, dark/light aware, zero external references. Regenerate with `npm run showcase`.
 
-| app | 部品の掛け合わせ | 一言 |
+| toy | cores crossed | what it does |
 |---|---|---|
-| [ascii-aquarium](demo/gifs/ascii-aquarium.gif) | contracts | task.done で魚が増える ASCII 水槽。夜になると月が出る |
-| [event-loom](demo/gifs/event-loom.gif) | events × tui | 1本のバスに流れる全イベントを織って見せる万能ビューア |
-| [commit-symphony](demo/gifs/commit-symphony.gif) | git-observe × chiptune | git 履歴が 8bit の曲になる。AI 共著は1オクターブ上で鳴く |
-| [git-replay](demo/gifs/git-replay.gif) | git-observe × tui | リポジトリの歴史をタイムラプス再生。人間と AI を色分け |
-| [secretary-today](demo/gifs/secretary-today.gif) | tui | 今日の優先順位をレーンで表示。blocked は赤く沈む |
-| [agent-constellation](demo/gifs/agent-constellation.gif) | device × events | エージェントたちが星座になる。dispatch で線が走る |
-| [collapse-arcade](demo/gifs/collapse-arcade.gif) | worker-data | 崩壊率の高いエージェントが敵に。撃墜=レビュー |
-| [collapse-siren](demo/gifs/collapse-siren.gif) | worker-data × chiptune × events | 崩壊率が閾値を越えると端末が不協和音で騒ぎ出す |
-| [desk-weather](demo/gifs/desk-weather.gif) | device | リポジトリの調子が机の天気になる。dirty は曇り |
-| [git-weather](demo/gifs/git-weather.gif) | git-observe × device | churn が強い日は嵐。静かな日は快晴 |
-| [pomodoro-forge](demo/gifs/pomodoro-forge.gif) | chiptune × device | 集中で鉱石を掘り、commit で精錬する鍛冶ポモドーロ |
-| [focus-forge](demo/gifs/focus-forge.gif) | focus-log × chiptune × device | 自己申告じゃない pomodoro。実測の集中だけが鎚を振る |
-| [focus-aquarium](demo/gifs/focus-aquarium.gif) | focus-log | 一日の集中記録が夜、魚群になって泳ぎ出す |
-| [focus-tally](demo/gifs/focus-tally.gif) | focus-log × tui | 今日なにをしたかが端末の棒グラフに積み上がる |
-| [ume-tamagotchi](demo/gifs/ume-tamagotchi.gif) | device | うめこを育てる。投稿すると喜び、滞ると拗ねる |
-| [routing-slot](demo/gifs/routing-slot.gif) | worker-data | worker 配車がスロットマシンに。適材適所で jackpot |
-| [routing-radar](demo/gifs/routing-radar.gif) | worker-data × tui | 配車の的中率を confidence バーで一望するレーダー |
-| [chiptune-clock](demo/gifs/chiptune-clock.gif) | chiptune × device | 時刻を 8bit の鐘で告げる置時計 |
-| [chiptune-themes](demo/gifs/chiptune-themes.gif) | chiptune × events | イベント種別ごとにテーマ曲が付く。deploy 成功はファンファーレ |
-| [commit-constellation](demo/gifs/commit-constellation.gif) | git-observe × device | コミット著者が星になる。寄与が大きいほど明るい |
+| [ascii-aquarium](demo/gifs/ascii-aquarium.gif) | contracts | An ASCII fish tank that gains a fish on every `task.done`. A moon rises at night. |
+| [event-loom](demo/gifs/event-loom.gif) | events × tui | Weaves every event on one bus into a live universal viewer. |
+| [commit-symphony](demo/gifs/commit-symphony.gif) | git-observe × chiptune | Your git history becomes an 8-bit tune; AI co-authored commits ring an octave up. |
+| [git-replay](demo/gifs/git-replay.gif) | git-observe × tui | Time-lapse playback of a repo's history, human and AI color-coded. |
+| [secretary-today](demo/gifs/secretary-today.gif) | tui | Today's priorities as lanes; blocked items sink in red. |
+| [agent-constellation](demo/gifs/agent-constellation.gif) | device × events | Agents become a constellation; a dispatch draws a line between stars. |
+| [collapse-arcade](demo/gifs/collapse-arcade.gif) | worker-data | High collapse-rate agents become enemies. Shooting one = a review. |
+| [collapse-siren](demo/gifs/collapse-siren.gif) | worker-data × chiptune × events | When collapse rate crosses a threshold, the terminal blares a dissonant siren. |
+| [desk-weather](demo/gifs/desk-weather.gif) | device | Your repo's health becomes desk weather; a dirty tree clouds over. |
+| [git-weather](demo/gifs/git-weather.gif) | git-observe × device | High-churn days storm, quiet days stay clear. |
+| [pomodoro-forge](demo/gifs/pomodoro-forge.gif) | chiptune × device | Mine ore by focusing, smelt it on commit — a blacksmith's pomodoro. |
+| [focus-forge](demo/gifs/focus-forge.gif) | focus-log × chiptune × device | A pomodoro that isn't self-reported. Only measured focus swings the hammer. |
+| [focus-aquarium](demo/gifs/focus-aquarium.gif) | focus-log | A day's focus log swims out as a school of fish at night. |
+| [focus-tally](demo/gifs/focus-tally.gif) | focus-log × tui | What you did today stacks up as a terminal bar chart. |
+| [ume-tamagotchi](demo/gifs/ume-tamagotchi.gif) | contracts | Raise Umeko: she's happy when you post, sulks when things stall. |
+| [routing-slot](demo/gifs/routing-slot.gif) | worker-data | Worker dispatch as a slot machine; the right fit hits the jackpot. |
+| [routing-radar](demo/gifs/routing-radar.gif) | worker-data × tui | A radar surveying dispatch hit-rate with confidence bars. |
+| [chiptune-clock](demo/gifs/chiptune-clock.gif) | chiptune × device | A desk clock that tells the hour with an 8-bit bell. |
+| [chiptune-themes](demo/gifs/chiptune-themes.gif) | chiptune × events | Each event kind gets a theme; a successful deploy plays a fanfare. |
+| [commit-constellation](demo/gifs/commit-constellation.gif) | git-observe × device | Commit authors become stars; the bigger the contribution, the brighter. |
 
-どの app も `apps/<name>/src/` の数ファイル。既存を一切壊さず追加できる = このキットの拡張性そのもの。
+Every toy is just a few files under `apps/<name>/src/`. You can add one without
+touching anything else — that additivity *is* the kit.
 
-## デモが腐らない仕組み
+## Demos that don't rot
 
-スクリーン録画の GIF はコードが変わった瞬間に嘘になる。umeplay の GIF は全部こう作る:
+A screen-recorded GIF turns into a lie the moment the code changes. Every GIF in
+umeplay is made like this instead:
 
 ```
-app の demo()  ──ANSI フレーム列──▶  core-termgif  ──▶  demo/gifs/<name>.gif
-（seeded 乱数・決定論的）              （GIF89a+LZW+8x8フォント・依存ゼロ）
+app's demo()  ──ANSI frames──▶  core-termgif  ──▶  demo/gifs/<name>.gif
+(seeded RNG, deterministic)     (GIF89a + LZW + 8×8 font, zero deps)
 ```
 
-- 各 app は `src/demo.ts` で `demo(): DemoSpec` を export する（規約は [core-termgif/README](packages/core-termgif/README.md)）
-- `npm run gifs` が全 app の GIF と `manifest.json` を再生成、`npm run showcase` がギャラリー HTML を再生成
-- 同じコード → 同じ GIF。**デモの鮮度 = リポジトリの誠実さ**
+- Each app exports `demo(): DemoSpec` from `src/demo.ts` (the convention lives in
+  [`packages/core-termgif/README.md`](packages/core-termgif/README.md)).
+- `npm run gifs` re-renders every app's GIF plus `manifest.json`; `npm run showcase`
+  rebuilds the gallery HTML; `npm run banner` rebuilds the hero.
+- Same code → same GIF. **Demo freshness = repository honesty.**
 
-フォントは IBM VGA 時代の Public Domain ビットマップ（[dhepper/font8x8](https://github.com/dhepper/font8x8)）+ 手描きグリフ。ひらがなも泳ぐ。
+The font is a public-domain IBM-VGA-era bitmap ([dhepper/font8x8](https://github.com/dhepper/font8x8))
+plus hand-drawn glyphs. Even hiragana swim across the tank.
 
-## 新しい遊び / デバイスの足し方
+## Grow your own toy
 
-`CONTRIBUTING.md` を参照。要点だけ:
-
-- 新しい遊び → `apps/<name>/` を1つ（`index.ts` にロジック・`cli.ts` に実行・`demo.ts` にGIFデモ）
-- 新デバイス → `packages/core-device/src/devices/<name>.ts` + `select.ts` に1行
-- 新イベント → `contracts/events.ts` の `PlayEvent` に型を1つ追加
-
-## テスト
+A new toy takes about 60 seconds to scaffold:
 
 ```sh
-npm run check   # tsc --noEmit + vitest（core を真面目に、app は smoke）
+npm run new -- my-toy    # generates apps/my-toy/ (6 files: package.json,
+                         # tsconfig, src/index.ts, src/cli.ts, src/demo.ts, test)
+npm run check            # typecheck + tests — green out of the box
+npm run play my-toy      # watch it run (Ctrl+C to quit)
+npm run gifs -- my-toy   # render demo/gifs/my-toy.gif
 ```
 
-`demo/wiring.test.ts` = 1本のイベントを4アプリが疎結合で受ける実証。
-`demo/showcase.test.ts` = 全アプリの実レンダリングを出力。
-core-termgif の LZW は独立実装デコーダとの roundtrip でテストしている。
+The generated toy already passes `check`, runs under `play`, and renders a GIF —
+so you start from something alive and reshape it. From there, add a `@umeplay/*`
+core to its `package.json` and cross parts to taste. Full guide (and how to add a
+new core, device, or event): **[CONTRIBUTING.md](CONTRIBUTING.md)**.
+
+## Testing
+
+```sh
+npm run check   # tsc --noEmit + vitest (cores tested seriously, apps are smoke tests)
+```
+
+`demo/wiring.test.ts` proves one event reaches four apps through loose coupling;
+`demo/showcase.test.ts` renders every app for real; `core-termgif`'s LZW is
+round-tripped against an independent decoder. **22 test files, 88 tests.**
+
+## Contributing
+
+Read **[CONTRIBUTING.md](CONTRIBUTING.md)**. The only rules that matter: keep the
+dependency direction (`apps → cores → contracts`), never import one app from
+another, and keep demos deterministic. `npm run new` gets you a valid toy in one
+command.
 
 ## License
 
-MIT（[LICENSE](LICENSE)）。フォントデータの出自は Public Domain（core-termgif/README 参照）。
+MIT — see [LICENSE](LICENSE). The bitmap font's provenance is public domain
+(see [`core-termgif/README.md`](packages/core-termgif/README.md)).

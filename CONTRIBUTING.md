@@ -35,7 +35,37 @@ apps/*  →  packages/core-*  →  contracts/   （逆流・横流し禁止）
 
 Steam Deck は Linux PC 扱い＝デバイスドライバ不要。core-tui 系 app のビルドターゲット。
 
-## 新しい遊び（app）を足す完全手順
+## 新しい遊び（app）を足す — まず `npm run new`
+
+いちばん速い足場作りは scaffolder に任せる。**約60秒**で「動く最小のおもちゃ」一式が出る:
+
+```sh
+npm run new -- my-toy
+```
+
+これで `apps/my-toy/` に6ファイル（`package.json` / `tsconfig.json` /
+`src/index.ts` / `src/cli.ts` / `src/demo.ts` / `test/my-toy.test.ts`）が生成される。
+生成直後から以下が全部通る状態で出る:
+
+```sh
+npm run check            # typecheck + テスト（緑）
+npm run play my-toy      # 起動して見る（Ctrl+C で終了）
+npm run gifs -- my-toy   # demo/gifs/my-toy.gif を生成
+```
+
+- 名前はケバブケース（小文字英数字とハイフン・数字/ハイフン始まり不可・連続ハイフン不可）。
+  予約語 `random`（`npm run play random` と衝突）は弾かれる。
+- 生成物の `index.ts`（純ロジック）/ `cli.ts`（実行）/ `demo.ts`（GIF デモ・決定論的）の
+  三分割はそのまま「あるべき形」。ここを書き換えて育てる。
+- core を使うときは `apps/my-toy/package.json` に `@umeplay/core-<domain>` 依存を足し、
+  `import { ... } from "@umeplay/core-<domain>"` で1個以上組み合わせる。
+  core をまたぐ再利用ロジックは app に書かず、core に落とす。
+- 実行アプリとして root スクリプトから叩けるようにするなら、root `package.json` の `scripts` に
+  `build:<name>` / `<name>` を追加（`esbuild` でバンドル → `node dist/<name>.mjs`。既存の
+  `aquarium`/`symphony`/`loom` を参考に）。ライブ実行だけなら `npm run play <name>` で足りる。
+- 最後に `README.md` / `README.ja.md` の「遊びカタログ（apps/）」表に1行追加。
+
+### 手動で足す完全手順（scaffolder を使わない場合）
 
 1. `apps/<name>/` を作る（`src/index.ts` に純ロジック、`package.json` に `@umeplay/*` 依存を宣言）
 2. 使う core を `import { ... } from "@umeplay/core-<domain>"` で1個以上組み合わせる。
@@ -48,8 +78,8 @@ Steam Deck は Linux PC 扱い＝デバイスドライバ不要。core-tui 系 a
    - `index.ts` の純ロジックを import して呼ぶだけ。cli.ts 自体にロジックを書かない
 5. 実行アプリ化する場合は root `package.json` の `scripts` に `build:<name>` / `<name>` を追加
    （`esbuild` でバンドル → `node dist/<name>.mjs`。既存の `aquarium`/`symphony`/`loom` を参考に）
-6. 生成物確認: `node tools/gifcast.mjs` で `demo/gifs/<name>.gif` が出ることを確認
-7. `README.md` の「試作品カタログ」または「遊び（apps/）」表に1行追加
+6. 生成物確認: `npm run gifs -- <name>` で `demo/gifs/<name>.gif` が出ることを確認
+7. `README.md` / `README.ja.md` の「遊びカタログ（apps/）」表に1行追加
 
 ## 新しい core を足す完全手順
 

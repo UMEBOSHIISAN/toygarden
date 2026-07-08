@@ -5,26 +5,42 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>umeplay — 端末で遊びが生える組み立てキット</title>
 <style>
-  :root { --bg:#0d1117; --fg:#e6edf3; --dim:#8b949e; --line:#30363d;
-          --cyan:#39c5cf; --green:#3fb950; --yellow:#d29922; --magenta:#bc8cf2; }
+  :root { --bg:#0d1117; --bg2:#010409; --fg:#e6edf3; --dim:#8b949e; --line:#30363d;
+          --cyan:#39c5cf; --green:#3fb950; --yellow:#d29922; --magenta:#bc8cf2; --red:#f85149; }
+  @media (prefers-color-scheme: light) {
+    :root { --bg:#f6f8fa; --bg2:#ffffff; --fg:#1f2328; --dim:#57606a; --line:#d0d7de;
+            --cyan:#0969da; --green:#1a7f37; --yellow:#9a6700; --magenta:#8250df; --red:#cf222e; }
+  }
   * { box-sizing:border-box; margin:0; }
   body { background:var(--bg); color:var(--fg);
          font-family:"SF Mono",Menlo,Consolas,monospace; line-height:1.6; }
   main { max-width:1080px; margin:0 auto; padding:48px 20px; }
-  .hero { text-align:center; padding:32px 0 40px; }
+  .hero { text-align:center; padding:24px 0 40px; }
+  .banner { display:block; max-width:100%; width:min(720px, 100%); margin:0 auto 28px;
+            border:1px solid var(--line); border-radius:10px; image-rendering:pixelated;
+            background:var(--bg2); }
   .hero h1 { font-size:2.4rem; letter-spacing:.06em; }
   .hero h1 .c { color:var(--cyan); }
   .hero p.tag { color:var(--dim); margin-top:12px; font-size:1.05rem; }
   .hero p.big { margin-top:20px; font-size:1.15rem; }
-  .hero .quick { display:inline-block; margin-top:24px; padding:10px 18px;
+  .hero p.stats { margin-top:14px; color:var(--dim); font-size:.85rem; }
+  .hero .quick { display:inline-flex; align-items:center; gap:8px; margin-top:24px; padding:10px 18px;
                  border:1px solid var(--line); border-radius:8px; color:var(--green); }
+  .hero .quick::before { content:"$"; color:var(--dim); }
   .arch { color:var(--dim); text-align:center; white-space:pre; overflow-x:auto;
           padding:24px 0; font-size:.85rem; }
   h2 { margin:48px 0 20px; font-size:1.3rem; color:var(--cyan); }
   h2::before { content:"» "; color:var(--magenta); }
+  .filters { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:24px; }
+  .chip { font:inherit; font-size:.78rem; padding:6px 12px; border:1px solid var(--line);
+          border-radius:999px; background:transparent; color:var(--dim); cursor:pointer; }
+  .chip .n { opacity:.65; margin-left:4px; }
+  .chip:hover { border-color:var(--cyan); color:var(--fg); }
+  .chip.active { color:var(--bg); background:var(--cyan); border-color:var(--cyan); }
+  .chip.active .n { color:var(--bg); opacity:.8; }
   .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:20px; }
-  .card { border:1px solid var(--line); border-radius:10px; overflow:hidden; background:#010409; }
-  .card img { width:100%; display:block; image-rendering:pixelated; background:#0d1117; }
+  .card { border:1px solid var(--line); border-radius:10px; overflow:hidden; background:var(--bg2); }
+  .card img { width:100%; display:block; image-rendering:pixelated; background:var(--bg); }
   .card figcaption { padding:14px 16px; }
   .card h3 { font-size:1rem; color:var(--yellow); }
   .card p { font-size:.85rem; color:var(--fg); margin:6px 0 10px; }
@@ -34,16 +50,20 @@
   .dim { color:var(--dim); font-size:.7rem; margin-left:auto; }
   footer { margin-top:56px; padding-top:24px; border-top:1px solid var(--line);
            color:var(--dim); text-align:center; font-size:.85rem; }
+  footer p { margin:4px 0; }
   a { color:var(--cyan); }
+  code { color:var(--green); }
 </style>
 </head>
 <body>
 <main>
   <div class="hero">
+    <img class="banner" src="banner.gif" alt="umeplay banner" onerror="this.remove()">
     <h1>ume<span class="c">play</span> 🎛️</h1>
-    <p class="tag">A construction kit where terminal toys grow</p>
+    <p class="tag">端末で遊びが生える組み立てキット<br>A construction kit where terminal toys grow</p>
     <p class="big">7つの部品を組むだけで、水槽が泳ぎ、git履歴が歌い、机に天気が降る。</p>
-    <div class="quick">npm install && npm run aquarium</div>
+    <p class="stats">20 apps · 521 frames · 1910KB of pixels — all rendered from code</p>
+    <div class="quick">npm install &amp;&amp; npm run play</div>
   </div>
 
   <div class="arch">apps/*          遊び（薄い・core を組み合わせるだけ）
@@ -53,8 +73,19 @@ packages/core-* 部品（再利用単位・依存ゼロ）
 contracts/      型・スキーマ（PlayEvent という共通語彙）</div>
 
   <h2>遊びカタログ — 全20本、すべてコードから焼いた GIF</h2>
+  <div class="filters">
+      <button class="chip active" data-filter="all">all <span class="n">20</span></button>
+      <button class="chip" data-filter="core-device">core-device <span class="n">7</span></button>
+      <button class="chip" data-filter="core-chiptune">core-chiptune <span class="n">6</span></button>
+      <button class="chip" data-filter="core-tui">core-tui <span class="n">5</span></button>
+      <button class="chip" data-filter="contracts">contracts <span class="n">4</span></button>
+      <button class="chip" data-filter="core-events">core-events <span class="n">4</span></button>
+      <button class="chip" data-filter="core-git-observe">core-git-observe <span class="n">4</span></button>
+      <button class="chip" data-filter="core-worker-data">core-worker-data <span class="n">4</span></button>
+      <button class="chip" data-filter="core-focus-log">core-focus-log <span class="n">3</span></button>
+  </div>
   <div class="grid">
-    <figure class="card">
+    <figure class="card" data-uses="contracts core-device core-events">
       <img src="gifs/agent-constellation.gif" alt="agent-constellation" loading="lazy">
       <figcaption>
         <h3>agent-constellation</h3>
@@ -67,7 +98,7 @@ contracts/      型・スキーマ（PlayEvent という共通語彙）</div>
         </div>
       </figcaption>
     </figure>
-    <figure class="card">
+    <figure class="card" data-uses="contracts">
       <img src="gifs/ascii-aquarium.gif" alt="ascii-aquarium" loading="lazy">
       <figcaption>
         <h3>ascii-aquarium</h3>
@@ -78,7 +109,7 @@ contracts/      型・スキーマ（PlayEvent という共通語彙）</div>
         </div>
       </figcaption>
     </figure>
-    <figure class="card">
+    <figure class="card" data-uses="core-chiptune core-device">
       <img src="gifs/chiptune-clock.gif" alt="chiptune-clock" loading="lazy">
       <figcaption>
         <h3>chiptune-clock</h3>
@@ -90,7 +121,7 @@ contracts/      型・スキーマ（PlayEvent という共通語彙）</div>
         </div>
       </figcaption>
     </figure>
-    <figure class="card">
+    <figure class="card" data-uses="core-chiptune core-events">
       <img src="gifs/chiptune-themes.gif" alt="chiptune-themes" loading="lazy">
       <figcaption>
         <h3>chiptune-themes</h3>
@@ -102,7 +133,7 @@ contracts/      型・スキーマ（PlayEvent という共通語彙）</div>
         </div>
       </figcaption>
     </figure>
-    <figure class="card">
+    <figure class="card" data-uses="core-worker-data">
       <img src="gifs/collapse-arcade.gif" alt="collapse-arcade" loading="lazy">
       <figcaption>
         <h3>collapse-arcade</h3>
@@ -113,7 +144,7 @@ contracts/      型・スキーマ（PlayEvent という共通語彙）</div>
         </div>
       </figcaption>
     </figure>
-    <figure class="card">
+    <figure class="card" data-uses="core-worker-data core-chiptune core-events">
       <img src="gifs/collapse-siren.gif" alt="collapse-siren" loading="lazy">
       <figcaption>
         <h3>collapse-siren</h3>
@@ -126,7 +157,7 @@ contracts/      型・スキーマ（PlayEvent という共通語彙）</div>
         </div>
       </figcaption>
     </figure>
-    <figure class="card">
+    <figure class="card" data-uses="core-git-observe core-device">
       <img src="gifs/commit-constellation.gif" alt="commit-constellation" loading="lazy">
       <figcaption>
         <h3>commit-constellation</h3>
@@ -138,7 +169,7 @@ contracts/      型・スキーマ（PlayEvent という共通語彙）</div>
         </div>
       </figcaption>
     </figure>
-    <figure class="card">
+    <figure class="card" data-uses="core-git-observe core-chiptune">
       <img src="gifs/commit-symphony.gif" alt="commit-symphony" loading="lazy">
       <figcaption>
         <h3>commit-symphony</h3>
@@ -150,7 +181,7 @@ contracts/      型・スキーマ（PlayEvent という共通語彙）</div>
         </div>
       </figcaption>
     </figure>
-    <figure class="card">
+    <figure class="card" data-uses="core-device">
       <img src="gifs/desk-weather.gif" alt="desk-weather" loading="lazy">
       <figcaption>
         <h3>desk-weather</h3>
@@ -161,7 +192,7 @@ contracts/      型・スキーマ（PlayEvent という共通語彙）</div>
         </div>
       </figcaption>
     </figure>
-    <figure class="card">
+    <figure class="card" data-uses="core-events core-tui contracts">
       <img src="gifs/event-loom.gif" alt="event-loom" loading="lazy">
       <figcaption>
         <h3>event-loom</h3>
@@ -174,7 +205,7 @@ contracts/      型・スキーマ（PlayEvent という共通語彙）</div>
         </div>
       </figcaption>
     </figure>
-    <figure class="card">
+    <figure class="card" data-uses="core-focus-log">
       <img src="gifs/focus-aquarium.gif" alt="focus-aquarium" loading="lazy">
       <figcaption>
         <h3>focus-aquarium</h3>
@@ -185,7 +216,7 @@ contracts/      型・スキーマ（PlayEvent という共通語彙）</div>
         </div>
       </figcaption>
     </figure>
-    <figure class="card">
+    <figure class="card" data-uses="core-focus-log core-chiptune core-device">
       <img src="gifs/focus-forge.gif" alt="focus-forge" loading="lazy">
       <figcaption>
         <h3>focus-forge</h3>
@@ -198,7 +229,7 @@ contracts/      型・スキーマ（PlayEvent という共通語彙）</div>
         </div>
       </figcaption>
     </figure>
-    <figure class="card">
+    <figure class="card" data-uses="core-focus-log core-tui">
       <img src="gifs/focus-tally.gif" alt="focus-tally" loading="lazy">
       <figcaption>
         <h3>focus-tally</h3>
@@ -210,7 +241,7 @@ contracts/      型・スキーマ（PlayEvent という共通語彙）</div>
         </div>
       </figcaption>
     </figure>
-    <figure class="card">
+    <figure class="card" data-uses="core-git-observe core-tui">
       <img src="gifs/git-replay.gif" alt="git-replay" loading="lazy">
       <figcaption>
         <h3>git-replay</h3>
@@ -222,7 +253,7 @@ contracts/      型・スキーマ（PlayEvent という共通語彙）</div>
         </div>
       </figcaption>
     </figure>
-    <figure class="card">
+    <figure class="card" data-uses="core-git-observe core-device">
       <img src="gifs/git-weather.gif" alt="git-weather" loading="lazy">
       <figcaption>
         <h3>git-weather</h3>
@@ -234,7 +265,7 @@ contracts/      型・スキーマ（PlayEvent という共通語彙）</div>
         </div>
       </figcaption>
     </figure>
-    <figure class="card">
+    <figure class="card" data-uses="core-chiptune core-device">
       <img src="gifs/pomodoro-forge.gif" alt="pomodoro-forge" loading="lazy">
       <figcaption>
         <h3>pomodoro-forge</h3>
@@ -246,7 +277,7 @@ contracts/      型・スキーマ（PlayEvent という共通語彙）</div>
         </div>
       </figcaption>
     </figure>
-    <figure class="card">
+    <figure class="card" data-uses="core-worker-data core-tui">
       <img src="gifs/routing-radar.gif" alt="routing-radar" loading="lazy">
       <figcaption>
         <h3>routing-radar</h3>
@@ -258,7 +289,7 @@ contracts/      型・スキーマ（PlayEvent という共通語彙）</div>
         </div>
       </figcaption>
     </figure>
-    <figure class="card">
+    <figure class="card" data-uses="core-worker-data">
       <img src="gifs/routing-slot.gif" alt="routing-slot" loading="lazy">
       <figcaption>
         <h3>routing-slot</h3>
@@ -269,7 +300,7 @@ contracts/      型・スキーマ（PlayEvent という共通語彙）</div>
         </div>
       </figcaption>
     </figure>
-    <figure class="card">
+    <figure class="card" data-uses="core-tui">
       <img src="gifs/secretary-today.gif" alt="secretary-today" loading="lazy">
       <figcaption>
         <h3>secretary-today</h3>
@@ -280,7 +311,7 @@ contracts/      型・スキーマ（PlayEvent という共通語彙）</div>
         </div>
       </figcaption>
     </figure>
-    <figure class="card">
+    <figure class="card" data-uses="contracts">
       <img src="gifs/ume-tamagotchi.gif" alt="ume-tamagotchi" loading="lazy">
       <figcaption>
         <h3>ume-tamagotchi</h3>
@@ -295,8 +326,30 @@ contracts/      型・スキーマ（PlayEvent という共通語彙）</div>
 
   <footer>
     <p>デモGIFはスクリーン録画ではありません。<code>npm run gifs</code> がコードから決定論的に再生成します。</p>
+    <p>Every pixel on this page is rendered from code — <code>npm run gifs</code></p>
     <p>MIT License · <a href="https://github.com/UMEBOSHIISAN/umeplay">github.com/UMEBOSHIISAN/umeplay</a></p>
   </footer>
 </main>
+<script>
+(function () {
+  var chips = document.querySelectorAll(".chip");
+  var cards = document.querySelectorAll(".card");
+  function apply(filter) {
+    chips.forEach(function (c) {
+      c.classList.toggle("active", c.dataset.filter === filter);
+    });
+    cards.forEach(function (card) {
+      var uses = (card.dataset.uses || "").split(" ");
+      card.style.display = filter === "all" || uses.indexOf(filter) !== -1 ? "" : "none";
+    });
+  }
+  chips.forEach(function (c) {
+    c.addEventListener("click", function () {
+      var next = c.classList.contains("active") && c.dataset.filter !== "all" ? "all" : c.dataset.filter;
+      apply(next);
+    });
+  });
+})();
+</script>
 </body>
 </html>
