@@ -1,4 +1,4 @@
-import { startSysmonFeed, type SysmonSample } from "@umeplay/core-sysmon";
+import { startSysmonFeed, type SysmonSample } from "@toygarden/core-sysmon";
 
 /**
  * cpu-diner — an ASCII diner whose crowd swells and thins with your machine's CPU busyness.

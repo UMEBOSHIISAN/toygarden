@@ -1,4 +1,4 @@
-import { toFocusEvents, readFocusRows, DEFAULT_FOCUS_DB, type FocusEvent } from "@umeplay/core-focus-log";
+import { toFocusEvents, readFocusRows, DEFAULT_FOCUS_DB, type FocusEvent } from "@toygarden/core-focus-log";
 import { renderScreen, dayStream } from "./demo.ts";
 
 /**

@@ -49,7 +49,7 @@ const UNIT = 7; // 旧6→7。タイトルは一回り太く立たせる
 const MARGIN_UNITS = 2;
 const LETTER_GAP_UNITS = 1;
 
-const LETTERS = "UMEPLAY".split(""); // MOTHER2 と同じく大文字で組む
+const LETTERS = "TOYGARDEN".split(""); // MOTHER2 と同じく大文字で組む
 
 for (const ch of LETTERS) {
   const cp = ch.codePointAt(0);
@@ -143,7 +143,7 @@ function buildSvg(theme) {
 
   return [
     `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${WIDTH} ${HEIGHT}" width="${WIDTH}" height="${HEIGHT}">`,
-    `  <title>umeplay</title>`,
+    `  <title>toygarden</title>`,
     `  <!-- tools/logo.mjs が焼く決定論的ロゴ (${theme.name}) — MOTHER2風: 赤一色・縦シェーディング・硬い落ち影 -->`,
     `  <g>`,
     ...shadowRects.map((r) => `    ${r}`),

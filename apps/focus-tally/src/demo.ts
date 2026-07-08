@@ -2,9 +2,9 @@
  * demo.ts — GIF 用デモ（DemoSpec 規約・決定論的）。
  * 合成 FocusEvent 列を1件ずつ積み上げながら barChart() を呼び直し、棒が伸びていく様子を再現する。
  */
-import type { DemoSpec } from "@umeplay/core-termgif";
-import { seeded } from "@umeplay/core-termgif";
-import type { FocusEvent } from "@umeplay/core-focus-log";
+import type { DemoSpec } from "@toygarden/core-termgif";
+import { seeded } from "@toygarden/core-termgif";
+import type { FocusEvent } from "@toygarden/core-focus-log";
 import { barChart } from "./index.ts";
 
 const CYAN = "\x1b[36m";

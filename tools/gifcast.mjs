@@ -5,7 +5,7 @@
  *   npm run gifs -- aquarium # 名前に一致する app だけ
  *   npm run gifs -- --crt ascii-aquarium # レトロ CRT 版を demo/crt/ に出力（opt-in）
  *
- * 各 app の demo() は DemoSpec（@umeplay/core-termgif 参照）を返す。決定論的なので
+ * 各 app の demo() は DemoSpec（@toygarden/core-termgif 参照）を返す。決定論的なので
  * 同じコードから常に同じ GIF が出る。demo/gifs/manifest.json に一覧も書く。
  * --crt は demo/gifs/*.gif・manifest.json には一切触れない別出力先（additive）。
  */

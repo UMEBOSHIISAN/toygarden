@@ -2,7 +2,7 @@
  * demo.ts — GIF 用デモ（DemoSpec 規約・決定論的）。
  * `npm run gifs` が拾って demo/gifs/ascii-aquarium.gif を再生成する。
  */
-import { seeded, type DemoSpec } from "@umeplay/core-termgif";
+import { seeded, type DemoSpec } from "@toygarden/core-termgif";
 import { initAquarium, step, feed, render } from "./index.ts";
 import { colorize } from "./color.ts";
 
@@ -20,7 +20,7 @@ export function demo(): DemoSpec {
     for (let i = 0; i < 36; i++) {
       tank = step(tank);
       if (i % 9 === 4) tank = feed(tank, { kind: "task.done", project: "投稿" });
-      const header = `  ${CYAN}~ umeplay aquarium ~${RESET}  ${DIM}task.done adds a fish${RESET}`;
+      const header = `  ${CYAN}~ toygarden aquarium ~${RESET}  ${DIM}task.done adds a fish${RESET}`;
       frames.push(header + "\n" + colorize(render(tank), tank.night));
     }
     return {

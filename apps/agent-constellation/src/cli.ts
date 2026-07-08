@@ -1,4 +1,4 @@
-import { EventBus } from "@umeplay/core-events";
+import { EventBus } from "@toygarden/core-events";
 import { initState, applyEvent, type ConstellationState } from "./index.ts";
 import { renderScreen, demoStream } from "./demo.ts";
 

@@ -1,5 +1,5 @@
 {
-  "name": "umeplay",
+  "name": "toygarden",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -10,7 +10,7 @@
     "apps/*"
   ],
   "bin": {
-    "umeplay": "bin/umeplay.mjs"
+    "toygarden": "bin/toygarden.mjs"
   },
   "files": [
     "bin",
@@ -52,7 +52,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/UMEBOSHIISAN/umeplay.git"
+    "url": "https://github.com/UMEBOSHIISAN/toygarden.git"
   },
   "engines": {
     "node": ">=22"

@@ -1,5 +1,5 @@
 import { execFileSync } from "node:child_process";
-import type { PlayEvent } from "@umeplay/contracts";
+import type { PlayEvent } from "@toygarden/contracts";
 import { parseGitLog, GIT_LOG_FORMAT, type GitCommit } from "./parse.js";
 
 /**

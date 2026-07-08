@@ -1,7 +1,7 @@
 /**
  * ansi.ts — ANSI SGR 付きテキストフレームをセル格子に変換する。
  *
- * umeplay の app が吐く 16 色 SGR（0/1/2/22/30-37/39/90-97）を解釈する。
+ * toygarden の app が吐く 16 色 SGR（0/1/2/22/30-37/39/90-97）を解釈する。
  * カーソル制御（2J/H/?25l 等）はフレーム単位描画では意味を持たないので読み飛ばす。
  */
 
@@ -23,7 +23,7 @@ export interface Grid {
   cells: (Cell | null)[][];
 }
 
-/** 全角判定（umeplay で使う範囲だけ: かな・CJK・全角形・記号の一部） */
+/** 全角判定（toygarden で使う範囲だけ: かな・CJK・全角形・記号の一部） */
 export function isWide(cp: number): boolean {
   return (
     (cp >= 0x1100 && cp <= 0x115f) ||

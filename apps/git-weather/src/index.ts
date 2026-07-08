@@ -1,5 +1,5 @@
-import type { GitCommit } from "@umeplay/core-git-observe";
-import type { Device } from "@umeplay/core-device";
+import type { GitCommit } from "@toygarden/core-git-observe";
+import type { Device } from "@toygarden/core-device";
 
 /**
  * git-weather （git-observe × device）

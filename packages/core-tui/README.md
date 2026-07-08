@@ -1,6 +1,6 @@
-# @umeplay/core-tui
+# @toygarden/core-tui
 
-ターミナル UI の最小基盤: 縦レーン描画・バッジ・ANSI カラー。依存は `@umeplay/contracts` のみ、
+ターミナル UI の最小基盤: 縦レーン描画・バッジ・ANSI カラー。依存は `@toygarden/contracts` のみ、
 実端末描画は持たない（文字列を生成するだけの純ロジック）。`secretary-today` の「優先順位レーン」
 表現を土台に、他 app が流用できる形に切り出したもの。
 
@@ -21,7 +21,7 @@
 ## 使用例
 
 ```ts
-import { renderLanes, badge, color, GREEN, type Lane } from "@umeplay/core-tui";
+import { renderLanes, badge, color, GREEN, type Lane } from "@toygarden/core-tui";
 
 const lanes: Lane[] = [
   { title: "投稿", items: [{ label: "朝の投稿", status: "ok" }] },
@@ -39,7 +39,7 @@ console.log(color(GREEN, "✓ done"));
 ## 使っている app
 
 `event-loom` / `focus-tally` / `git-replay` / `routing-radar` / `secretary-today` が
-`@umeplay/core-tui` を直接 import する（`apps/*/src/*.ts` を grep して実測）。
+`@toygarden/core-tui` を直接 import する（`apps/*/src/*.ts` を grep して実測）。
 
 ## 設計原則
 

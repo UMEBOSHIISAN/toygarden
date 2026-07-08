@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { MockDevice, selectDevice } from "@umeplay/core-device";
+import { MockDevice, selectDevice } from "@toygarden/core-device";
 
 describe("core-device HAL (mock)", () => {
   it("selectDevice defaults to mock", () => {
@@ -32,6 +32,6 @@ describe("core-device HAL (mock)", () => {
   });
 
   it("throws on unknown device", () => {
-    expect(() => selectDevice("nope")).toThrow(/unknown UMEPLAY_DEVICE/);
+    expect(() => selectDevice("nope")).toThrow(/unknown TOYGARDEN_DEVICE/);
   });
 });

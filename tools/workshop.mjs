@@ -142,7 +142,7 @@ const CORES = CORE_NAMES.map((name) => ({
 // parameter instead of owning an instance at module scope.
 const WIRING = {
   "core-events": {
-    imports: ['import { EventBus } from "@umeplay/core-events";', 'import type { PlayEvent } from "@umeplay/contracts";'],
+    imports: ['import { EventBus } from "@toygarden/core-events";', 'import type { PlayEvent } from "@toygarden/contracts";'],
     extras: [
       "/** core-events wiring sample: subscribe to a bus and receive event kinds. */",
       "export function attachTicker(bus: EventBus, onEvent: (e: PlayEvent) => void): () => void {",
@@ -151,7 +151,7 @@ const WIRING = {
     ],
   },
   "core-device": {
-    imports: ['import type { Device } from "@umeplay/core-device";'],
+    imports: ['import type { Device } from "@toygarden/core-device";'],
     extras: [
       "/** core-device wiring sample: draw one frame to whichever device you pass in (default: mock). */",
       "export function drawToDevice(device: Device, name: string, tick: number): void {",
@@ -163,7 +163,7 @@ const WIRING = {
     ],
   },
   "core-chiptune": {
-    imports: ['import { motifForEvent, type Motif } from "@umeplay/core-chiptune";', 'import type { PlayEvent } from "@umeplay/contracts";'],
+    imports: ['import { motifForEvent, type Motif } from "@toygarden/core-chiptune";', 'import type { PlayEvent } from "@toygarden/contracts";'],
     extras: [
       "/** core-chiptune wiring sample: the fanfare Motif for a deploy.success event. */",
       "export function fanfare(): Motif | null {",
@@ -173,7 +173,7 @@ const WIRING = {
     ],
   },
   "core-focus-log": {
-    imports: ['import { activityTally, type FocusEvent } from "@umeplay/core-focus-log";'],
+    imports: ['import { activityTally, type FocusEvent } from "@toygarden/core-focus-log";'],
     extras: [
       "/** core-focus-log wiring sample: turn a list of focus events into an activity tally. */",
       "export function tallyFocus(events: FocusEvent[]) {",
@@ -182,7 +182,7 @@ const WIRING = {
     ],
   },
   "core-git-observe": {
-    imports: ['import { parseGitLog, type GitCommit } from "@umeplay/core-git-observe";'],
+    imports: ['import { parseGitLog, type GitCommit } from "@toygarden/core-git-observe";'],
     extras: [
       "/** core-git-observe wiring sample: parse raw `git log` text into commits. */",
       "export function commitsFromLog(raw: string): GitCommit[] {",
@@ -191,7 +191,7 @@ const WIRING = {
     ],
   },
   "core-termgif": {
-    imports: ['import { hasGlyph } from "@umeplay/core-termgif";'],
+    imports: ['import { hasGlyph } from "@toygarden/core-termgif";'],
     extras: [
       "/** core-termgif wiring sample: does the font actually have this glyph (avoids silent block-fill fallback)? */",
       "export function isRenderable(ch: string): boolean {",
@@ -200,7 +200,7 @@ const WIRING = {
     ],
   },
   "core-tui": {
-    imports: ['import { renderLanes, type Lane } from "@umeplay/core-tui";'],
+    imports: ['import { renderLanes, type Lane } from "@toygarden/core-tui";'],
     extras: [
       "/** core-tui wiring sample: render the toy's name as a single ok lane. */",
       "export function statusLane(name: string): string {",
@@ -210,7 +210,7 @@ const WIRING = {
     ],
   },
   "core-worker-data": {
-    imports: ['import { parseCollapseStats, collapseToEvents } from "@umeplay/core-worker-data";'],
+    imports: ['import { parseCollapseStats, collapseToEvents } from "@toygarden/core-worker-data";'],
     extras: [
       "/** core-worker-data wiring sample: turn a collapse-stats TSV into PlayEvents. */",
       "export function eventsFromTsv(raw: string) {",
@@ -281,7 +281,7 @@ const CLEAR = "\x1b[2J\x1b[H";
 
 function renderScreen(cursor, selected) {
   const out = [];
-  out.push(`${CYAN}${BOLD}=== umeplay workshop ===${RESET}`);
+  out.push(`${CYAN}${BOLD}=== toygarden workshop ===${RESET}`);
   out.push(`${DIM}Pick parts, and a toy grows.${RESET}`);
   out.push("");
   CORES.forEach((core, i) => {

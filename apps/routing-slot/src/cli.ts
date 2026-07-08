@@ -1,5 +1,5 @@
 import { spin } from "./index.ts";
-import type { RoutingTrial } from "@umeplay/core-worker-data";
+import type { RoutingTrial } from "@toygarden/core-worker-data";
 import { renderSpinning, renderStopped } from "./view.ts";
 
 /**

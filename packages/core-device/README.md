@@ -1,7 +1,7 @@
-# @umeplay/core-device
+# @toygarden/core-device
 
 小型パネルデバイス（M5Stack / Ajazz AKP153 等）を1つの抽象 `Device` で扱う HAL
-（Hardware Abstraction Layer）。依存は `@umeplay/contracts` のみ。
+（Hardware Abstraction Layer）。依存は `@toygarden/contracts` のみ。
 
 app はハードを知らず、`Device` インターフェースだけを見る。実機ドライバがなくても
 既定の `MockDevice` で全 app / core が実機ゼロで開発・CI できる。Steam Deck は Linux PC 扱いで
@@ -18,7 +18,7 @@ HAL の外（`core-tui` 系 app がそのまま動く）。
 | `PanelSize` | interface | `{ width: number; height: number }` |
 | `RGB` | interface | `{ r: number; g: number; b: number }` |
 | `MockDevice` | class（`Device` 実装） | `new MockDevice(size?: PanelSize)` — 実機なしで動く既定デバイス |
-| `selectDevice` | 関数 | `selectDevice(name?: string): Device` — env `UMEPLAY_DEVICE` でドライバ選択 |
+| `selectDevice` | 関数 | `selectDevice(name?: string): Device` — env `TOYGARDEN_DEVICE` でドライバ選択 |
 
 `Device` インターフェース:
 
@@ -39,9 +39,9 @@ export interface Device {
 ## 使用例
 
 ```ts
-import { selectDevice, type Device } from "@umeplay/core-device";
+import { selectDevice, type Device } from "@toygarden/core-device";
 
-const device: Device = selectDevice(); // 既定は mock（UMEPLAY_DEVICE 未設定時）
+const device: Device = selectDevice(); // 既定は mock（TOYGARDEN_DEVICE 未設定時）
 
 device.draw({ op: "clear" });
 device.draw({ op: "text", x: 20, y: 20, text: "(・ω・)" });
@@ -54,7 +54,7 @@ const off = device.onButton((btn) => console.log("pressed", btn));
 ## 使っている app
 
 `agent-constellation` / `chiptune-clock` / `commit-constellation` / `desk-weather` /
-`focus-forge` / `git-weather` / `pomodoro-forge` / `ume-tamagotchi` が `@umeplay/core-device`
+`focus-forge` / `git-weather` / `pomodoro-forge` / `ume-tamagotchi` が `@toygarden/core-device`
 を直接 import する（`apps/*/src/*.ts` を grep して実測）。
 
 ## 設計原則

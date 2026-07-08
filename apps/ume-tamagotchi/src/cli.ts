@@ -1,4 +1,4 @@
-import type { PlayEvent } from "@umeplay/contracts";
+import type { PlayEvent } from "@toygarden/contracts";
 import { initPet, applyEvent, type Pet } from "./index.ts";
 import { renderPet } from "./view.ts";
 

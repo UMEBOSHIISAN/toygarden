@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
-import { EventBus } from "@umeplay/core-events";
-import type { PlayEvent } from "@umeplay/contracts";
+import { EventBus } from "@toygarden/core-events";
+import type { PlayEvent } from "@toygarden/contracts";
 
 describe("EventBus", () => {
   it("delivers events to subscribers", () => {

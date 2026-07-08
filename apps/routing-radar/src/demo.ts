@@ -3,9 +3,9 @@
  * confidence を 0 → 最終値へ徐々に伸ばしながら radar() を呼び直し、
  * バーが伸びる/確信度順の並びが入れ替わる様子を再現する。
  */
-import type { DemoSpec } from "@umeplay/core-termgif";
-import { seeded } from "@umeplay/core-termgif";
-import type { RoutingTrial } from "@umeplay/core-worker-data";
+import type { DemoSpec } from "@toygarden/core-termgif";
+import { seeded } from "@toygarden/core-termgif";
+import type { RoutingTrial } from "@toygarden/core-worker-data";
 import { radar } from "./index.ts";
 
 const CYAN = "\x1b[36m";

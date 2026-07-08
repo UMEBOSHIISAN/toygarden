@@ -1,7 +1,7 @@
 import { writeFileSync } from "node:fs";
 import { basename } from "node:path";
-import { commitsSince } from "@umeplay/core-git-observe";
-import { noteToFreq } from "@umeplay/core-chiptune";
+import { commitsSince } from "@toygarden/core-git-observe";
+import { noteToFreq } from "@toygarden/core-chiptune";
 import { commitsToMotif, commitsToWav } from "./index.ts";
 
 /**

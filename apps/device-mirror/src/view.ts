@@ -2,7 +2,7 @@
  * view.ts — device-mirror の画面描画（純関数・乱数なし）。demo.ts と cli.ts で共有する。
  * ベゼル + 液晶グリッド + LED ドット + A/B/C ボタン + 直近ログ、の順で組む。
  */
-import type { RGB } from "@umeplay/core-device";
+import type { RGB } from "@toygarden/core-device";
 import { BUTTON_LABELS, type MirrorState } from "./index.ts";
 
 const RESET = "\x1b[0m";

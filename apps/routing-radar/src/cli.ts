@@ -1,4 +1,4 @@
-import { loadRoutingTrials } from "@umeplay/core-worker-data";
+import { loadRoutingTrials } from "@toygarden/core-worker-data";
 import { radar } from "./index.ts";
 import { FINAL } from "./demo.ts";
 

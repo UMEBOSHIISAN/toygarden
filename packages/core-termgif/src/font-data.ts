@@ -4,7 +4,7 @@
  * 生成: tools/bake_font.mjs
  * 元データ: dhepper/font8x8 (Public Domain, IBM public domain VGA fonts 由来)
  *           https://github.com/dhepper/font8x8
- * 追加: umeplay 手描きグリフ（≡ ♪ ★ ● 矢印ほか・Public Domain として提供）
+ * 追加: toygarden 手描きグリフ（≡ ♪ ★ ● 矢印ほか・Public Domain として提供）
  *
  * 形式: 12バイト/グリフ [u32le codepoint][8バイト 行ビットマップ(bit0=左端)] を base64 直列化。
  * 収録: ASCII / Latin-1 / ギリシャ / 罫線 / ブロック / ひらがな / 追加記号 = 512 グリフ。

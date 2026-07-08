@@ -2,9 +2,9 @@
  * demo.ts — GIF 用デモ（DemoSpec 規約・決定論的）。
  * 実 git 履歴の代わりに seeded な合成コミット列を使い、タイムラプス再生を再現する。
  */
-import type { DemoSpec } from "@umeplay/core-termgif";
-import { seeded } from "@umeplay/core-termgif";
-import type { GitCommit } from "@umeplay/core-git-observe";
+import type { DemoSpec } from "@toygarden/core-termgif";
+import { seeded } from "@toygarden/core-termgif";
+import type { GitCommit } from "@toygarden/core-git-observe";
 import { renderScreen } from "./index.ts";
 
 /** seeded rng で合成コミット列を作る（新しい順・index 0 が最新）。 */
@@ -28,7 +28,7 @@ export function demo(): DemoSpec {
   const commits = synthCommits(rnd, 16);
   const frames: string[] = [];
   for (let revealed = 1; revealed <= commits.length; revealed++) {
-    frames.push(renderScreen(commits, revealed, "umeplay"));
+    frames.push(renderScreen(commits, revealed, "toygarden"));
   }
   // 最終フレームを数枚保持（止め絵にならないよう保険）
   for (let i = 0; i < 6; i++) frames.push(frames[frames.length - 1]);

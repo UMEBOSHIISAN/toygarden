@@ -1,7 +1,7 @@
-import type { Agent, PlayEvent } from "@umeplay/contracts";
-import type { CollapseStat } from "@umeplay/core-worker-data";
-import { motifForEvent, type Motif } from "@umeplay/core-chiptune";
-import { EventBus } from "@umeplay/core-events";
+import type { Agent, PlayEvent } from "@toygarden/contracts";
+import type { CollapseStat } from "@toygarden/core-worker-data";
+import { motifForEvent, type Motif } from "@toygarden/core-chiptune";
+import { EventBus } from "@toygarden/core-events";
 
 /**
  * collapse-siren （worker-data × chiptune × events）

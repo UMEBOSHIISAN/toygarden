@@ -1,5 +1,5 @@
 /**
- * splash.mjs — `npx umeplay` の目玉になる、映画的な起動スプラッシュ（3.5秒/20fps）。
+ * splash.mjs — `npx toygarden` の目玉になる、映画的な起動スプラッシュ（3.5秒/20fps）。
  * GLM-5.2 の絵コンテ（Beat1〜Beat8）に忠実な実装。技術都合で細部は調整しているが、
  * 各ビートの演出意図（星の湧き→ロゴの色収差収束→スライド→グリッド床→魚群→会話ボックス
  * →ハート鼓動→ノイズ暗転からのシームレスな着地）は崩していない。
@@ -7,7 +7,7 @@
  *   node tools/splash.mjs        # 単体実行（そのまま3.5秒のスプラッシュだけ流す）
  *
  * playSplash() は Promise を返す。任意のキー入力で即座に resolve（スキップ）する。
- * 非TTY・UMEPLAY_NO_SPLASH=1・80x24未満の端末では、それぞれ「出さない」「出さない」
+ * 非TTY・TOYGARDEN_NO_SPLASH=1・80x24未満の端末では、それぞれ「出さない」「出さない」
  * 「簡易版に degrade」という3つの縮退経路を持つ（80x24未満でも完全な no-op にはしない。
  * ロゴ+ボックスだけの簡易版で "起動した感" は残す）。
  *
@@ -53,7 +53,7 @@ function sleep(ms) {
   return new Promise((r) => setTimeout(r, ms));
 }
 
-// --- 手組みの5行ブロックロゴ（"umeplay"。フォント制約なしの自由描画） -------
+// --- 手組みの5行ブロックロゴ（"toygarden"。フォント制約なしの自由描画） -------
 const GLYPHS = {
   u: ["█ █", "█ █", "█ █", "█ █", " █ "],
   m: ["█   █", "██ ██", "█ █ █", "█   █", "█   █"],
@@ -62,8 +62,14 @@ const GLYPHS = {
   l: ["█  ", "█  ", "█  ", "█  ", "███"],
   a: [" █ ", "█ █", "███", "█ █", "█ █"],
   y: ["█ █", "█ █", " █ ", " █ ", " █ "],
+  t: [" █ ", "███", " █ ", " █ ", " ██"],
+  o: ["███", "█ █", "█ █", "█ █", "███"],
+  g: ["███", "█  ", "█ ██", "█  █", " ███"],
+  r: ["██ ", "█ █", "██ ", "█ █", "█ █"],
+  d: ["  █", "  █", "███", "█ █", "███"],
+  n: ["██ ", "█ █", "█ █", "█ █", "█ █"],
 };
-const LOGO_WORD = "umeplay";
+const LOGO_WORD = "toygarden";
 const LOGO_ROWS = 5;
 const LOGO_GAP = 1;
 function logoWidth() {
@@ -386,12 +392,12 @@ async function playSplashSimple() {
 }
 
 /**
- * スプラッシュを再生する。非TTY・UMEPLAY_NO_SPLASH=1 では即 resolve（何も出さない）。
+ * スプラッシュを再生する。非TTY・TOYGARDEN_NO_SPLASH=1 では即 resolve（何も出さない）。
  * 80x24未満のTTYでは簡易版に degrade する。
  */
 export function playSplash() {
   if (!process.stdout.isTTY || !process.stdin.isTTY) return Promise.resolve();
-  if (process.env.UMEPLAY_NO_SPLASH === "1") return Promise.resolve();
+  if (process.env.TOYGARDEN_NO_SPLASH === "1") return Promise.resolve();
   const cols = process.stdout.columns ?? COLS;
   const rows = process.stdout.rows ?? ROWS;
   if (cols < COLS || rows < ROWS) return playSplashSimple();

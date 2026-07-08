@@ -4,10 +4,10 @@
  * PlayEvent 風シナリオ（投稿 → 承認待ち → deploy成功 → dispatch → route）を
  * 実際の mirror()/applyDraw 等を叩いて液晶へ描き、途中で seeded 乱数によりボタン押下も挟む。
  */
-import type { DemoSpec } from "@umeplay/core-termgif";
-import { seeded } from "@umeplay/core-termgif";
-import { MockDevice } from "@umeplay/core-device";
-import type { PlayEvent } from "@umeplay/contracts";
+import type { DemoSpec } from "@toygarden/core-termgif";
+import { seeded } from "@toygarden/core-termgif";
+import { MockDevice } from "@toygarden/core-device";
+import type { PlayEvent } from "@toygarden/contracts";
 import { mirror, labelFor, ledFor } from "./index.ts";
 import { renderGadget } from "./view.ts";
 

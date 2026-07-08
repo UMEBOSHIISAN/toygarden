@@ -1,7 +1,7 @@
-# @umeplay/core-save
+# @toygarden/core-save
 
-A fail-soft, zero-dependency JSON persistence layer for small states in `~/.umeplay`.
-Dependency: `@umeplay/contracts` only.
+A fail-soft, zero-dependency JSON persistence layer for small states in `~/.toygarden`.
+Dependency: `@toygarden/contracts` only.
 
 `[ core-save ] :: keep your toy's memory safe`
 
@@ -11,7 +11,7 @@ The full public surface exported by `src/index.ts` (implementation lives in `src
 
 | API | Kind | Signature |
 |---|---|---|
-| `SaveOptions` | type | `{ dir?: string }`（テスト用注入。未指定時は `~/.umeplay/`） |
+| `SaveOptions` | type | `{ dir?: string }`（テスト用注入。未指定時は `~/.toygarden/`） |
 | `SaveResult<T>` | type | `{ ok: true; data: T } \| { ok: false; reason: "EMPTY" \| "CORRUPTED" }` |
 | `parseSave` | function | `<T>(json: string, fallback: T): T`（純ロジック。壊れた JSON は例外を投げず fallback） |
 | `applyUpdate` | function | `<T>(current: T, updater: (draft: T) => void): T`（純ロジック。ディープコピー→更新→返却） |
@@ -22,7 +22,7 @@ The full public surface exported by `src/index.ts` (implementation lives in `src
 ## Usage
 
 ```ts
-import { loadSave, saveSave, applyUpdate } from "@umeplay/core-save";
+import { loadSave, saveSave, applyUpdate } from "@toygarden/core-save";
 
 const fallback = { best: 0 };
 const result = await loadSave("cpu-diner", fallback);

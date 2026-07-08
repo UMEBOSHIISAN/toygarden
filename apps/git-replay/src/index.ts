@@ -1,5 +1,5 @@
-import type { GitCommit } from "@umeplay/core-git-observe";
-import { GREEN, RED, DIM, YELLOW, color } from "@umeplay/core-tui";
+import type { GitCommit } from "@toygarden/core-git-observe";
+import { GREEN, RED, DIM, YELLOW, color } from "@toygarden/core-tui";
 
 /**
  * git-replay — git-vibes 拡張。

@@ -3,7 +3,7 @@
  * dirty/fail/stale の推移を天気で見せる: はれ → くもり → あめ → あらし → 回復。
  * `npm run gifs` が拾って demo/gifs/desk-weather.gif を再生成する。
  */
-import type { DemoSpec } from "@umeplay/core-termgif";
+import type { DemoSpec } from "@toygarden/core-termgif";
 import { weatherFor, score, type Metrics, type Weather } from "./index.ts";
 
 const RESET = "\x1b[0m";

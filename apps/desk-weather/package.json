@@ -1,9 +1,9 @@
 {
-  "name": "@umeplay/desk-weather",
+  "name": "@toygarden/desk-weather",
   "version": "0.0.0",
   "type": "module",
   "main": "src/index.ts",
   "dependencies": {
-    "@umeplay/core-device": "*"
+    "@toygarden/core-device": "*"
   }
 }

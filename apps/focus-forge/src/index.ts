@@ -1,6 +1,6 @@
-import type { FocusEvent } from "@umeplay/core-focus-log";
-import type { Device } from "@umeplay/core-device";
-import { MOTIFS, type Motif } from "@umeplay/core-chiptune";
+import type { FocusEvent } from "@toygarden/core-focus-log";
+import type { Device } from "@toygarden/core-device";
+import { MOTIFS, type Motif } from "@toygarden/core-chiptune";
 
 /**
  * focus-forge （focus-log × chiptune × device）

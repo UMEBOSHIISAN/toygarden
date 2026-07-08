@@ -3,9 +3,9 @@
  * `npm run gifs` が拾って demo/gifs/routing-slot.gif を再生成する。
  * 実際の spin() を seeded rng で3回回し、3回目で jackpot が揃う（seed=6 で確認済み）。
  */
-import { seeded, type DemoSpec } from "@umeplay/core-termgif";
+import { seeded, type DemoSpec } from "@toygarden/core-termgif";
 import { spin } from "./index.ts";
-import type { RoutingTrial } from "@umeplay/core-worker-data";
+import type { RoutingTrial } from "@toygarden/core-worker-data";
 import { renderSpinning, renderStopped } from "./view.ts";
 
 // routing_trial_ledger 由来の予測データ（形は RoutingTrial 実物と同じ）

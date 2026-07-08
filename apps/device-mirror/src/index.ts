@@ -1,5 +1,5 @@
-import type { Device, DrawCommand, PanelSize, RGB } from "@umeplay/core-device";
-import type { PlayEvent } from "@umeplay/contracts";
+import type { Device, DrawCommand, PanelSize, RGB } from "@toygarden/core-device";
+import type { PlayEvent } from "@toygarden/contracts";
 
 /**
  * device-mirror — 実機を買う前に、実機が見える。

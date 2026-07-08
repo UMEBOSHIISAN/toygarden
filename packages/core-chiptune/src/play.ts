@@ -11,7 +11,7 @@ import type { Motif } from "./motif.js";
  */
 export function play(motif: Motif): void {
   const wav = encodeWav(renderPCM(motif));
-  const dir = mkdtempSync(join(tmpdir(), "umeplay-chiptune-"));
+  const dir = mkdtempSync(join(tmpdir(), "toygarden-chiptune-"));
   const file = join(dir, "motif.wav");
   writeFileSync(file, wav);
   execFileSync("afplay", [file]);

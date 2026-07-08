@@ -2,7 +2,7 @@ import { readdirSync, existsSync } from "node:fs";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import { describe, it, expect } from "vitest";
-import { hasGlyph, parseFrame, type DemoSpec } from "@umeplay/core-termgif";
+import { hasGlyph, parseFrame, type DemoSpec } from "@toygarden/core-termgif";
 
 /**
  * 全 app の demo() が実際に GIF へ描く文字は、core-termgif のフォント(font8x8)で

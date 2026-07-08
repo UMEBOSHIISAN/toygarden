@@ -1,5 +1,5 @@
 /**
- * hello.mjs — umeplay 初回起動のオンボーディング。
+ * hello.mjs — toygarden 初回起動のオンボーディング。
  * Undertale 風の会話ボックス（白の二重線）で挨拶し、タイプライター演出のあと
  * 「PLAY/BUILD/WATCH/BYE」を ♥ カーソルで選ばせる。
  *
@@ -9,14 +9,14 @@
  * dim であしらいの日本語を1行添える。非TTY（CI・パイプ経由）では会話ボックスも
  * キー入力も出さず、英語の案内文だけ出して exit 0。
  *
- * UMEPLAY_CONTEXT=package のとき（npx 経由の bin から渡される契約）は案内コマンドを
- * `npx umeplay <sub>` 形式に切り替える。未設定 or "repo" なら従来の `npm run <sub>` 形式。
+ * TOYGARDEN_CONTEXT=package のとき（npx 経由の bin から渡される契約）は案内コマンドを
+ * `npx toygarden <sub>` 形式に切り替える。未設定 or "repo" なら従来の `npm run <sub>` 形式。
  * BUILD は repo コンテキストでは tools/workshop.mjs を直接起動する（PLAY が tour.mjs を
  * 起動するのと同じ流儀）。package コンテキストでは workshop がリポジトリを必要とするため
  * clone を案内するだけに留める。
  *
  * TTY のときだけ冒頭で映画的スプラッシュ（splash.mjs）を1回流してから会話ボックスへ繋ぐ。
- * `UMEPLAY_NO_SPLASH=1` で省略できる（毎回見るとうざくなるため・playSplash 側も同じ変数を見る）。
+ * `TOYGARDEN_NO_SPLASH=1` で省略できる（毎回見るとうざくなるため・playSplash 側も同じ変数を見る）。
  */
 import { existsSync } from "node:fs";
 import { join, resolve } from "node:path";
@@ -31,15 +31,15 @@ const WHITE = "\x1b[97m";
 const DIM = "\x1b[2m";
 const MAGENTA = "\x1b[35m";
 
-const CONTEXT = process.env.UMEPLAY_CONTEXT === "package" ? "package" : "repo";
+const CONTEXT = process.env.TOYGARDEN_CONTEXT === "package" ? "package" : "repo";
 function cmd(sub) {
-  return CONTEXT === "package" ? `npx umeplay ${sub}` : `npm run ${sub}`;
+  return CONTEXT === "package" ? `npx toygarden ${sub}` : `npm run ${sub}`;
 }
-const REPO_CLONE_HINT = "git clone https://github.com/UMEBOSHIISAN/umeplay.git";
+const REPO_CLONE_HINT = "git clone https://github.com/UMEBOSHIISAN/toygarden.git";
 
 // EN 主役 + JP dim 併記（タイプライターは EN 行のみ・JP は静かな添え書き）
 const GREETING_LINES = [
-  { en: "* Welcome to umeplay.", jp: "ようこそ。" },
+  { en: "* Welcome to toygarden.", jp: "ようこそ。" },
   { en: "* This is where terminal toys grow.", jp: "たんまつで あそびが はえる ばしょ。" },
   { en: "* So, what shall we do?", jp: "さあ、なにを する?" },
 ];
@@ -243,7 +243,7 @@ async function main() {
       CONTEXT === "package"
         ? `  building needs the repo -> ${REPO_CLONE_HINT}`
         : `  ${cmd("workshop")}  -- pick parts and grow a toy`;
-    console.log("Welcome to umeplay. No interactive terminal (TTY) here, so just the basics:");
+    console.log("Welcome to toygarden. No interactive terminal (TTY) here, so just the basics:");
     console.log(`  ${cmd("tour")}      -- watch every toy, one after another`);
     console.log(buildLine);
     console.log(`  ${cmd("play")}      -- list of individual toys`);
@@ -251,7 +251,7 @@ async function main() {
     return;
   }
 
-  if (process.env.UMEPLAY_NO_SPLASH !== "1") {
+  if (process.env.TOYGARDEN_NO_SPLASH !== "1") {
     await playSplash();
   }
 

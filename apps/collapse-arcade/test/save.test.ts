@@ -8,7 +8,7 @@ import { loadBest, saveBest } from "../src/save.js";
 let savePath: string;
 
 beforeEach(() => {
-  const dir = mkdtempSync(join(tmpdir(), "umeplay-save-test-"));
+  const dir = mkdtempSync(join(tmpdir(), "toygarden-save-test-"));
   // 未作成の nested ディレクトリを指す → mkdirSync(recursive) の経路も一緒に検証する。
   savePath = join(dir, "nested", "save.json");
 });

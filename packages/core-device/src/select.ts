@@ -2,12 +2,12 @@ import type { Device } from "./hal.js";
 import { MockDevice } from "./devices/mock.js";
 
 /**
- * env UMEPLAY_DEVICE でドライバ選択（設計 §4.5）。
+ * env TOYGARDEN_DEVICE でドライバ選択（設計 §4.5）。
  * 新デバイスはここに case を1行足すだけ。実機ドライバ（m5-*, ajazz-akp153）は
  * 後続フェーズで追加する。既定は mock（実機なしで動く）。
  */
 export function selectDevice(
-  name: string = process.env.UMEPLAY_DEVICE ?? "mock",
+  name: string = process.env.TOYGARDEN_DEVICE ?? "mock",
 ): Device {
   switch (name) {
     case "mock":
@@ -17,6 +17,6 @@ export function selectDevice(
     // case "m5-stickc":    return new M5StickCDevice();     // TODO(P1+): M5StickC Plus
     // case "ajazz-akp153": return new AjazzAkp153Device();  // TODO(P1+): Ajazz AKP153 (Stream Deck系)
     default:
-      throw new Error(`unknown UMEPLAY_DEVICE: ${name} (available: mock)`);
+      throw new Error(`unknown TOYGARDEN_DEVICE: ${name} (available: mock)`);
   }
 }

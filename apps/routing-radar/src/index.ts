@@ -1,5 +1,5 @@
-import type { RoutingTrial } from "@umeplay/core-worker-data";
-import { color, YELLOW, GREEN } from "@umeplay/core-tui";
+import type { RoutingTrial } from "@toygarden/core-worker-data";
+import { color, YELLOW, GREEN } from "@toygarden/core-tui";
 
 /**
  * routing-radar （worker-data × tui）

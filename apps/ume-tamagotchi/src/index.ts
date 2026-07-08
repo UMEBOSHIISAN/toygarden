@@ -1,5 +1,5 @@
-import type { PlayEvent } from "@umeplay/contracts";
-import type { Device } from "@umeplay/core-device";
+import type { PlayEvent } from "@toygarden/contracts";
+import type { Device } from "@toygarden/core-device";
 
 /**
  * ume-tamagotchi — うめこ/しそこ（ブランドキャラ）を育成。

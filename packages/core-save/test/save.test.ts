@@ -2,7 +2,7 @@ import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
-import { applyUpdate, loadSave, parseSave, resolveSavePath, saveSave } from "@umeplay/core-save";
+import { applyUpdate, loadSave, parseSave, resolveSavePath, saveSave } from "@toygarden/core-save";
 
 const tmpDirs: string[] = [];
 async function makeTmpDir(): Promise<string> {

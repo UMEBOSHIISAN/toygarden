@@ -3,7 +3,7 @@
  * 時刻が正時をまたぐ瞬間に chimeFor(hour) の鐘が鳴る様子を、大きな7セグ風の数字と
  * 鳴った音符（♪）で見せる。`npm run gifs` が拾って demo/gifs/chiptune-clock.gif を再生成する。
  */
-import type { DemoSpec } from "@umeplay/core-termgif";
+import type { DemoSpec } from "@toygarden/core-termgif";
 import { chimeFor } from "./index.ts";
 
 const RESET = "\x1b[0m";

@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { spawn, shoot, cleared } from "../src/index.js";
-import type { CollapseStat } from "@umeplay/core-worker-data";
+import type { CollapseStat } from "@toygarden/core-worker-data";
 
 const stats: CollapseStat[] = [
   { agent: "codex", rate: 0.19 }, // 敵

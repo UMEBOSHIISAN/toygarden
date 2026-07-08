@@ -4,8 +4,8 @@
  * 実際の forgeFromFocus() を「イベントの先頭からi件」で繰り返し叩き、
  * 時系列に沿った ore/ingots の推移をそのまま描く（sort は時刻順で安定なので prefix = 途中経過と一致）。
  */
-import type { DemoSpec } from "@umeplay/core-termgif";
-import type { FocusEvent } from "@umeplay/core-focus-log";
+import type { DemoSpec } from "@toygarden/core-termgif";
+import type { FocusEvent } from "@toygarden/core-focus-log";
 import { forgeFromFocus } from "./index.ts";
 import { renderForge } from "./view.ts";
 

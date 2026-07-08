@@ -7,17 +7,17 @@ const root = process.cwd();
 export default defineConfig({
   resolve: {
     alias: {
-      "@umeplay/contracts": resolve(root, "contracts/index.ts"),
-      "@umeplay/core-events": resolve(root, "packages/core-events/src/index.ts"),
-      "@umeplay/core-device": resolve(root, "packages/core-device/src/index.ts"),
-      "@umeplay/core-git-observe": resolve(root, "packages/core-git-observe/src/index.ts"),
-      "@umeplay/core-chiptune": resolve(root, "packages/core-chiptune/src/index.ts"),
-      "@umeplay/core-tui": resolve(root, "packages/core-tui/src/index.ts"),
-      "@umeplay/core-worker-data": resolve(root, "packages/core-worker-data/src/index.ts"),
-      "@umeplay/core-focus-log": resolve(root, "packages/core-focus-log/src/index.ts"),
-      "@umeplay/core-termgif": resolve(root, "packages/core-termgif/src/index.ts"),
-      "@umeplay/core-sysmon": resolve(root, "packages/core-sysmon/src/index.ts"),
-      "@umeplay/core-save": resolve(root, "packages/core-save/src/index.ts"),
+      "@toygarden/contracts": resolve(root, "contracts/index.ts"),
+      "@toygarden/core-events": resolve(root, "packages/core-events/src/index.ts"),
+      "@toygarden/core-device": resolve(root, "packages/core-device/src/index.ts"),
+      "@toygarden/core-git-observe": resolve(root, "packages/core-git-observe/src/index.ts"),
+      "@toygarden/core-chiptune": resolve(root, "packages/core-chiptune/src/index.ts"),
+      "@toygarden/core-tui": resolve(root, "packages/core-tui/src/index.ts"),
+      "@toygarden/core-worker-data": resolve(root, "packages/core-worker-data/src/index.ts"),
+      "@toygarden/core-focus-log": resolve(root, "packages/core-focus-log/src/index.ts"),
+      "@toygarden/core-termgif": resolve(root, "packages/core-termgif/src/index.ts"),
+      "@toygarden/core-sysmon": resolve(root, "packages/core-sysmon/src/index.ts"),
+      "@toygarden/core-save": resolve(root, "packages/core-save/src/index.ts"),
     },
   },
   test: {

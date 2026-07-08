@@ -1,6 +1,6 @@
 # CONTRIBUTING — 拡張のしかた（正本）
 
-umeplay を「いつでも接続できる」状態に保つための規約。ガチガチにはしない。守るのは依存方向と配置だけ。
+toygarden を「いつでも接続できる」状態に保つための規約。ガチガチにはしない。守るのは依存方向と配置だけ。
 
 ## 配置ルール
 
@@ -66,8 +66,8 @@ npm run gifs -- my-toy   # demo/gifs/my-toy.gif を生成
   予約語 `random`（`npm run play random` と衝突）は弾かれる。
 - 生成物の `index.ts`（純ロジック）/ `cli.ts`（実行）/ `demo.ts`（GIF デモ・決定論的）の
   三分割はそのまま「あるべき形」。ここを書き換えて育てる。
-- core を使うときは `apps/my-toy/package.json` に `@umeplay/core-<domain>` 依存を足し、
-  `import { ... } from "@umeplay/core-<domain>"` で1個以上組み合わせる。
+- core を使うときは `apps/my-toy/package.json` に `@toygarden/core-<domain>` 依存を足し、
+  `import { ... } from "@toygarden/core-<domain>"` で1個以上組み合わせる。
   core をまたぐ再利用ロジックは app に書かず、core に落とす。
 - 実行アプリとして root スクリプトから叩けるようにするなら、root `package.json` の `scripts` に
   `build:<name>` / `<name>` を追加（`esbuild` でバンドル → `node dist/<name>.mjs`。既存の
@@ -76,8 +76,8 @@ npm run gifs -- my-toy   # demo/gifs/my-toy.gif を生成
 
 ### 手動で足す完全手順（scaffolder を使わない場合）
 
-1. `apps/<name>/` を作る（`src/index.ts` に純ロジック、`package.json` に `@umeplay/*` 依存を宣言）
-2. 使う core を `import { ... } from "@umeplay/core-<domain>"` で1個以上組み合わせる。
+1. `apps/<name>/` を作る（`src/index.ts` に純ロジック、`package.json` に `@toygarden/*` 依存を宣言）
+2. 使う core を `import { ... } from "@toygarden/core-<domain>"` で1個以上組み合わせる。
    core をまたぐ実装（app 固有の再利用ロジック）は書かない — core に落とす
 3. **`src/demo.ts` を書く**（GIF 用デモ・決定論的）。規約は `packages/core-termgif/README.md` の
    「デモ規約（DemoSpec）」を参照。乱数は必ず `seeded()` で固定し、同じ入力から同じ GIF が出ること
@@ -100,7 +100,7 @@ npm run gifs -- my-toy   # demo/gifs/my-toy.gif を生成
 
 ```
 packages/core-events/
-├── package.json     # name = @umeplay/core-<domain>, deps は @umeplay/contracts のみ
+├── package.json     # name = @toygarden/core-<domain>, deps は @toygarden/contracts のみ
 ├── tsconfig.json    # tsconfig.base.json を extends するだけ
 ├── src/
 │   ├── index.ts     # 公開 API を re-export する薄い入口（例: export { EventBus } from "./bus.js";）
@@ -114,13 +114,13 @@ packages/core-events/
 
 ```json
 {
-  "name": "@umeplay/core-<domain>",
+  "name": "@toygarden/core-<domain>",
   "version": "0.0.0",
   "type": "module",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "dependencies": {
-    "@umeplay/contracts": "*"
+    "@toygarden/contracts": "*"
   }
 }
 ```
@@ -131,23 +131,23 @@ packages/core-events/
 2. **純ロジック（テスト対象）と副作用境界（DB/ファイル/外部プロセス呼び出し・テスト対象外）を
    別ファイルに分ける**（既存 core 全てがこの分離を守っている）。`src/index.ts` は公開 API を
    re-export するだけの薄い入口にする
-3. **依存方向を守る（絶対）**: core が import してよいのは `@umeplay/contracts` **のみ**。
+3. **依存方向を守る（絶対）**: core が import してよいのは `@toygarden/contracts` **のみ**。
    他の core を直接 import しない（core 同士の連携は `PlayEvent` 型経由）。app は絶対に import しない
 4. **`tsconfig.base.json` の `paths` に1行追加**:
    ```json
-   "@umeplay/core-<domain>": ["packages/core-<domain>/src/index.ts"]
+   "@toygarden/core-<domain>": ["packages/core-<domain>/src/index.ts"]
    ```
 5. **`vitest.config.ts` の `resolve.alias` に1行追加**（`tsconfig.base.json` と必ず一致させる）:
    ```ts
-   "@umeplay/core-<domain>": resolve(root, "packages/core-<domain>/src/index.ts"),
+   "@toygarden/core-<domain>": resolve(root, "packages/core-<domain>/src/index.ts"),
    ```
 6. **`test/*.test.ts` で純ロジックを vitest unit テスト**（必須）。`core-events` の
    `test/bus.test.ts` と同じ粒度で。`npm run check` が緑になるまで
 7. `README.md`（本パッケージ用）を作成: 責務1文 / 提供API表 / 使用例 / 使っている app / 設計原則
    （`packages/core-events/README.md` を見本にした形式）
 8. **root `README.md` / `README.ja.md` の「部品カタログ（packages/）」表に1行追加**
-9. その core を使うおもちゃ側は、`apps/<name>/package.json` に `@umeplay/core-<domain>` 依存を足し、
-   `import { ... } from "@umeplay/core-<domain>"` で掛け合わせる（→「新しい遊び（app）を足す」参照）
+9. その core を使うおもちゃ側は、`apps/<name>/package.json` に `@toygarden/core-<domain>` 依存を足し、
+   `import { ... } from "@toygarden/core-<domain>"` で掛け合わせる（→「新しい遊び（app）を足す」参照）
 
 ## PR 前チェック
 

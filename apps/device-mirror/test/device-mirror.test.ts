@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { MockDevice } from "@umeplay/core-device";
-import { hasGlyph } from "@umeplay/core-termgif";
+import { MockDevice } from "@toygarden/core-device";
+import { hasGlyph } from "@toygarden/core-termgif";
 import {
   cellGrid,
   initMirror,

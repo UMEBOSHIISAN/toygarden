@@ -7,8 +7,8 @@
  * レーン title は index.ts の PRIORITY（漢字）が正だが、GIF フォントは漢字未収録のため
  * 表示だけ かな に写し替える（buildLanes / blockedCount のロジックは実物を叩く）。
  */
-import { seeded, type DemoSpec } from "@umeplay/core-termgif";
-import { renderLanes, badge, type Lane } from "@umeplay/core-tui";
+import { seeded, type DemoSpec } from "@toygarden/core-termgif";
+import { renderLanes, badge, type Lane } from "@toygarden/core-tui";
 import { buildLanes, blockedCount, PRIORITY, type TodayState, type LaneKey } from "./index.ts";
 
 const CYAN = "\x1b[36m";

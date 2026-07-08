@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * umeplay — thin router for `npx umeplay`.
+ * toygarden — thin router for `npx toygarden`.
  *
  * package.json is still `"private": true`; a human must flip that to
  * `false` right before `npm publish`. This file makes no assumption about
@@ -15,23 +15,23 @@
  *      esbuild-bundles them on demand (requires devDependencies).
  *
  * Resolves all paths from this file's own location, so it works from any
- * cwd (that's the point of `npx umeplay`).
+ * cwd (that's the point of `npx toygarden`).
  *
  * Subcommands:
- *   umeplay                -- hello (onboarding), falls back to a toy list
- *   umeplay tour           -- auto-play every toy in sequence
- *   umeplay list           -- list every toy
- *   umeplay play [name]    -- list (no name) or launch a toy by name
- *   umeplay workshop       -- pick parts and grow a new toy (repo only)
- *   umeplay new            -- scaffold a new toy (repo only)
- *   umeplay <name>         -- shorthand for `umeplay play <name>`
+ *   toygarden                -- hello (onboarding), falls back to a toy list
+ *   toygarden tour           -- auto-play every toy in sequence
+ *   toygarden list           -- list every toy
+ *   toygarden play [name]    -- list (no name) or launch a toy by name
+ *   toygarden workshop       -- pick parts and grow a new toy (repo only)
+ *   toygarden new            -- scaffold a new toy (repo only)
+ *   toygarden <name>         -- shorthand for `toygarden play <name>`
  *
  * Execution context contract: every child process spawned by this router
- * gets `UMEPLAY_CONTEXT=repo|package` in its environment. "repo" means this
+ * gets `TOYGARDEN_CONTEXT=repo|package` in its environment. "repo" means this
  * is a source checkout (apps/ sources + workspaces package.json present).
  * "package" means this is an installed npm package (npx run, no sources).
  * tools/*.mjs may read this var to phrase guidance as `npm run …` (repo) or
- * `npx umeplay …` (package) instead of hardcoding one form.
+ * `npx toygarden …` (package) instead of hardcoding one form.
  */
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join, dirname } from "node:path";
@@ -64,17 +64,17 @@ const context = detectContext();
 
 // The command form to suggest to the user, adapted to how they're running us.
 function playHint(name) {
-  return context === "repo" ? `npm run play ${name}` : `npx umeplay ${name}`;
+  return context === "repo" ? `npm run play ${name}` : `npx toygarden ${name}`;
 }
 
 function run(scriptPath, args) {
   const child = spawn(process.execPath, [scriptPath, ...args], {
     stdio: "inherit",
-    env: { ...process.env, UMEPLAY_CONTEXT: context },
+    env: { ...process.env, TOYGARDEN_CONTEXT: context },
   });
   child.on("exit", (code) => process.exit(code ?? 0));
   child.on("error", (err) => {
-    console.error(`umeplay: failed to run ${scriptPath}: ${err.message}`);
+    console.error(`toygarden: failed to run ${scriptPath}: ${err.message}`);
     process.exit(1);
   });
 }
@@ -82,7 +82,7 @@ function run(scriptPath, args) {
 function delegateToPlay(args) {
   const playScript = join(root, "tools", "play.mjs");
   if (!existsSync(playScript)) {
-    console.error("umeplay: tools/play.mjs not found — this package looks incomplete.");
+    console.error("toygarden: tools/play.mjs not found — this package looks incomplete.");
     process.exit(1);
   }
   run(playScript, args);
@@ -108,13 +108,13 @@ function runPrebuilt(name, args) {
 
   if (hits.length === 0) {
     console.error(
-      `umeplay: "${name}" に一致する app がない。候補:\n` +
+      `toygarden: "${name}" に一致する app がない。候補:\n` +
         names.map((n) => `  ${playHint(n)}`).join("\n")
     );
     process.exit(1);
   }
   if (hits.length > 1) {
-    console.error(`umeplay: "${name}" が曖昧: ${hits.join(", ")}`);
+    console.error(`toygarden: "${name}" が曖昧: ${hits.join(", ")}`);
     process.exit(1);
   }
   run(join(distAppsDir, `${hits[0]}.mjs`), args);
@@ -127,7 +127,7 @@ function handlePlayName(name, args) {
     delegateToPlay([name, ...args]);
     return;
   }
-  console.error(`umeplay: "${name}" に一致する app が見つからない（prebuilt bundle が無い）。`);
+  console.error(`toygarden: "${name}" に一致する app が見つからない（prebuilt bundle が無い）。`);
   process.exit(1);
 }
 
@@ -138,7 +138,7 @@ function handleList() {
   }
   const names = prebuiltNames();
   if (names.length === 0) {
-    console.error("umeplay: 遊べる toy が見つからない（dist/apps が空）。");
+    console.error("toygarden: 遊べる toy が見つからない（dist/apps が空）。");
     process.exit(1);
   }
   console.log(`おもちゃ箱（${names.length}本）:`);
@@ -161,12 +161,12 @@ function handleTour(args) {
   // (no apps/ sources, esbuild not shipped) it would crash instead of
   // running — guard on context rather than mere file existence.
   if (context === "package") {
-    console.error("umeplay: tour needs the repo (esbuild + toy sources aren't shipped in the npx package).");
+    console.error("toygarden: tour needs the repo (esbuild + toy sources aren't shipped in the npx package).");
     console.error("");
-    console.error("  git clone https://github.com/UMEBOSHIISAN/umeplay.git");
-    console.error("  cd umeplay && npm install && npm run tour");
+    console.error("  git clone https://github.com/UMEBOSHIISAN/toygarden.git");
+    console.error("  cd toygarden && npm install && npm run tour");
     console.error("");
-    console.error("Meanwhile: npx umeplay list / npx umeplay <name>");
+    console.error("Meanwhile: npx toygarden list / npx toygarden <name>");
     process.exit(1);
   }
   const tourScript = join(root, "tools", "tour.mjs");
@@ -174,7 +174,7 @@ function handleTour(args) {
     run(tourScript, args);
     return;
   }
-  console.error("umeplay: tour is not available yet in this build.");
+  console.error("toygarden: tour is not available yet in this build.");
   process.exit(1);
 }
 
@@ -189,13 +189,13 @@ function handleRepoOnlyTool(name, args) {
       run(script, args);
       return;
     }
-    console.error(`umeplay: tools/${scriptFile} not found in this checkout.`);
+    console.error(`toygarden: tools/${scriptFile} not found in this checkout.`);
     process.exit(1);
   }
   console.log("Building your own toy needs the repo:");
   console.log("");
-  console.log("  git clone https://github.com/UMEBOSHIISAN/umeplay.git");
-  console.log("  cd umeplay");
+  console.log("  git clone https://github.com/UMEBOSHIISAN/toygarden.git");
+  console.log("  cd toygarden");
   console.log("  npm install");
   console.log(`  npm run ${name}`);
   process.exit(0);

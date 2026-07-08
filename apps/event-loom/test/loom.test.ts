@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
-import { EventBus } from "@umeplay/core-events";
+import { EventBus } from "@toygarden/core-events";
 import { label, loom, tally, renderDashboard, demoStream } from "../src/index.js";
-import type { PlayEvent } from "@umeplay/contracts";
+import type { PlayEvent } from "@toygarden/contracts";
 
 describe("event-loom", () => {
   it("labels every event kind (exhaustive, no blanks)", () => {

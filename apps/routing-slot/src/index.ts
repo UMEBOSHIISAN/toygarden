@@ -1,4 +1,4 @@
-import type { RoutingTrial } from "@umeplay/core-worker-data";
+import type { RoutingTrial } from "@toygarden/core-worker-data";
 
 /**
  * routing-slot — worker 配車をスロット演出で。回すと task種別×worker×confidence が揃う。

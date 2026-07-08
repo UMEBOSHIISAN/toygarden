@@ -1,11 +1,11 @@
 # Bring your gadget
 
-> A driver-writing guide for `@umeplay/core-device` — the HAL that lets any
+> A driver-writing guide for `@toygarden/core-device` — the HAL that lets any
 > panel gadget (M5Stack, a Stream Deck–style macropad, your own homebrew
-> keyboard with a screen bolted on) run all 20 umeplay toys without a single
+> keyboard with a screen bolted on) run all 20 toygarden toys without a single
 > line of app code changing.
 
-If you've got a small screen and a button, you can plug it into umeplay. This
+If you've got a small screen and a button, you can plug it into toygarden. This
 doc is the tour: what the interface looks like, how the only driver that
 exists today is built, and what's still open for someone to claim.
 
@@ -30,10 +30,10 @@ that already exists keeps working, unmodified.
 ```
 
 `selectDevice()` picks which box on the bottom row gets built, based on
-`UMEPLAY_DEVICE`. Nothing above that line — no app, no core package other
+`TOYGARDEN_DEVICE`. Nothing above that line — no app, no core package other
 than `core-device` itself — needs to know which box it is.
 
-Eight apps import `@umeplay/core-device` directly today: `agent-constellation`,
+Eight apps import `@toygarden/core-device` directly today: `agent-constellation`,
 `chiptune-clock`, `commit-constellation`, `desk-weather`, `focus-forge`,
 `git-weather`, `pomodoro-forge`, `ume-tamagotchi` (grepped from
 `apps/*/src/*.ts`, matches the package README). Every one of them runs right
@@ -234,7 +234,7 @@ required.
 "Hardware" means two different things here, and it's worth keeping them apart:
 
 - **A computer with a terminal** — a Raspberry Pi (or any SBC that boots to a
-  shell) runs umeplay *today, unmodified*. Every `core-tui` toy —
+  shell) runs toygarden *today, unmodified*. Every `core-tui` toy —
   ascii-aquarium, secretary-today, git-replay, focus-tally, the whole terminal
   half of the catalog — is just Node drawing to a screen. `git clone`,
   `npm install`, `npm run play`, done. No driver, no HAL, nothing to write. If
@@ -255,30 +255,30 @@ required.
 ### This genre is real — you'd be in good company
 
 The "one hardware-abstraction layer + a thin display layer on top" pattern isn't
-umeplay's invention. A cluster of popular projects have converged on the same
+toygarden's invention. A cluster of popular projects have converged on the same
 shape, which is the best evidence the `Device` seam is worth filling. None of
-these are umeplay dependencies or integrations — they're **neighbors** that show
+these are toygarden dependencies or integrations — they're **neighbors** that show
 the target hardware is real, active, and waiting for exactly this kind of driver:
 
 - **[AWTRIX 3](https://github.com/Blueforcer/awtrix3)** (~2.3k★ at the time of
   writing) — ESP32 firmware that turns a 32×8 LED matrix into a clock/dashboard
-  driven by small draw commands over the network. Almost exactly umeplay's
+  driven by small draw commands over the network. Almost exactly toygarden's
   `draw()` / `flush()` seam, expressed in firmware.
 - **[M5Stack StackChan](https://github.com/m5stack/StackChan)** (994★) — an
   M5Stack desktop robot whose faces and animations are a thin display layer over
   the same M5 panel that `device-mirror` already emulates in your terminal.
 - **[badge.team](https://github.com/badgeteam)** (132 public repos) — an
   event-badge firmware community built around swappable apps on shared badge
-  hardware: the same "many small display apps, one HAL" split umeplay uses.
+  hardware: the same "many small display apps, one HAL" split toygarden uses.
 
 ## 5. Try it without hardware
 
-You don't need a gadget to see the HAL work. Everything in umeplay already
-runs on `MockDevice` by default — `UMEPLAY_DEVICE` unset means mock:
+You don't need a gadget to see the HAL work. Everything in toygarden already
+runs on `MockDevice` by default — `TOYGARDEN_DEVICE` unset means mock:
 
 ```sh
 npm install
-UMEPLAY_DEVICE=mock npm run play desk-weather   # mock is also the default; explicit here for clarity
+TOYGARDEN_DEVICE=mock npm run play desk-weather   # mock is also the default; explicit here for clarity
 ```
 
 To watch the actual `draw()` / `led()` / `flush()` calls happening in real
@@ -293,18 +293,18 @@ That toy draws the same `DrawCommand`s a real M5Stack or AKP153 driver would
 receive, just rendered as ASCII instead of pixels — it's the shortest loop
 for seeing what a driver you write would actually be asked to do.
 
-Once you have real hardware, point `UMEPLAY_DEVICE` at your driver's `id` and
+Once you have real hardware, point `TOYGARDEN_DEVICE` at your driver's `id` and
 every existing toy runs against it unmodified:
 
 ```sh
-UMEPLAY_DEVICE=m5-basic npm run play desk-weather   # once such a driver exists
+TOYGARDEN_DEVICE=m5-basic npm run play desk-weather   # once such a driver exists
 ```
 
 ---
 
 ## 日本語サマリ
 
-`@umeplay/core-device` は小型パネルデバイスを1つの `Device` インターフェース
+`@toygarden/core-device` は小型パネルデバイスを1つの `Device` インターフェース
 （6メソッド・38行）で抽象化する HAL。app はこのインターフェースしか見ないため、
 ドライバを1つ書けば全20 toy がそのまま動く。
 

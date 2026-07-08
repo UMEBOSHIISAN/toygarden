@@ -1,9 +1,9 @@
 {
-  "name": "@umeplay/ascii-aquarium",
+  "name": "@toygarden/ascii-aquarium",
   "version": "0.0.0",
   "type": "module",
   "main": "src/index.ts",
   "dependencies": {
-    "@umeplay/contracts": "*"
+    "@toygarden/contracts": "*"
   }
 }

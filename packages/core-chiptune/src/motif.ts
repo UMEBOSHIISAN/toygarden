@@ -1,4 +1,4 @@
-import type { PlayEvent } from "@umeplay/contracts";
+import type { PlayEvent } from "@toygarden/contracts";
 
 export interface Note {
   note: string;

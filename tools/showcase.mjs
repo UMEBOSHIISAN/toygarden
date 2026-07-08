@@ -53,7 +53,7 @@ const html = `<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>umeplay — 端末で遊びが生える組み立てキット</title>
+<title>toygarden — 端末で遊びが生える組み立てキット</title>
 <style>
   :root { --bg:#0d1117; --bg2:#010409; --fg:#e6edf3; --dim:#8b949e; --line:#30363d;
           --cyan:#39c5cf; --green:#3fb950; --yellow:#d29922; --magenta:#bc8cf2; --red:#f85149; }
@@ -108,7 +108,7 @@ const html = `<!doctype html>
 <body>
 <main>
   <div class="hero">
-    <img class="banner" src="banner.gif" alt="umeplay banner" onerror="this.remove()">
+    <img class="banner" src="banner.gif" alt="toygarden banner" onerror="this.remove()">
     <h1>ume<span class="c">play</span> 🎛️</h1>
     <p class="tag">端末で遊びが生える組み立てキット<br>A construction kit where terminal toys grow</p>
     <p class="big">7つの部品を組むだけで、水槽が泳ぎ、git履歴が歌い、机に天気が降る。</p>
@@ -133,7 +133,7 @@ ${cards}
   <footer>
     <p>デモGIFはスクリーン録画ではありません。<code>npm run gifs</code> がコードから決定論的に再生成します。</p>
     <p>Every pixel on this page is rendered from code — <code>npm run gifs</code></p>
-    <p>MIT License · <a href="https://github.com/UMEBOSHIISAN/umeplay">github.com/UMEBOSHIISAN/umeplay</a></p>
+    <p>MIT License · <a href="https://github.com/UMEBOSHIISAN/toygarden">github.com/UMEBOSHIISAN/toygarden</a></p>
   </footer>
 </main>
 <script>

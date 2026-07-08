@@ -1,5 +1,5 @@
-import type { PlayEvent, Agent } from "@umeplay/contracts";
-import type { Device } from "@umeplay/core-device";
+import type { PlayEvent, Agent } from "@toygarden/contracts";
+import type { Device } from "@toygarden/core-device";
 
 /**
  * agent-constellation — m5-agent-stars 拡張。

@@ -1,5 +1,5 @@
 import { render, blockedCount, type TodayState } from "./index.ts";
-import { badge } from "@umeplay/core-tui";
+import { badge } from "@toygarden/core-tui";
 
 /**
  * secretary-today 実行エントリ。

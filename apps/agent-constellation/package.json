@@ -1,11 +1,11 @@
 {
-  "name": "@umeplay/agent-constellation",
+  "name": "@toygarden/agent-constellation",
   "version": "0.0.0",
   "type": "module",
   "main": "src/index.ts",
   "dependencies": {
-    "@umeplay/contracts": "*",
-    "@umeplay/core-device": "*",
-    "@umeplay/core-events": "*"
+    "@toygarden/contracts": "*",
+    "@toygarden/core-device": "*",
+    "@toygarden/core-events": "*"
   }
 }

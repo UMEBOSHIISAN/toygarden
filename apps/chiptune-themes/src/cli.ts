@@ -1,4 +1,4 @@
-import { EventBus } from "@umeplay/core-events";
+import { EventBus } from "@toygarden/core-events";
 import { attachNotifier } from "./index.ts";
 import { renderScreen, SCENES } from "./demo.ts";
 

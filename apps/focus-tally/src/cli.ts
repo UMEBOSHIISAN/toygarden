@@ -1,4 +1,4 @@
-import { readFocusRows, toFocusEvents, DEFAULT_FOCUS_DB } from "@umeplay/core-focus-log";
+import { readFocusRows, toFocusEvents, DEFAULT_FOCUS_DB } from "@toygarden/core-focus-log";
 import { barChart } from "./index.ts";
 import { synthEvents } from "./demo.ts";
 

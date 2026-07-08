@@ -3,8 +3,8 @@
  * `npm run gifs` が拾って demo/gifs/ume-tamagotchi.gif を再生成する。
  * 投稿で喜び、承認待ちが積もると弱り、deploy成功で持ち直す一連を実際の applyEvent() で再現する。
  */
-import type { DemoSpec } from "@umeplay/core-termgif";
-import type { PlayEvent } from "@umeplay/contracts";
+import type { DemoSpec } from "@toygarden/core-termgif";
+import type { PlayEvent } from "@toygarden/contracts";
 import { initPet, applyEvent, type Pet } from "./index.ts";
 import { renderPet } from "./view.ts";
 

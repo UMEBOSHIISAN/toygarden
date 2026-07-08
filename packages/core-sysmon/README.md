@@ -1,7 +1,7 @@
-# @umeplay/core-sysmon
+# @toygarden/core-sysmon
 
 Measures the host machine's workload (CPU, memory, load average) using `node:os` and normalizes
-it into a 0..1 busyness score. Dependency: `@umeplay/contracts` only.
+it into a 0..1 busyness score. Dependency: `@toygarden/contracts` only.
 
 `[ core-sysmon ] :: feel the pulse of your machine`
 
@@ -20,7 +20,7 @@ The full public surface exported by `src/index.ts` (implementation lives in `src
 ## Usage
 
 ```ts
-import { startSysmonFeed } from "@umeplay/core-sysmon";
+import { startSysmonFeed } from "@toygarden/core-sysmon";
 
 const stop = startSysmonFeed((sample) => {
   console.log(`busyness: ${(sample.busyness * 100).toFixed(0)}%`);

@@ -3,8 +3,8 @@
  * 直近コミットの churn（追加+削除）が積もるほど天気が荒れる様子を見せる。
  * `npm run gifs` が拾って demo/gifs/git-weather.gif を再生成する。
  */
-import { seeded, type DemoSpec } from "@umeplay/core-termgif";
-import type { GitCommit } from "@umeplay/core-git-observe";
+import { seeded, type DemoSpec } from "@toygarden/core-termgif";
+import type { GitCommit } from "@toygarden/core-git-observe";
 import { repoWeather, type Weather } from "./index.ts";
 
 const RESET = "\x1b[0m";
@@ -80,7 +80,7 @@ export function demo(): DemoSpec {
   for (let i = 0; i < 28; i++) {
     commits.push(commitAt(i, rnd));
     const recent = commits.slice(-WINDOW);
-    frames.push(renderScreen(recent, "umeplay", i));
+    frames.push(renderScreen(recent, "toygarden", i));
   }
   return {
     name: "git-weather",

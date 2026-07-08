@@ -1,4 +1,4 @@
-# umeplay 売り文句集（COPY）
+# toygarden 売り文句集（COPY）
 
 > README / SNS / showcase / リリースノートで使い回す公式コピー。
 > トーン: 遊び心 × 技術的誠実。「盛らない・でも楽しさは全開」。
@@ -81,12 +81,12 @@
 **案1（開発物語）**
 ターミナルで魚を飼い始めた。task が終わると1匹増える。
 9つの部品を組み合わせるだけで、水槽も、8bitの曲も、机の天気も生えてくる。
-遊びの組み立てキット umeplay、OSSにしました🎛️
+遊びの組み立てキット toygarden、OSSにしました🎛️
 
 **案2（技術フック）**
 デモGIFをスクリーン録画するの、やめました。
 ANSI出力→GIF89a を依存ゼロのTypeScriptで焼くと、デモがコードと一緒に生き続ける。
-LZWも8bitフォントも全部手元。#umeplay
+LZWも8bitフォントも全部手元。#toygarden
 
 **案3（哲学）**
 「アプリを作る」より「部品を掛け合わせたら遊びが生えた」の方が楽しい。
@@ -95,11 +95,11 @@ core 9個 × 契約1枚 = 遊び22本。掛け算はまだ終わらない。
 **案4（組み合わせフロンティア）**
 10個の部品でできる組み合わせは45通り。その大半はまだ誰も掛け合わせていない。
 地図は `npm run frontier` が自動で実数を焼くから、埋まった数はいつも本物。
-「これとこれを混ぜたら面白いじゃん」を、みんなで埋めていくキットです🎛️ #umeplay
+「これとこれを混ぜたら面白いじゃん」を、みんなで埋めていくキットです🎛️ #toygarden
 
 ## リリースノート用ボイラープレート
 
-umeplay v0.x — 端末で遊びが生える組み立てキット
+toygarden v0.x — 端末で遊びが生える組み立てキット
 - 9 cores × 1 contract = 22 toys, all in your terminal
 - Zero-dependency GIF renderer included (your demos never rot)
 - MIT License. Play responsibly.

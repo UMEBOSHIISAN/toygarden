@@ -3,8 +3,8 @@
  * リポジトリの著者を星座にし、寄与量(churn)が増えるほど星が明るく大きく育つ様子を見せる。
  * `npm run gifs` が拾って demo/gifs/commit-constellation.gif を再生成する。
  */
-import { seeded, type DemoSpec } from "@umeplay/core-termgif";
-import type { GitCommit } from "@umeplay/core-git-observe";
+import { seeded, type DemoSpec } from "@toygarden/core-termgif";
+import type { GitCommit } from "@toygarden/core-git-observe";
 import { authorStars, type AuthorStar } from "./index.ts";
 
 const RESET = "\x1b[0m";
@@ -60,7 +60,7 @@ export function demo(): DemoSpec {
   const frames: string[] = [];
   for (let i = 0; i < 26; i++) {
     commits.push(commitAt(i, rnd));
-    frames.push(renderScreen(commits, "umeplay"));
+    frames.push(renderScreen(commits, "toygarden"));
   }
   return {
     name: "commit-constellation",

@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { MockDevice } from "@umeplay/core-device";
-import { MOTIFS } from "@umeplay/core-chiptune";
+import { MockDevice } from "@toygarden/core-device";
+import { MOTIFS } from "@toygarden/core-chiptune";
 import {
   initForge,
   tick,

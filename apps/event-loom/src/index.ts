@@ -1,6 +1,6 @@
-import type { PlayEvent, PlayEventKind } from "@umeplay/contracts";
-import { EventBus } from "@umeplay/core-events";
-import { color, GREEN, RED, YELLOW, DIM } from "@umeplay/core-tui";
+import type { PlayEvent, PlayEventKind } from "@toygarden/contracts";
+import { EventBus } from "@toygarden/core-events";
+import { color, GREEN, RED, YELLOW, DIM } from "@toygarden/core-tui";
 
 /**
  * event-loom （events × tui）

@@ -4,7 +4,7 @@
  *
  * Bundles every apps/<name>/src/cli.ts into dist/apps/<name>.mjs ahead of
  * time, so the published package doesn't need esbuild/typescript as a
- * runtime dependency (they stay devDependencies). bin/umeplay.mjs looks
+ * runtime dependency (they stay devDependencies). bin/toygarden.mjs looks
  * for these prebuilt files first and only falls back to the on-demand
  * esbuild path (tools/play.mjs) when dist/apps/ is absent.
  *

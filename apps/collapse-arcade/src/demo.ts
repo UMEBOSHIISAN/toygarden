@@ -3,9 +3,9 @@
  * `npm run gifs` が拾って demo/gifs/collapse-arcade.gif を再生成する。
  * collapse-frontier の崩壊統計を実際に spawn/shoot に通し、撃墜の様子をそのまま描く。
  */
-import type { DemoSpec } from "@umeplay/core-termgif";
+import type { DemoSpec } from "@toygarden/core-termgif";
 import { spawn, shoot, type ArcadeState } from "./index.ts";
-import type { CollapseStat } from "@umeplay/core-worker-data";
+import type { CollapseStat } from "@toygarden/core-worker-data";
 import { renderBattle, renderClear, type EnemyView } from "./view.ts";
 
 // collapse-frontier 由来の崩壊率データ（形は CollapseStat 実物と同じ）

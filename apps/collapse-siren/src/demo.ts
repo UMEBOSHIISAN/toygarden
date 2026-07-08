@@ -3,9 +3,9 @@
  * `npm run gifs` が拾って demo/gifs/collapse-siren.gif を再生成する。
  * 実際の EventBus + attachSiren() を叩き、崩壊率が閾値を超えた瞬間の警報をそのまま描く。
  */
-import type { DemoSpec } from "@umeplay/core-termgif";
-import type { PlayEvent, Agent } from "@umeplay/contracts";
-import { EventBus } from "@umeplay/core-events";
+import type { DemoSpec } from "@toygarden/core-termgif";
+import type { PlayEvent, Agent } from "@toygarden/contracts";
+import { EventBus } from "@toygarden/core-events";
 import { attachSiren } from "./index.ts";
 import { renderSiren, type AgentRow } from "./view.ts";
 

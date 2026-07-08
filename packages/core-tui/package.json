@@ -1,10 +1,10 @@
 {
-  "name": "@umeplay/core-tui",
+  "name": "@toygarden/core-tui",
   "version": "0.0.0",
   "type": "module",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "dependencies": {
-    "@umeplay/contracts": "*"
+    "@toygarden/contracts": "*"
   }
 }

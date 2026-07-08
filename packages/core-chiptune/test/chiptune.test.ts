@@ -5,7 +5,7 @@ import {
   MOTIFS,
   renderPCM,
   encodeWav,
-} from "@umeplay/core-chiptune";
+} from "@toygarden/core-chiptune";
 
 describe("notes", () => {
   it("A4 = 440Hz", () => {

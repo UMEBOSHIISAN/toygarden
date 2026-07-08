@@ -1,7 +1,7 @@
-# @umeplay/core-chiptune
+# @toygarden/core-chiptune
 
 イベントを **8bit チップチューン**（矩形波 PCM / WAV）に変換して鳴らす部品。依存は
-`@umeplay/contracts` のみ。音名→周波数、イベント種別→モチーフ、モチーフ→PCM/WAV、
+`@toygarden/contracts` のみ。音名→周波数、イベント種別→モチーフ、モチーフ→PCM/WAV、
 再生（macOS `afplay`）まで一気通貫。
 
 純ロジック（`notes.ts` / `motif.ts` / `synth.ts`）と副作用境界（`play.ts`）を分離しているので、
@@ -24,8 +24,8 @@
 ## 使用例
 
 ```ts
-import { motifForEvent, renderPCM, encodeWav, play } from "@umeplay/core-chiptune";
-import type { PlayEvent } from "@umeplay/contracts";
+import { motifForEvent, renderPCM, encodeWav, play } from "@toygarden/core-chiptune";
+import type { PlayEvent } from "@toygarden/contracts";
 
 const e: PlayEvent = { kind: "deploy.success" };
 const motif = motifForEvent(e); // ファンファーレのモチーフ
@@ -45,7 +45,7 @@ if (motif) {
 ## 使っている app
 
 `chiptune-clock` / `chiptune-themes` / `collapse-siren` / `commit-symphony` / `focus-forge` /
-`pomodoro-forge` が `@umeplay/core-chiptune` を直接 import する（`apps/*/src/*.ts` を grep して実測）。
+`pomodoro-forge` が `@toygarden/core-chiptune` を直接 import する（`apps/*/src/*.ts` を grep して実測）。
 
 ## 設計原則
 

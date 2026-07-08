@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { createSysmonCalculator, type SysmonContext } from "@umeplay/core-sysmon";
+import { createSysmonCalculator, type SysmonContext } from "@toygarden/core-sysmon";
 
 const ctx = (overrides: Partial<SysmonContext> = {}): SysmonContext => ({
   totalMem: 1000,
@@ -55,7 +55,7 @@ describe("startSysmonFeed", () => {
   it("stops delivering samples once the returned stop function is called", async () => {
     vi.useFakeTimers();
     try {
-      const { startSysmonFeed } = await import("@umeplay/core-sysmon");
+      const { startSysmonFeed } = await import("@toygarden/core-sysmon");
       const callback = vi.fn();
       const stop = startSysmonFeed(callback, 100);
 

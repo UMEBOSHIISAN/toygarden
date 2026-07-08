@@ -1,21 +1,21 @@
-<h1 align="center"><picture><source media="(prefers-color-scheme: light)" srcset="assets/logo-light.svg"><img src="assets/logo.svg" alt="umeplay" width="420"></picture></h1>
+<h1 align="center"><picture><source media="(prefers-color-scheme: light)" srcset="assets/logo-light.svg"><img src="assets/logo.svg" alt="toygarden" width="420"></picture></h1>
 
 > **A construction kit where terminal toys grow.**
 > 日本語版 → **[README.ja.md](README.ja.md)**
 
-[![CI](https://github.com/UMEBOSHIISAN/umeplay/actions/workflows/ci.yml/badge.svg)](https://github.com/UMEBOSHIISAN/umeplay/actions/workflows/ci.yml)
+[![CI](https://github.com/UMEBOSHIISAN/toygarden/actions/workflows/ci.yml/badge.svg)](https://github.com/UMEBOSHIISAN/toygarden/actions/workflows/ci.yml)
 [![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![node](https://img.shields.io/badge/node-%3E%3D22-brightgreen.svg)](package.json)
 [![dependencies: zero](https://img.shields.io/badge/dependencies-zero-brightgreen.svg)](package.json)
 [![demos: rendered from code](https://img.shields.io/badge/demos-rendered%20from%20code-ff69b4.svg)](#demos-that-dont-rot)
 
-![umeplay](demo/banner.gif)
+![toygarden](demo/banner.gif)
 
 > **This repository contains not a single screenshot.** Even the banner above is
 > a GIF89a burned from code by our own encoder — run `npm run banner` and you get
 > the same bytes back.
 
-umeplay is a **zero-dependency TypeScript monorepo** where **22 terminal toys**
+toygarden is a **zero-dependency TypeScript monorepo** where **22 terminal toys**
 (an aquarium, a chiptune symphony, a tamagotchi, desk weather, a virtual M5Stack
 panel…) are assembled from **10 reusable `core-*` packages** wired together by a
 **single event contract**.
@@ -28,7 +28,7 @@ Read this as your first day, not a command dump:
 
 ```sh
 npm install              # devDeps only: typescript + vitest + esbuild
-npm run hello            # a cinematic splash, then an Undertale-style greeter walks you in (UMEPLAY_NO_SPLASH=1 to skip)
+npm run hello            # a cinematic splash, then an Undertale-style greeter walks you in (TOYGARDEN_NO_SPLASH=1 to skip)
 npm run tour             # sit back — all 22 toys, 8 seconds each, with save-point interludes
 npm run play daily       # "today's toy": a date-seeded pick (same day → same toy)
 npm run workshop         # pick parts by eye and grow a toy of your own
@@ -46,7 +46,7 @@ npm run banner           # re-render the hero banner → demo/banner.gif
 npm run frontier         # re-render the combination map → demo/frontier.gif
 ```
 
-> **`npx umeplay` is coming soon.** The bin entrypoint and ahead-of-time bundling
+> **`npx toygarden` is coming soon.** The bin entrypoint and ahead-of-time bundling
 > are already in place, but the package isn't published yet — for now, clone the
 > repo and use the `npm run` commands above.
 
@@ -119,7 +119,7 @@ Ten `core-*` packages. Nine of them compose the toys; the tenth,
 | [`core-tui`](packages/core-tui/) | terminal UI primitives (lanes / badges / ANSI) |
 | [`core-worker-data`](packages/core-worker-data/) | worker dispatch / collapse data supply (read-only) |
 | [`core-focus-log`](packages/core-focus-log/) | focus-cam log (sqlite) supplied read-only |
-| [`core-save`](packages/core-save/) | fail-soft, zero-dependency JSON persistence for small states in `~/.umeplay` |
+| [`core-save`](packages/core-save/) | fail-soft, zero-dependency JSON persistence for small states in `~/.toygarden` |
 | [`core-sysmon`](packages/core-sysmon/) | host workload (CPU / memory / load via `node:os`) normalized to a 0..1 busyness score |
 | [`core-termgif`](packages/core-termgif/) | ANSI output → GIF. The part that keeps demos from rotting (GIF89a + LZW + a built-in 8×8 font) |
 
@@ -136,7 +136,7 @@ core, dark/light aware, zero external references. Regenerate with `npm run showc
 | [git-replay](demo/gifs/git-replay.gif) | git-observe × tui | Time-lapse playback of a repo's history, human and AI color-coded. |
 | [secretary-today](demo/gifs/secretary-today.gif) | tui | Today's priorities as lanes; blocked items sink in red. |
 | [agent-constellation](demo/gifs/agent-constellation.gif) | device × events | Agents become a constellation; a dispatch draws a line between stars. |
-| [collapse-arcade](demo/gifs/collapse-arcade.gif) | worker-data | High collapse-rate agents become enemies. Shooting one = a review. Your best score saves RPG-style to `~/.umeplay/save.json` — brag about it with the 🏆 issue template. |
+| [collapse-arcade](demo/gifs/collapse-arcade.gif) | worker-data | High collapse-rate agents become enemies. Shooting one = a review. Your best score saves RPG-style to `~/.toygarden/save.json` — brag about it with the 🏆 issue template. |
 | [collapse-siren](demo/gifs/collapse-siren.gif) | worker-data × chiptune × events | When collapse rate crosses a threshold, the terminal blares a dissonant siren. |
 | [device-mirror](demo/gifs/device-mirror.gif) | device | See the hardware before you buy it: a virtual M5Stack panel in your terminal, mirroring the `DrawCommand`s a real driver would receive. |
 | [desk-weather](demo/gifs/desk-weather.gif) | device | Your repo's health becomes desk weather; a dirty tree clouds over. |
@@ -161,7 +161,7 @@ touching anything else — that additivity *is* the kit.
 All 22 toys run with **zero hardware** — `core-device` defaults to a mock driver,
 and that default is exactly what lets every app and every CI run work with nothing
 plugged in. But the `Device` HAL is real: a small screen and a button is enough to
-make umeplay drive a physical panel.
+make toygarden drive a physical panel.
 
 ![device-mirror](demo/gifs/device-mirror.gif)
 
@@ -177,7 +177,7 @@ the ~50-line walkthrough, and the PR checklist are in
 
 ## Human × AI, and the repo knows it
 
-umeplay was built by a human and AI agents working side by side, and the git history
+toygarden was built by a human and AI agents working side by side, and the git history
 still carries the `Co-Authored-By` trailers that prove it. That isn't a footnote
 here — it's playable. [commit-symphony](demo/gifs/commit-symphony.gif) sings this
 repo's own log, ringing the AI co-authored commits an octave up;
@@ -188,7 +188,7 @@ collaboration that made them.
 ## Demos that don't rot
 
 A screen-recorded GIF turns into a lie the moment the code changes. Every GIF in
-umeplay is made like this instead:
+toygarden is made like this instead:
 
 ```
 app's demo()  ──ANSI frames──▶  core-termgif  ──▶  demo/gifs/<name>.gif
@@ -223,7 +223,7 @@ npm run gifs -- my-toy   # render demo/gifs/my-toy.gif
 ```
 
 The generated toy already passes `check`, runs under `play`, and renders a GIF —
-so you start from something alive and reshape it. From there, add a `@umeplay/*`
+so you start from something alive and reshape it. From there, add a `@toygarden/*`
 core to its `package.json` and cross parts to taste. Full guide (and how to add a
 new core, device, or event): **[CONTRIBUTING.md](CONTRIBUTING.md)**.
 
@@ -258,7 +258,7 @@ pair with every existing part at once — a whole new row of empty cells to fill
 
 ## The kit grows
 
-umeplay isn't a finished box of toys — it's a kit that keeps sprouting new ones.
+toygarden isn't a finished box of toys — it's a kit that keeps sprouting new ones.
 There are four ways to make it grow, and they compound:
 
 - 🧸 **A new toy** — `npm run new -- my-toy` scaffolds a living app in ~60 seconds.

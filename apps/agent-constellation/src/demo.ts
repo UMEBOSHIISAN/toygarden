@@ -3,8 +3,8 @@
  * dispatch が走るたびに星座線が伸び、collapse すると星が赤く灯る様子を見せる。
  * `npm run gifs` が拾って demo/gifs/agent-constellation.gif を再生成する。
  */
-import type { DemoSpec } from "@umeplay/core-termgif";
-import type { PlayEvent, Agent } from "@umeplay/contracts";
+import type { DemoSpec } from "@toygarden/core-termgif";
+import type { PlayEvent, Agent } from "@toygarden/contracts";
 import { initState, applyEvent, type ConstellationState, type Star } from "./index.ts";
 
 const RESET = "\x1b[0m";

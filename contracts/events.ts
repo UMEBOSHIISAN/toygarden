@@ -1,5 +1,5 @@
 /**
- * contracts/events.ts — umeplay 全 app / core が従う共通語彙。
+ * contracts/events.ts — toygarden 全 app / core が従う共通語彙。
  *
  * ここは依存ゼロの「葉」。app → core → contracts の一方向依存の終端（設計 §4.6）。
  * 新しい遊びは「新イベント型を1つ足す」か「既存イベントを consume する」だけで接続できる。

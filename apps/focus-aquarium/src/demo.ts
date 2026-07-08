@@ -3,9 +3,9 @@
  * 1日の focus 記録が届くたびに水槽の魚が増えていく様子を見せる。
  * `npm run gifs` が拾って demo/gifs/focus-aquarium.gif を再生成する。
  */
-import type { DemoSpec } from "@umeplay/core-termgif";
-import type { FocusEvent } from "@umeplay/core-focus-log";
-import { activityTally } from "@umeplay/core-focus-log";
+import type { DemoSpec } from "@toygarden/core-termgif";
+import type { FocusEvent } from "@toygarden/core-focus-log";
+import { activityTally } from "@toygarden/core-focus-log";
 import { render } from "./index.ts";
 
 const RESET = "\x1b[0m";

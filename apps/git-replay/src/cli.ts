@@ -1,5 +1,5 @@
 import { basename } from "node:path";
-import { commitsSince, type GitCommit } from "@umeplay/core-git-observe";
+import { commitsSince, type GitCommit } from "@toygarden/core-git-observe";
 import { buildFrames, renderScreen } from "./index.ts";
 
 /**

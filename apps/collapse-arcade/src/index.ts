@@ -1,4 +1,4 @@
-import type { CollapseStat } from "@umeplay/core-worker-data";
+import type { CollapseStat } from "@toygarden/core-worker-data";
 
 /**
  * collapse-arcade — collapse-frontier の越権/崩壊データをシューティング化。

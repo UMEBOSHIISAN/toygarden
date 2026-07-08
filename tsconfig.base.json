@@ -13,17 +13,17 @@
     "verbatimModuleSyntax": true,
     "baseUrl": ".",
     "paths": {
-      "@umeplay/contracts": ["contracts/index.ts"],
-      "@umeplay/core-events": ["packages/core-events/src/index.ts"],
-      "@umeplay/core-device": ["packages/core-device/src/index.ts"],
-      "@umeplay/core-git-observe": ["packages/core-git-observe/src/index.ts"],
-      "@umeplay/core-chiptune": ["packages/core-chiptune/src/index.ts"],
-      "@umeplay/core-tui": ["packages/core-tui/src/index.ts"],
-      "@umeplay/core-worker-data": ["packages/core-worker-data/src/index.ts"],
-      "@umeplay/core-focus-log": ["packages/core-focus-log/src/index.ts"],
-      "@umeplay/core-termgif": ["packages/core-termgif/src/index.ts"],
-      "@umeplay/core-sysmon": ["packages/core-sysmon/src/index.ts"],
-      "@umeplay/core-save": ["packages/core-save/src/index.ts"]
+      "@toygarden/contracts": ["contracts/index.ts"],
+      "@toygarden/core-events": ["packages/core-events/src/index.ts"],
+      "@toygarden/core-device": ["packages/core-device/src/index.ts"],
+      "@toygarden/core-git-observe": ["packages/core-git-observe/src/index.ts"],
+      "@toygarden/core-chiptune": ["packages/core-chiptune/src/index.ts"],
+      "@toygarden/core-tui": ["packages/core-tui/src/index.ts"],
+      "@toygarden/core-worker-data": ["packages/core-worker-data/src/index.ts"],
+      "@toygarden/core-focus-log": ["packages/core-focus-log/src/index.ts"],
+      "@toygarden/core-termgif": ["packages/core-termgif/src/index.ts"],
+      "@toygarden/core-sysmon": ["packages/core-sysmon/src/index.ts"],
+      "@toygarden/core-save": ["packages/core-save/src/index.ts"]
     }
   }
 }

@@ -3,13 +3,13 @@ import { homedir } from "node:os";
 import { dirname, join } from "node:path";
 
 /**
- * save.ts — `~/.umeplay/<name>.json` への小さな永続セーブ。
+ * save.ts — `~/.toygarden/<name>.json` への小さな永続セーブ。
  * 副作用境界（ファイル読込・書込）と純ロジック（パース・更新・パス解決）を分離する（設計 §1）。
  * 依存ゼロを守るため Immer 等は使わず structuredClone でディープコピーしてから更新する。
  */
 
 export type SaveOptions = {
-  /** テスト用注入。未指定時は ~/.umeplay/ */
+  /** テスト用注入。未指定時は ~/.toygarden/ */
   dir?: string;
 };
 
@@ -36,7 +36,7 @@ export function applyUpdate<T>(current: T, updater: (draft: T) => void): T {
 
 /** 純ロジック（テスト対象）: name + options からセーブファイルの絶対パスを解決する。 */
 export function resolveSavePath(name: string, options?: SaveOptions): string {
-  const dir = options?.dir ?? join(homedir(), ".umeplay");
+  const dir = options?.dir ?? join(homedir(), ".toygarden");
   return join(dir, `${name}.json`);
 }
 

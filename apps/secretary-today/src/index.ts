@@ -1,5 +1,5 @@
-import type { Lane, LaneItem } from "@umeplay/core-tui";
-import { renderLanes } from "@umeplay/core-tui";
+import type { Lane, LaneItem } from "@toygarden/core-tui";
+import { renderLanes } from "@toygarden/core-tui";
 
 /**
  * secretary-today — secretary-tui 拡張の "today lane"。

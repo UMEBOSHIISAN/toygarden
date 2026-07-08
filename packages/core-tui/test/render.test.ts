@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { renderLanes, badge, RED, type Lane } from "@umeplay/core-tui";
+import { renderLanes, badge, RED, type Lane } from "@toygarden/core-tui";
 
 const lanes: Lane[] = [
   {

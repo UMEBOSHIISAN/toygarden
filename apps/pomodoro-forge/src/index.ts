@@ -1,6 +1,6 @@
-import type { PlayEvent } from "@umeplay/contracts";
-import type { Device } from "@umeplay/core-device";
-import { MOTIFS, type Motif } from "@umeplay/core-chiptune";
+import type { PlayEvent } from "@toygarden/contracts";
+import type { Device } from "@toygarden/core-device";
+import { MOTIFS, type Motif } from "@toygarden/core-chiptune";
 
 /**
  * pomodoro-forge — 合体もの（git-observe + chiptune + device を app 層で束ねる実証）。

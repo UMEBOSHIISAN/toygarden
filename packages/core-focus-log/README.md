@@ -1,7 +1,7 @@
-# @umeplay/core-focus-log
+# @toygarden/core-focus-log
 
 focus-cam ログ（`~/.focus-log/events.sqlite` の `focus_events` テーブル）を **read-only で供給**する
-後付け部品。依存は `@umeplay/contracts` のみ（外部 npm 不要 — node 組込みの `node:sqlite` を使う）。
+後付け部品。依存は `@toygarden/contracts` のみ（外部 npm 不要 — node 組込みの `node:sqlite` を使う）。
 
 DB 読取（`reader.ts`）と行→ドメイン→イベントの変換（`parse.ts`）を分離しており、後者は合成データで
 テストできる。個人の focus ログ実体は repo に一切含まれない。
@@ -23,7 +23,7 @@ DB 読取（`reader.ts`）と行→ドメイン→イベントの変換（`parse
 ## 使用例
 
 ```ts
-import { readFocusRows, toFocusEvents, activityTally } from "@umeplay/core-focus-log";
+import { readFocusRows, toFocusEvents, activityTally } from "@toygarden/core-focus-log";
 
 const rows = await readFocusRows(); // 既定パス・直近200件
 const events = toFocusEvents(rows);
@@ -37,7 +37,7 @@ console.log(activityTally(events));
 
 ## 使っている app
 
-`focus-aquarium` / `focus-forge` / `focus-tally` が `@umeplay/core-focus-log` を直接 import する
+`focus-aquarium` / `focus-forge` / `focus-tally` が `@toygarden/core-focus-log` を直接 import する
 （`apps/*/src/*.ts` を grep して実測）。
 
 ## 設計原則

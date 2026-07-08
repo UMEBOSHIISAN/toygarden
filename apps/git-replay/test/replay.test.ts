@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
-import { GREEN, RED } from "@umeplay/core-tui";
+import { GREEN, RED } from "@toygarden/core-tui";
 import { buildFrames, aiShare } from "../src/index.js";
-import type { GitCommit } from "@umeplay/core-git-observe";
+import type { GitCommit } from "@toygarden/core-git-observe";
 
 const commits: GitCommit[] = [
   { hash: "newest0", author: "u", added: 5, removed: 2, coauthoredByClaude: true },

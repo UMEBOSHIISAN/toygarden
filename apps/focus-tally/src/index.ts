@@ -1,5 +1,5 @@
-import { activityTally, type FocusEvent } from "@umeplay/core-focus-log";
-import { color, GREEN, YELLOW } from "@umeplay/core-tui";
+import { activityTally, type FocusEvent } from "@toygarden/core-focus-log";
+import { color, GREEN, YELLOW } from "@toygarden/core-tui";
 
 /**
  * focus-tally （focus-log × tui）

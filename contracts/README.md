@@ -1,9 +1,9 @@
-# @umeplay/contracts
+# @toygarden/contracts
 
 3層アーキテクチャの**葉**。依存ゼロ。`apps/* → packages/core-* → contracts/` の一方向依存の終端。
 
 ここにあるのは型だけ。producer（イベントを出す側）は誰が聞くか知らず、consumer（受ける側）は誰が出したか
-知らない。この疎結合を支える共通語彙が `PlayEvent` — umeplay の全 core / 全 app が読み書きする唯一の橋。
+知らない。この疎結合を支える共通語彙が `PlayEvent` — toygarden の全 core / 全 app が読み書きする唯一の橋。
 
 ## PlayEvent 一覧
 
@@ -39,7 +39,7 @@ export interface Consumer {
 }
 ```
 
-`@umeplay/core-events` の `EventBus` が `Producer` の標準実装。app はこれを1つ持ち、
+`@toygarden/core-events` の `EventBus` が `Producer` の標準実装。app はこれを1つ持ち、
 各 core / consumer を `subscribe` させ、observer 系 core（`core-git-observe` など）が `emit` する。
 
 ## 新しいイベントの足し方

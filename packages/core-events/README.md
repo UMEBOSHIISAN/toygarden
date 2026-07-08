@@ -1,6 +1,6 @@
-# @umeplay/core-events
+# @toygarden/core-events
 
-producer と consumer を疎結合につなぐ**最小イベントバス**。依存は `@umeplay/contracts` のみ。
+producer と consumer を疎結合につなぐ**最小イベントバス**。依存は `@toygarden/contracts` のみ。
 
 app はこれを1つ持ち、各 core / consumer を `subscribe` させ、observer 系 core（`core-git-observe` など）
 が `emit` する。同じバスに複数の購読者を繋いでも、互いを一切知らない — それがこの部品の存在理由。
@@ -21,8 +21,8 @@ app はこれを1つ持ち、各 core / consumer を `subscribe` させ、observ
 ## 使用例
 
 ```ts
-import { EventBus } from "@umeplay/core-events";
-import type { PlayEvent } from "@umeplay/contracts";
+import { EventBus } from "@toygarden/core-events";
+import type { PlayEvent } from "@toygarden/contracts";
 
 const bus = new EventBus();
 
@@ -39,7 +39,7 @@ off1(); // 1つ目だけ解除
 
 ## 使っている app
 
-`chiptune-themes` / `collapse-siren` / `event-loom` が `@umeplay/core-events` を直接 import する
+`chiptune-themes` / `collapse-siren` / `event-loom` が `@toygarden/core-events` を直接 import する
 （`apps/*/src/*.ts` を grep して実測）。特に `event-loom` は「1本のバスに疎結合な2購読者を繋ぐ」ことを
 そのまま実演する app で、この core の設計思想の実証になっている。
 
@@ -47,7 +47,7 @@ off1(); // 1つ目だけ解除
 
 - **疎結合**: `EventBus` は誰が emit したか・誰が subscribe しているかを互いに知らせない。producer/consumer
   は `PlayEvent` の型だけを共有言語として繋がる。
-- **一方向依存**: このパッケージは `@umeplay/contracts` にのみ依存する。`apps/*` から import されるが、
+- **一方向依存**: このパッケージは `@toygarden/contracts` にのみ依存する。`apps/*` から import されるが、
   逆に app を import することはない。
 - **最小実装**: ハンドラの集合を `Set` で持つだけ。エラーハンドリングや優先度制御などは意図的に持たない
   — 必要になった app 側で組む。

@@ -1,4 +1,4 @@
-import type { Agent, PlayEvent } from "@umeplay/contracts";
+import type { Agent, PlayEvent } from "@toygarden/contracts";
 
 export interface RoutingTrial {
   taxonomy: string;

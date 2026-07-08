@@ -1,10 +1,10 @@
 {
-  "name": "@umeplay/git-replay",
+  "name": "@toygarden/git-replay",
   "version": "0.0.0",
   "type": "module",
   "main": "src/index.ts",
   "dependencies": {
-    "@umeplay/core-git-observe": "*",
-    "@umeplay/core-tui": "*"
+    "@toygarden/core-git-observe": "*",
+    "@toygarden/core-tui": "*"
   }
 }

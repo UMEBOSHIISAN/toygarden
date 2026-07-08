@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { toFocusEvents, toPlayEvents, activityTally } from "@umeplay/core-focus-log";
-import type { FocusRow } from "@umeplay/core-focus-log";
+import { toFocusEvents, toPlayEvents, activityTally } from "@toygarden/core-focus-log";
+import type { FocusRow } from "@toygarden/core-focus-log";
 
 // 合成データ（実際の個人ログは使わない）
 const rows: FocusRow[] = [

@@ -6,10 +6,10 @@
  * index.ts の同名関数は cli.ts の端末表示用（font8x8 未収録の漢字・記号を含む）で、
  * そちらは変更しない。demo() が実際に描く文字列だけを収録済みグリフに置き換える。
  */
-import type { DemoSpec } from "@umeplay/core-termgif";
-import { EventBus } from "@umeplay/core-events";
-import { color, GREEN, RED, YELLOW, DIM } from "@umeplay/core-tui";
-import type { PlayEvent } from "@umeplay/contracts";
+import type { DemoSpec } from "@toygarden/core-termgif";
+import { EventBus } from "@toygarden/core-events";
+import { color, GREEN, RED, YELLOW, DIM } from "@toygarden/core-tui";
+import type { PlayEvent } from "@toygarden/contracts";
 import { tally, type Counts } from "./index.ts";
 
 const CYAN = "\x1b[36m";

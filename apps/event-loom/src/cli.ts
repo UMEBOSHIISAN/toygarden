@@ -1,4 +1,4 @@
-import { EventBus } from "@umeplay/core-events";
+import { EventBus } from "@toygarden/core-events";
 import { label, tally, renderDashboard, demoStream, type Counts } from "./index.ts";
 
 /**

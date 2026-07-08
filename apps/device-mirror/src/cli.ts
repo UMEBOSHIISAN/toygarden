@@ -1,5 +1,5 @@
-import type { PlayEvent } from "@umeplay/contracts";
-import { MockDevice } from "@umeplay/core-device";
+import type { PlayEvent } from "@toygarden/contracts";
+import { MockDevice } from "@toygarden/core-device";
 import { mirror, labelFor, ledFor } from "./index.ts";
 import { renderGadget } from "./view.ts";
 

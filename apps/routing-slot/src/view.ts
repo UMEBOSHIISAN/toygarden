@@ -2,7 +2,7 @@
  * view.ts — routing-slot の画面描画（純関数・乱数なし）。demo.ts と cli.ts で共有する。
  * 文字は ASCII + ひらがな + 罫線/ブロック/指定記号のみ。
  */
-import type { RoutingTrial } from "@umeplay/core-worker-data";
+import type { RoutingTrial } from "@toygarden/core-worker-data";
 import type { SpinResult } from "./index.ts";
 
 const RESET = "\x1b[0m";

@@ -1,5 +1,5 @@
 /**
- * @umeplay/core-termgif — ターミナル出力（ANSI フレーム列）を GIF に焼く部品。
+ * @toygarden/core-termgif — ターミナル出力（ANSI フレーム列）を GIF に焼く部品。
  *
  * これ1つで「app のデモ → README に貼れる GIF」がリポジトリ内で再現できる。
  * 依存ゼロ: GIF89a エンコーダ / LZW / ANSI パーサ / 8x8 ビットマップフォントを内蔵。

@@ -1,5 +1,5 @@
-import type { Device } from "@umeplay/core-device";
-import { renderPCM, encodeWav, type Motif } from "@umeplay/core-chiptune";
+import type { Device } from "@toygarden/core-device";
+import { renderPCM, encodeWav, type Motif } from "@toygarden/core-chiptune";
 
 /**
  * chiptune-clock （chiptune × device）

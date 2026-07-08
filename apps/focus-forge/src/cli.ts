@@ -1,4 +1,4 @@
-import type { FocusEvent } from "@umeplay/core-focus-log";
+import type { FocusEvent } from "@toygarden/core-focus-log";
 import { forgeFromFocus } from "./index.ts";
 import { renderForge } from "./view.ts";
 

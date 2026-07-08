@@ -1,4 +1,4 @@
-# @umeplay/core-termgif
+# @toygarden/core-termgif
 
 ターミナル出力（ANSI フレーム列）を **GIF に焼く**部品。依存ゼロ。
 
@@ -19,7 +19,7 @@ READMEに貼るデモGIFを「スクリーン録画」ではなく**コードか
 ## 使い方
 
 ```ts
-import { renderGif, seeded, type DemoSpec } from "@umeplay/core-termgif";
+import { renderGif, seeded, type DemoSpec } from "@toygarden/core-termgif";
 import { writeFileSync } from "node:fs";
 
 const frames = ["hello\nworld", "\x1b[36mhello\x1b[0m\nworld!"];
@@ -31,8 +31,8 @@ writeFileSync("out.gif", renderGif(frames, { fps: 4 }));
 各 app は `src/demo.ts` で以下を export する。`tools/gifcast.ts` が拾って `demo/gifs/<name>.gif` を量産する。
 
 ```ts
-import type { DemoSpec } from "@umeplay/core-termgif";
-import { seeded } from "@umeplay/core-termgif";
+import type { DemoSpec } from "@toygarden/core-termgif";
+import { seeded } from "@toygarden/core-termgif";
 
 export function demo(): DemoSpec {
   const rnd = seeded(42); // 乱数は必ず seeded（同じ入力 → 同じ GIF）

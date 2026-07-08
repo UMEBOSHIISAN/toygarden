@@ -3,9 +3,9 @@
  * イベント種別 → 音テーマを、音符の出現とピッチバーで可視化する。
  * `npm run gifs` が拾って demo/gifs/chiptune-themes.gif を再生成する。
  */
-import type { DemoSpec } from "@umeplay/core-termgif";
-import type { PlayEvent } from "@umeplay/contracts";
-import { noteToFreq } from "@umeplay/core-chiptune";
+import type { DemoSpec } from "@toygarden/core-termgif";
+import type { PlayEvent } from "@toygarden/contracts";
+import { noteToFreq } from "@toygarden/core-chiptune";
 import { themeFor } from "./index.ts";
 
 const RESET = "\x1b[0m";

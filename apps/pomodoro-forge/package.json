@@ -1,11 +1,11 @@
 {
-  "name": "@umeplay/pomodoro-forge",
+  "name": "@toygarden/pomodoro-forge",
   "version": "0.0.0",
   "type": "module",
   "main": "src/index.ts",
   "dependencies": {
-    "@umeplay/contracts": "*",
-    "@umeplay/core-chiptune": "*",
-    "@umeplay/core-device": "*"
+    "@toygarden/contracts": "*",
+    "@toygarden/core-chiptune": "*",
+    "@toygarden/core-device": "*"
   }
 }

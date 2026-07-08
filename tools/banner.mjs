@@ -4,12 +4,12 @@
  *   npm run banner
  *
  * コンセプト: 「RPGの会話ボックスの中で、ターミナルおもちゃの住人たちがネオンに光りながら
- * 動いている」画。umeplay は21本のターミナルおもちゃのキットなので、その住人たち（水槽の
+ * 動いている」画。toygarden は21本のターミナルおもちゃのキットなので、その住人たち（水槽の
  * 魚群・chiptune の音符・agent-constellation の星座線・tamagotchi の顔）がバナーの中で
  * 同時に生きて動いている「パレード」に、Undertale 風の会話ボックス・ピクセルハート・
  * シンセウェーブ風ネオングリッドを重ねる。
  *
- * このリポジトリはスクリーンショットを1枚も含まない。バナーも @umeplay/core-termgif の
+ * このリポジトリはスクリーンショットを1枚も含まない。バナーも @toygarden/core-termgif の
  * 自前 GIF89a エンコーダで焼く。乱数は seeded() のみ使用（同じコード → 同じバイト列）。
  *
  * renderGif() はセル格子全体に単一の pxScale しか適用できない（ロゴだけ拡大できない）ため、
@@ -248,7 +248,7 @@ function drawLinePx(buf, x0, y0, x1, y1, colorIdx, thickness = 1) {
 }
 
 // --- 素材（フォント経由のテキストは全てフォントに実在するグリフのみで構成） -------------------
-const LOGO_TEXT = "u m e p l a y"; // 文字間スペース = 字間を広げて大きく見せる
+const LOGO_TEXT = "t o y g a r d e n"; // 文字間スペース = 字間を広げて大きく見せる
 const LOGO_COLOR_NAMES = ["cyan-bold", "green-bold", "yellow-bold", "magenta-bold", "blue-bold", "cyan-bold", "green-bold"];
 const LOGO_COLORS = LOGO_COLOR_NAMES.map(C);
 

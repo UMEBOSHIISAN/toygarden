@@ -1,4 +1,4 @@
-import type { PlayEvent, Producer } from "@umeplay/contracts";
+import type { PlayEvent, Producer } from "@toygarden/contracts";
 
 /**
  * 最小イベントバス。producer と consumer を疎結合につなぐ（設計 §4.4）。

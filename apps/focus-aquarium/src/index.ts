@@ -1,4 +1,4 @@
-import type { FocusEvent } from "@umeplay/core-focus-log";
+import type { FocusEvent } from "@toygarden/core-focus-log";
 
 /**
  * focus-aquarium （focus-log × ascii-aquarium の描画思想）

@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { parseGitLog, toPlayEvents } from "@umeplay/core-git-observe";
+import { parseGitLog, toPlayEvents } from "@toygarden/core-git-observe";
 
 const SOH = String.fromCharCode(1);
 const US = String.fromCharCode(31);

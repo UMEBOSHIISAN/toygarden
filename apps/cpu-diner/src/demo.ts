@@ -4,7 +4,7 @@
  * 客の着席・行列形成・chef の居眠り⇄調理が全部ついてくる（renderDiner は state だけを見る純関数）。
  * `npm run gifs` が拾って demo/gifs/cpu-diner.gif を再生成する。
  */
-import type { DemoSpec } from "@umeplay/core-termgif";
+import type { DemoSpec } from "@toygarden/core-termgif";
 import { dinerLogic, initDinerState, renderDiner } from "./index.ts";
 
 const FRAME_COUNT = 40;

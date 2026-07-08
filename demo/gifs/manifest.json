@@ -17,7 +17,7 @@
     "file": "ascii-aquarium.gif",
     "frames": 36,
     "fps": 7,
-    "kb": 185,
+    "kb": 186,
     "uses": [
       "contracts"
     ],
@@ -76,7 +76,7 @@
     "file": "commit-constellation.gif",
     "frames": 26,
     "fps": 5,
-    "kb": 78,
+    "kb": 79,
     "uses": [
       "core-git-observe",
       "core-device"
@@ -182,7 +182,7 @@
     "file": "git-replay.gif",
     "frames": 22,
     "fps": 6,
-    "kb": 165,
+    "kb": 166,
     "uses": [
       "core-git-observe",
       "core-tui"
@@ -194,7 +194,7 @@
     "file": "git-weather.gif",
     "frames": 28,
     "fps": 6,
-    "kb": 104,
+    "kb": 105,
     "uses": [
       "core-git-observe",
       "core-device"

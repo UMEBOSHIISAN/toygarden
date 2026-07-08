@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { MockDevice } from "@umeplay/core-device";
+import { MockDevice } from "@toygarden/core-device";
 import { initState, applyEvent, draw } from "../src/index.js";
 
 describe("agent-constellation", () => {

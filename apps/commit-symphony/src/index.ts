@@ -1,5 +1,5 @@
-import type { GitCommit } from "@umeplay/core-git-observe";
-import { renderPCM, encodeWav, type Motif, type Note } from "@umeplay/core-chiptune";
+import type { GitCommit } from "@toygarden/core-git-observe";
+import { renderPCM, encodeWav, type Motif, type Note } from "@toygarden/core-chiptune";
 
 /**
  * commit-symphony （git-observe × chiptune）

@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { spin, reel } from "../src/index.js";
-import type { RoutingTrial } from "@umeplay/core-worker-data";
+import type { RoutingTrial } from "@toygarden/core-worker-data";
 
 const trials: RoutingTrial[] = [
   { taxonomy: "read_only_scan", predictedWorker: "qwen", confidence: 0.85 },

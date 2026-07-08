@@ -3,7 +3,7 @@
  * `npm run gifs` が拾って demo/gifs/pomodoro-forge.gif を再生成する。
  * 実際の tick()/applyEvent() を叩いて、鉱石が育ち→精錬され→25分満タンで完成するまでを再現する。
  */
-import type { DemoSpec } from "@umeplay/core-termgif";
+import type { DemoSpec } from "@toygarden/core-termgif";
 import { FOCUS_MS, initForge, tick, applyEvent, type ForgeState } from "./index.ts";
 import { renderForge, renderDone } from "./view.ts";
 

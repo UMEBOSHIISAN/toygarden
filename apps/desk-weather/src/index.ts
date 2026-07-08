@@ -1,4 +1,4 @@
-import type { Device } from "@umeplay/core-device";
+import type { Device } from "@toygarden/core-device";
 
 /**
  * desk-weather — 作業環境の「天気計」。

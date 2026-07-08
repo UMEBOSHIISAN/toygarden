@@ -1,4 +1,4 @@
-import type { PlayEvent } from "@umeplay/contracts";
+import type { PlayEvent } from "@toygarden/contracts";
 
 /**
  * focus-cam ログ（~/.focus-log/events.sqlite の focus_events テーブル）を扱う純ロジック。

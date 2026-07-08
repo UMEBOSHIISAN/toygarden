@@ -2,10 +2,10 @@
  * demo.ts — GIF 用デモ（DemoSpec 規約・決定論的）。
  * 合成コミット列を commitsToMotif() に通し、ノートが1つずつ「鳴っていく」ピアノロール風の進行画面にする。
  */
-import type { DemoSpec } from "@umeplay/core-termgif";
-import { seeded } from "@umeplay/core-termgif";
-import type { GitCommit } from "@umeplay/core-git-observe";
-import { noteToFreq } from "@umeplay/core-chiptune";
+import type { DemoSpec } from "@toygarden/core-termgif";
+import { seeded } from "@toygarden/core-termgif";
+import type { GitCommit } from "@toygarden/core-git-observe";
+import { noteToFreq } from "@toygarden/core-chiptune";
 import { commitsToMotif } from "./index.ts";
 
 const CYAN = "\x1b[36m";

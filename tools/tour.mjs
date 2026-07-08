@@ -9,8 +9,8 @@
  * 非TTY（CI・パイプ経由）では各おもちゃをフルの8秒表示し、キー操作は受け付けない。
  *
  * UI は EN 主役（想定オーディエンスは海外が主）。幕間の tagline だけ manifest の日本語のまま。
- * UMEPLAY_CONTEXT=package のとき（npx 経由の bin から渡される契約）は終了画面の案内コマンドを
- * `npx umeplay <sub>` 形式に切り替える。未設定 or "repo" なら従来の `npm run <sub>` 形式。
+ * TOYGARDEN_CONTEXT=package のとき（npx 経由の bin から渡される契約）は終了画面の案内コマンドを
+ * `npx toygarden <sub>` 形式に切り替える。未設定 or "repo" なら従来の `npm run <sub>` 形式。
  */
 import { build } from "esbuild";
 import { readdirSync, existsSync, readFileSync } from "node:fs";
@@ -29,9 +29,9 @@ const YELLOW = "\x1b[33m";
 const WHITE = "\x1b[97m";
 const DIM = "\x1b[2m";
 
-const CONTEXT = process.env.UMEPLAY_CONTEXT === "package" ? "package" : "repo";
+const CONTEXT = process.env.TOYGARDEN_CONTEXT === "package" ? "package" : "repo";
 function cmd(sub) {
-  return CONTEXT === "package" ? `npx umeplay ${sub}` : `npm run ${sub}`;
+  return CONTEXT === "package" ? `npx toygarden ${sub}` : `npm run ${sub}`;
 }
 
 const DURATION_MS = 8000;
@@ -142,7 +142,7 @@ async function main() {
     process.exit(1);
   }
 
-  console.log(`${WHITE}umeplay tour — ${apps.length} toys, 8s each${RESET}`);
+  console.log(`${WHITE}toygarden tour — ${apps.length} toys, 8s each${RESET}`);
   if (process.stdin.isTTY) {
     console.log(`${DIM}(Ctrl+C to skip / q to end tour)${RESET}`);
   }

@@ -1,5 +1,5 @@
 import { spawn, shoot, type ArcadeState } from "./index.ts";
-import type { CollapseStat } from "@umeplay/core-worker-data";
+import type { CollapseStat } from "@toygarden/core-worker-data";
 import { renderBattle, renderClear, type EnemyView } from "./view.ts";
 import { loadBest, saveBest } from "./save.ts";
 
@@ -8,7 +8,7 @@ import { loadBest, saveBest } from "./save.ts";
  *   node dist/arcade.mjs             → ライブ（Ctrl+C で終了。撃墜し終えると再湧きしてループ）
  *   node dist/arcade.mjs --frames 20 → 20フレームで終了（キャプチャ用）
  *
- * 終了時のスコアをベストと比較し ~/.umeplay/save.json に記録する（RPGセーブ風）。
+ * 終了時のスコアをベストと比較し ~/.toygarden/save.json に記録する（RPGセーブ風）。
  */
 
 const CLEAR = "\x1b[2J\x1b[H";
@@ -55,7 +55,7 @@ function* play(): Generator<Frame> {
   }
 }
 
-/** 終了時に「きろくポイント」演出を出し、ベストなら ~/.umeplay/save.json に保存する。 */
+/** 終了時に「きろくポイント」演出を出し、ベストなら ~/.toygarden/save.json に保存する。 */
 function reportRecord(score: number): void {
   const updated = saveBest(score);
   const best = loadBest();

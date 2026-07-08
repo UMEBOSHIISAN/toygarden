@@ -38,7 +38,7 @@ if (live) {
   setInterval(() => {
     process.stdout.write(CLEAR);
     const moon = tank.night ? `  ${DIM}~ 夜 ~${RESET}` : "";
-    process.stdout.write(`  ${CYAN}~ umeplay aquarium ~${RESET}  ${DIM}(Ctrl+C で終了)${RESET}${moon}\n`);
+    process.stdout.write(`  ${CYAN}~ toygarden aquarium ~${RESET}  ${DIM}(Ctrl+C で終了)${RESET}${moon}\n`);
     process.stdout.write(colorize(render(tank), tank.night) + "\n");
     advance(0.12);
   }, 120);

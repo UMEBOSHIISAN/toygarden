@@ -1,5 +1,5 @@
-import type { PlayEvent, Agent } from "@umeplay/contracts";
-import { EventBus } from "@umeplay/core-events";
+import type { PlayEvent, Agent } from "@toygarden/contracts";
+import { EventBus } from "@toygarden/core-events";
 import { attachSiren } from "./index.ts";
 import { renderSiren, type AgentRow } from "./view.ts";
 

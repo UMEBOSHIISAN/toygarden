@@ -4,11 +4,11 @@ import { homedir } from "node:os";
 
 /**
  * save.ts — ベストスコアの永続化（RPGセーブ風）。
- * `~/.umeplay/save.json` に `{ "<app名>": { "best": number } }` の形で置く。
+ * `~/.toygarden/save.json` に `{ "<app名>": { "best": number } }` の形で置く。
  * 他アプリが同じファイルに相乗りしても名前空間で衝突しない設計。
  */
 
-export const DEFAULT_SAVE_PATH = join(homedir(), ".umeplay", "save.json");
+export const DEFAULT_SAVE_PATH = join(homedir(), ".toygarden", "save.json");
 const KEY = "collapse-arcade";
 
 interface SaveFile {

@@ -1,9 +1,9 @@
 {
-  "name": "@umeplay/secretary-today",
+  "name": "@toygarden/secretary-today",
   "version": "0.0.0",
   "type": "module",
   "main": "src/index.ts",
   "dependencies": {
-    "@umeplay/core-tui": "*"
+    "@toygarden/core-tui": "*"
   }
 }

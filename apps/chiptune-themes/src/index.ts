@@ -1,12 +1,12 @@
-import type { PlayEvent } from "@umeplay/contracts";
+import type { PlayEvent } from "@toygarden/contracts";
 import {
   motifForEvent,
   renderPCM,
   encodeWav,
   play,
   type Motif,
-} from "@umeplay/core-chiptune";
-import { EventBus } from "@umeplay/core-events";
+} from "@toygarden/core-chiptune";
+import { EventBus } from "@toygarden/core-events";
 
 /**
  * chiptune-themes — chiptune-notify 拡張 "event themes"。

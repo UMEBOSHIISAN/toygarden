@@ -4,7 +4,7 @@ import {
   parseCollapseStats,
   routingToEvents,
   collapseToEvents,
-} from "@umeplay/core-worker-data";
+} from "@toygarden/core-worker-data";
 
 const routing = [
   "# routing trial ledger",
