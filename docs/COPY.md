@@ -19,6 +19,7 @@
 - **なぜイベント?** — `PlayEvent` という共通語彙が producer と consumer を疎結合にする。水槽は「誰がタスクを終えたか」を知らないまま、魚を1匹増やす。
 - **なぜGIFを自前で焼く?** — スクリーン録画は腐る。コードから焼いたGIFは、コードが生きてる限り新鮮。デモの鮮度=リポジトリの誠実さ。
 - **8bitフォントの由来** — IBM VGA 時代の Public Domain フォント（font8x8）+ 手描きグリフ。ひらがなが泳ぐ端末は、ちょっといいでしょ。
+- **どうやって作る?（workshop）** — 部品を目で選ぶと、おもちゃが生える。`npm run workshop` で `core-*` をカーソルで選ぶと、レシピ図がライブで組み変わり、Enter でそのおもちゃが生える。
 
 ## app別ワンライナー（21本）
 
@@ -55,6 +56,8 @@
 | 掛け算 | 部品を1個足すと、遊びは掛け算で増える。 | Add one part, and the play multiplies. |
 | 庭 | このリポジトリは完成品じゃない。生えつづける庭。 | This repo isn't a finished product — it's a garden that keeps growing. |
 | 招待 | あなたのおもちゃ・部品・ドライバを見せてほしい。 | Show us your toy, your part, your driver. |
+| workshop | 部品を目で選ぶと、おもちゃが生える。 | Pick parts by eye, and a toy grows. |
+| お題 | はじめての1本は、お題から選ぶのもいい。 | Your first toy can start from a prompt. |
 
 ## SNS 投稿案（X向け・下書き）
 

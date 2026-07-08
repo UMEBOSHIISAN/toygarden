@@ -24,15 +24,30 @@ terminal: no build target, no browser, no hardware. `npm install && npm run play
 
 ## Quick start
 
+Read this as your first day, not a command dump:
+
 ```sh
 npm install              # devDeps only: typescript + vitest + esbuild
+npm run hello            # an Undertale-style greeter walks you in
+npm run tour             # sit back — all 21 toys, 8 seconds each, with save-point interludes
+npm run play daily       # "today's toy": a date-seeded pick (same day → same toy)
+npm run workshop         # pick parts by eye and grow a toy of your own
+```
+
+From there, the everyday commands:
+
+```sh
 npm run play             # list every toy, with taglines
-npm run play tamagotchi    # names match by substring — Ctrl+C to quit
+npm run play tamagotchi  # names match by substring; an ambiguous name gets a numbered menu (TTY)
 npm run play random      # feeling lucky? launch a random one
-npm run check            # typecheck + tests (24 files / 119 tests)
+npm run check            # typecheck + tests (25 files / 125 tests)
 npm run gifs             # re-render every demo GIF from code → demo/gifs/
 npm run banner           # re-render the hero banner → demo/banner.gif
 ```
+
+> **`npx umeplay` is coming soon.** The bin entrypoint and ahead-of-time bundling
+> are already in place, but the package isn't published yet — for now, clone the
+> repo and use the `npm run` commands above.
 
 Everything runs without hardware (`core-device` defaults to a mock driver).
 
@@ -41,8 +56,11 @@ Everything runs without hardware (`core-device` defaults to a mock driver).
 Three ways in, depending on why you're here:
 
 - 🎮 **Terminal tinkerers** — `npm run play` lists every toy; `npm run play random`
-  if you feel lucky. Want your own? `npm run new -- my-toy` scaffolds a living toy
-  in ~60 seconds — green tests, running CLI, and a rendered GIF out of the box.
+  if you feel lucky. Want your own? Run `npm run workshop`: pick `core-*` parts by
+  eye with `j`/`k`+`space`, watch the recipe diagram re-wire live, and `Enter` grows
+  a toy pre-wired with those parts (pick the same parts as an existing toy and it
+  tells you "same bloodline!"). Prefer the CLI? `npm run new -- my-toy` scaffolds a
+  living toy in ~60 seconds — green tests, running CLI, and a rendered GIF out of the box.
 - 🔌 **Gadget people (M5Stack, macropads)** — start with
   `npm run play device-mirror` to watch a virtual M5Stack panel light up in your
   terminal, then read **[docs/DEVICES.md](docs/DEVICES.md)** and write a driver in
@@ -115,7 +133,7 @@ core, dark/light aware, zero external references. Regenerate with `npm run showc
 | [git-replay](demo/gifs/git-replay.gif) | git-observe × tui | Time-lapse playback of a repo's history, human and AI color-coded. |
 | [secretary-today](demo/gifs/secretary-today.gif) | tui | Today's priorities as lanes; blocked items sink in red. |
 | [agent-constellation](demo/gifs/agent-constellation.gif) | device × events | Agents become a constellation; a dispatch draws a line between stars. |
-| [collapse-arcade](demo/gifs/collapse-arcade.gif) | worker-data | High collapse-rate agents become enemies. Shooting one = a review. |
+| [collapse-arcade](demo/gifs/collapse-arcade.gif) | worker-data | High collapse-rate agents become enemies. Shooting one = a review. Your best score saves RPG-style to `~/.umeplay/save.json` — brag about it with the 🏆 issue template. |
 | [collapse-siren](demo/gifs/collapse-siren.gif) | worker-data × chiptune × events | When collapse rate crosses a threshold, the terminal blares a dissonant siren. |
 | [device-mirror](demo/gifs/device-mirror.gif) | device | See the hardware before you buy it: a virtual M5Stack panel in your terminal, mirroring the `DrawCommand`s a real driver would receive. |
 | [desk-weather](demo/gifs/desk-weather.gif) | device | Your repo's health becomes desk weather; a dirty tree clouds over. |
@@ -205,7 +223,8 @@ umeplay isn't a finished box of toys — it's a kit that keeps sprouting new one
 There are four ways to make it grow, and they compound:
 
 - 🧸 **A new toy** — `npm run new -- my-toy` scaffolds a living app in ~60 seconds.
-  One toy = a few files under `apps/`, added without touching anything else.
+  One toy = a few files under `apps/`, added without touching anything else. Stuck for
+  an idea? Your first one can come from a prompt — [browse the `toy-idea` issues](../../issues?q=is%3Aissue+is%3Aopen+label%3Atoy-idea) and build one.
 - 🧩 **A new core (part)** — this is the one with leverage. A single new `core-*`
   package doesn't add *one* thing; it multiplies with every toy that crosses it.
   Cross it with three existing cores and you've got new combinations for free —
@@ -226,7 +245,8 @@ So show it to us. Open an issue with the idea, or send a PR:
 
 - 🧸 [Suggest a toy](../../issues/new?template=toy-idea.yml) ·
   🧩 [Propose a new core](../../issues/new?template=new-core.yml) ·
-  🔌 [Bring a device driver](../../issues/new?template=device-driver.yml)
+  🔌 [Bring a device driver](../../issues/new?template=device-driver.yml) ·
+  🏆 [Brag a collapse-arcade score](../../issues/new?template=high-score.yml)
 - PRs welcome — the checklist is in [CONTRIBUTING.md](CONTRIBUTING.md) and the
   [pull request template](.github/PULL_REQUEST_TEMPLATE.md).
 
@@ -238,7 +258,7 @@ npm run check   # tsc --noEmit + vitest (cores tested seriously, apps are smoke 
 
 `demo/wiring.test.ts` proves one event reaches four apps through loose coupling;
 `demo/showcase.test.ts` renders every app for real; `core-termgif`'s LZW is
-round-tripped against an independent decoder. **24 test files, 119 tests.**
+round-tripped against an independent decoder. **25 test files, 125 tests.**
 
 ## Contributing
 
