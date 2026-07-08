@@ -20,7 +20,8 @@
       "@umeplay/core-chiptune": ["packages/core-chiptune/src/index.ts"],
       "@umeplay/core-tui": ["packages/core-tui/src/index.ts"],
       "@umeplay/core-worker-data": ["packages/core-worker-data/src/index.ts"],
-      "@umeplay/core-focus-log": ["packages/core-focus-log/src/index.ts"]
+      "@umeplay/core-focus-log": ["packages/core-focus-log/src/index.ts"],
+      "@umeplay/core-termgif": ["packages/core-termgif/src/index.ts"]
     }
   }
 }

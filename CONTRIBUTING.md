@@ -35,6 +35,51 @@ apps/*  →  packages/core-*  →  contracts/   （逆流・横流し禁止）
 
 Steam Deck は Linux PC 扱い＝デバイスドライバ不要。core-tui 系 app のビルドターゲット。
 
+## 新しい遊び（app）を足す完全手順
+
+1. `apps/<name>/` を作る（`src/index.ts` に純ロジック、`package.json` に `@umeplay/*` 依存を宣言）
+2. 使う core を `import { ... } from "@umeplay/core-<domain>"` で1個以上組み合わせる。
+   core をまたぐ実装（app 固有の再利用ロジック）は書かない — core に落とす
+3. **`src/demo.ts` を書く**（GIF 用デモ・決定論的）。規約は `packages/core-termgif/README.md` の
+   「デモ規約（DemoSpec）」を参照。乱数は必ず `seeded()` で固定し、同じ入力から同じ GIF が出ること
+4. **`src/cli.ts` を書く**（実行エントリ）。規約は `apps/event-loom/src/cli.ts` を参照:
+   - `--frames N` でフレーム数指定 → キャプチャ用の有限終了
+   - 指定なし → ライブ実行（`SIGINT`/`SIGTERM` でカーソル復帰して終了）
+   - `index.ts` の純ロジックを import して呼ぶだけ。cli.ts 自体にロジックを書かない
+5. 実行アプリ化する場合は root `package.json` の `scripts` に `build:<name>` / `<name>` を追加
+   （`esbuild` でバンドル → `node dist/<name>.mjs`。既存の `aquarium`/`symphony`/`loom` を参考に）
+6. 生成物確認: `node tools/gifcast.mjs` で `demo/gifs/<name>.gif` が出ることを確認
+7. `README.md` の「試作品カタログ」または「遊び（apps/）」表に1行追加
+
+## 新しい core を足す完全手順
+
+1. `packages/core-<domain>/` を作る（`package.json` に `@umeplay/contracts` 依存を宣言・`src/index.ts`
+   で公開 API を export）
+2. 純ロジック（テスト対象）と副作用境界（DB/ファイル/外部プロセス呼び出し・テスト対象外）を
+   別ファイルに分ける（既存 core 全てがこの分離を守っている）
+3. **`tsconfig.base.json` の `paths` に1行追加**:
+   ```json
+   "@umeplay/core-<domain>": ["packages/core-<domain>/src/index.ts"]
+   ```
+4. **`vitest.config.ts` の `resolve.alias` に1行追加**（`tsconfig.base.json` と必ず一致させる）:
+   ```ts
+   "@umeplay/core-<domain>": resolve(root, "packages/core-<domain>/src/index.ts"),
+   ```
+5. `test/*.test.ts` で純ロジックを vitest unit テスト
+6. `README.md`（本パッケージ用）を作成: 責務1文 / 提供API表 / 使用例 / 使っているapp / 設計原則
+   （既存 core の README を参考にした形式）
+7. root `README.md` の「部品カタログ（packages/）」表に1行追加
+
+## PR 前チェック
+
+```sh
+npm run check   # tsc --noEmit + vitest run
+npm run gifs    # demo.ts を持つ app 全部の GIF が壊れず生成できるか
+```
+
+両方が緑になってから PR を出す。`npm run gifs` は `demo.ts` が決定論的であることの検証も兼ねる
+（`seeded()` を使わずに `Math.random()` を直接使っていると、実行ごとに GIF が変わり気づける）。
+
 ## テスト（品質は保つ・でもガチガチにしない）
 
 | 層 | テスト |

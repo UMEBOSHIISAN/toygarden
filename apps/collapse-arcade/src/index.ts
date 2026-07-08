@@ -18,7 +18,8 @@ export interface ArcadeState {
 export function spawn(stats: CollapseStat[], threshold = 0.05): ArcadeState {
   const enemies = stats
     .filter((s) => s.rate > threshold)
-    .map((s) => ({ agent: s.agent, hp: Math.max(1, Math.ceil(s.rate * 100)) }));
+    // 0.07*100=7.000000000000001 の浮動小数誤差で ceil が 8 になるのを防ぐため先に丸める
+    .map((s) => ({ agent: s.agent, hp: Math.max(1, Math.ceil(Math.round(s.rate * 10000) / 100)) }));
   return { enemies, score: 0 };
 }
 

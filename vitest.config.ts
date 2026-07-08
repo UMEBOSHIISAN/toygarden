@@ -15,6 +15,7 @@ export default defineConfig({
       "@umeplay/core-tui": resolve(root, "packages/core-tui/src/index.ts"),
       "@umeplay/core-worker-data": resolve(root, "packages/core-worker-data/src/index.ts"),
       "@umeplay/core-focus-log": resolve(root, "packages/core-focus-log/src/index.ts"),
+      "@umeplay/core-termgif": resolve(root, "packages/core-termgif/src/index.ts"),
     },
   },
   test: {

@@ -21,12 +21,23 @@
     "build:replay": "esbuild apps/git-replay/src/cli.ts --bundle --platform=node --format=esm --outfile=dist/replay.mjs",
     "replay": "npm run build:replay && node dist/replay.mjs",
     "build:loom": "esbuild apps/event-loom/src/cli.ts --bundle --platform=node --format=esm --outfile=dist/loom.mjs",
-    "loom": "npm run build:loom && node dist/loom.mjs"
+    "loom": "npm run build:loom && node dist/loom.mjs",
+    "gifs": "node tools/gifcast.mjs",
+    "showcase": "node tools/showcase.mjs",
+    "play": "node tools/play.mjs"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
     "esbuild": "^0.21.5",
     "typescript": "^5.6.0",
     "vitest": "^2.1.0"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/UMEBOSHIISAN/umeplay.git"
+  },
+  "engines": {
+    "node": ">=22"
   }
 }
