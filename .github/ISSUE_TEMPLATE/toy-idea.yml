@@ -1,0 +1,25 @@
+name: "🧸 こんなおもちゃどう? / Toy idea"
+description: "端末で動く新しいおもちゃのアイデア。1行でいい。 / A new terminal toy idea — one line is enough."
+title: "🧸 toy: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        アイデアだけで大歓迎。実装は要りません。`npm run new -- my-toy` で60秒で足場が作れます。
+        Ideas only, no code required. `npm run new -- my-toy` scaffolds a living toy in ~60 seconds.
+  - type: textarea
+    id: idea
+    attributes:
+      label: "どんなおもちゃ? / What's the toy?"
+      description: "1行で。例: 「未読メールの数だけ空に星が増えるプラネタリウム」 / One line. e.g. \"a planetarium that gains a star per unread email\"."
+      placeholder: "端末で〇〇すると△△が…… / When you ___ in the terminal, ___ happens…"
+    validations:
+      required: true
+  - type: input
+    id: crossing
+    attributes:
+      label: "使いそうな部品の掛け合わせ / Cores you'd cross (optional)"
+      description: "分かる範囲で。例: chiptune × device / git-observe × tui。分からなければ空でOK。 / As far as you know; leave blank if unsure."
+      placeholder: "e.g. chiptune × device"
+    validations:
+      required: false

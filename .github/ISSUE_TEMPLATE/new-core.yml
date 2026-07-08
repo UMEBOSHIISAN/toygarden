@@ -1,0 +1,33 @@
+name: "🧩 新しい部品の提案 / New core (part)"
+description: "新しい core-* 部品のアイデア。1個足すと全おもちゃとの掛け合わせが増える。 / A new core-* part — one addition multiplies across every toy."
+title: "🧩 core: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        部品は掛け算です。1個の core が、既存のどのおもちゃと組んでも新しい遊びになります。
+        A part multiplies: one new core combines with every existing toy. See CONTRIBUTING.md「新しい core を足す」.
+  - type: input
+    id: name
+    attributes:
+      label: "部品名 / Core name"
+      description: "core-<領域> の形で。例: core-weather-api / core-midi。 / As core-<domain>."
+      placeholder: "core-<domain>"
+    validations:
+      required: true
+  - type: textarea
+    id: responsibility
+    attributes:
+      label: "責務は? / What does it do?"
+      description: "この部品が1つだけ担う責務を1文で。 / The single responsibility, in one sentence."
+      placeholder: "〇〇を△△として供給する / supplies ___ as ___"
+    validations:
+      required: true
+  - type: input
+    id: crossing
+    attributes:
+      label: "掛け合わせ想定 / Toys it could cross with"
+      description: "この部品を使いたいおもちゃ、または生まれそうな新しい遊び。 / Toys that would use it, or new play it could spawn."
+      placeholder: "e.g. desk-weather × core-weather-api"
+    validations:
+      required: false

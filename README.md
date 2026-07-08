@@ -199,6 +199,37 @@ so you start from something alive and reshape it. From there, add a `@umeplay/*`
 core to its `package.json` and cross parts to taste. Full guide (and how to add a
 new core, device, or event): **[CONTRIBUTING.md](CONTRIBUTING.md)**.
 
+## The kit grows
+
+umeplay isn't a finished box of toys — it's a kit that keeps sprouting new ones.
+There are four ways to make it grow, and they compound:
+
+- 🧸 **A new toy** — `npm run new -- my-toy` scaffolds a living app in ~60 seconds.
+  One toy = a few files under `apps/`, added without touching anything else.
+- 🧩 **A new core (part)** — this is the one with leverage. A single new `core-*`
+  package doesn't add *one* thing; it multiplies with every toy that crosses it.
+  Cross it with three existing cores and you've got new combinations for free —
+  that combinatorial blow-up is what the kit is actually made of.
+- 🔌 **A new device driver** — implement six methods and every existing toy runs on
+  your gadget, unmodified. Real hardware drivers are wanted, not shipped:
+  **[docs/DEVICES.md](docs/DEVICES.md)**.
+- 📡 **A new event** — add one line to the `PlayEvent` type in
+  [`contracts/events.ts`](contracts/events.ts) and every producer and consumer
+  gets it for free. The shared vocabulary widens for the whole kit at once.
+
+> **From the owner (umeboshi):** I'm not shipping this and walking away. I'll keep
+> adding parts and toys to it myself — that's the point. Think of this repo less
+> as a product and more as a garden I keep planting in, and you're welcome to plant
+> next to me. If you build a toy, a part, or a driver, I want to see it.
+
+So show it to us. Open an issue with the idea, or send a PR:
+
+- 🧸 [Suggest a toy](../../issues/new?template=toy-idea.yml) ·
+  🧩 [Propose a new core](../../issues/new?template=new-core.yml) ·
+  🔌 [Bring a device driver](../../issues/new?template=device-driver.yml)
+- PRs welcome — the checklist is in [CONTRIBUTING.md](CONTRIBUTING.md) and the
+  [pull request template](.github/PULL_REQUEST_TEMPLATE.md).
+
 ## Testing
 
 ```sh

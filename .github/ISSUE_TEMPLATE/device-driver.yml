@@ -1,0 +1,34 @@
+name: "🔌 実機ドライバ / Device driver"
+description: "M5Stack・マクロパッド・自作ガジェットのドライバ。画面とボタンがあれば繋がる。 / A driver for a real gadget — a screen and a button is enough."
+title: "🔌 device: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        実機ドライバは wanted（募集中）で未実装です。6メソッド実装すれば既存の全おもちゃが無改修で動きます。
+        Real drivers are wanted, not shipped. Implement six methods and every toy runs on it. See docs/DEVICES.md.
+  - type: input
+    id: gadget
+    attributes:
+      label: "ガジェット / The gadget"
+      description: "機種名。例: M5Stack Basic / Ajazz AKP153 / 自作キーボード。 / Model name."
+      placeholder: "e.g. M5Stack Basic"
+    validations:
+      required: true
+  - type: dropdown
+    id: kind
+    attributes:
+      label: "種類 / Kind"
+      options:
+        - "提案・欲しい（実装はまだ） / Request (no code yet)"
+        - "書き始めた・書ける / Working on it / can build it"
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: "画面とボタン / Screen & buttons"
+      description: "解像度・ボタン数・接続方法（シリアル/HID/HTTP等）が分かれば。分からなければ空でOK。 / Resolution, buttons, transport if known."
+      placeholder: "e.g. 320×240, [A][B][C] buttons, serial over USB"
+    validations:
+      required: false

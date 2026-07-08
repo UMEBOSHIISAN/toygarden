@@ -46,6 +46,16 @@
 | chiptune-themes | イベント種別ごとにテーマ曲が付く。deploy 成功はファンファーレ |
 | commit-constellation | コミット著者が星になる。寄与が大きいほど明るい |
 
+## コミュニティ / 拡張性
+
+> README の「生えつづける」節・Issue/PR 導線・OSS 招待で使い回す公式コピー。
+
+| 用途 | JP | EN |
+|---|---|---|
+| 掛け算 | 部品を1個足すと、遊びは掛け算で増える。 | Add one part, and the play multiplies. |
+| 庭 | このリポジトリは完成品じゃない。生えつづける庭。 | This repo isn't a finished product — it's a garden that keeps growing. |
+| 招待 | あなたのおもちゃ・部品・ドライバを見せてほしい。 | Show us your toy, your part, your driver. |
+
 ## SNS 投稿案（X向け・下書き）
 
 > ⚠️ 投稿は human 判断。ここは下書き置き場。
