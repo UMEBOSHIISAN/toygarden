@@ -30,7 +30,7 @@
 ```sh
 npm install              # 依存導入（typescript + vitest + esbuild のみ）
 npm run play             # 遊び一覧（tagline 付き）
-npm run play aquarium    # 名前は部分一致。Ctrl+C で終了
+npm run play tamagotchi    # 名前は部分一致。Ctrl+C で終了
 npm run play random      # ランダムに1本起動
 npm run check            # typecheck + テスト（24 files / 119 tests）
 npm run gifs             # 全デモGIFをコードから再生成 → demo/gifs/

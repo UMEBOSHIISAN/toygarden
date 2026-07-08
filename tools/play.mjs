@@ -2,7 +2,7 @@
  * play.mjs — どの遊びも1コマンドで起動するランナー。
  *
  *   npm run play                                # おもちゃ箱の一覧（tagline 付き）
- *   npm run play aquarium                       # 名前は部分一致（apps/ のディレクトリ名）
+ *   npm run play tamagotchi                       # 名前は部分一致（apps/ のディレクトリ名）
  *   npm run play random                         # ランダムに1本起動
  *   npm run play routing-slot -- --frames 30    # 追加引数は app の cli にそのまま渡る
  *

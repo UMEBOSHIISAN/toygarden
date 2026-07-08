@@ -20,14 +20,14 @@ umeplay is a **zero-dependency TypeScript monorepo** where **21 terminal toys**
 panel…) are assembled from **8 reusable `core-*` packages** wired together by a
 **single event contract**.
 You don't build apps — you cross parts, and play *grows*. It's all in your
-terminal: no build target, no browser, no hardware. `npm install && npm run play aquarium`.
+terminal: no build target, no browser, no hardware. `npm install && npm run play tamagotchi`.
 
 ## Quick start
 
 ```sh
 npm install              # devDeps only: typescript + vitest + esbuild
 npm run play             # list every toy, with taglines
-npm run play aquarium    # names match by substring — Ctrl+C to quit
+npm run play tamagotchi    # names match by substring — Ctrl+C to quit
 npm run play random      # feeling lucky? launch a random one
 npm run check            # typecheck + tests (24 files / 119 tests)
 npm run gifs             # re-render every demo GIF from code → demo/gifs/
