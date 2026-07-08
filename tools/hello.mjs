@@ -12,11 +12,15 @@
  * UMEPLAY_CONTEXT=package のとき（npx 経由の bin から渡される契約）は案内コマンドを
  * `npx umeplay <sub>` 形式に切り替える。未設定 or "repo" なら従来の `npm run <sub>` 形式。
  * BUILD は package コンテキストではリポジトリ clone を案内する（workshop はリポジトリが要る）。
+ *
+ * TTY のときだけ冒頭で映画的スプラッシュ（splash.mjs）を1回流してから会話ボックスへ繋ぐ。
+ * `UMEPLAY_NO_SPLASH=1` で省略できる（毎回見るとうざくなるため・playSplash 側も同じ変数を見る）。
  */
 import { existsSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { spawn } from "node:child_process";
 import readline from "node:readline";
+import { playSplash } from "./splash.mjs";
 
 const root = resolve(new URL("..", import.meta.url).pathname);
 
@@ -238,6 +242,10 @@ async function main() {
     console.log(`  ${cmd("play")}      -- list of individual toys`);
     process.exit(0);
     return;
+  }
+
+  if (process.env.UMEPLAY_NO_SPLASH !== "1") {
+    await playSplash();
   }
 
   await showGreeting(GREETING_LINES);

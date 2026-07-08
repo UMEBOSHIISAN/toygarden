@@ -229,6 +229,48 @@ required.
       `packages/core-device/README.md`'s API table if it changes the public
       surface
 
+## 4b. Raspberry Pi already runs the terminal half — today, no driver
+
+"Hardware" means two different things here, and it's worth keeping them apart:
+
+- **A computer with a terminal** — a Raspberry Pi (or any SBC that boots to a
+  shell) runs umeplay *today, unmodified*. Every `core-tui` toy —
+  ascii-aquarium, secretary-today, git-replay, focus-tally, the whole terminal
+  half of the catalog — is just Node drawing to a screen. `git clone`,
+  `npm install`, `npm run play`, done. No driver, no HAL, nothing to write. If
+  you then want the Pi's GPIO pins or an attached LED/HAT to light up as well,
+  *that* part is a `Device` driver — the ~50-line job from section 3.
+- **A panel gadget** — an ESP32 board, an M5Stack, a Stream Deck–class macropad:
+  something with a small screen and/or a button but no general-purpose shell.
+  These need a `Device` driver to translate `DrawCommand`s into the panel's own
+  wire protocol. That's the wanted work.
+
+| target | how it runs |
+|---|---|
+| Raspberry Pi / any SBC with a terminal | ✅ today — `core-tui` toys run as-is; GPIO/LED is an *optional* `Device` driver |
+| ESP32 / ESP32-S3 dev boards | 🔌 wanted — needs a `Device` driver (serial or BLE transport) |
+| M5Stack (Basic/Core2, Cardputer, StickC Plus) | 🔌 wanted — placeholder `case` only, see the table in §4 |
+| Stream Deck–class macropad (Ajazz AKP153) | 🔌 wanted — HID transport, same six-method shape |
+
+### This genre is real — you'd be in good company
+
+The "one hardware-abstraction layer + a thin display layer on top" pattern isn't
+umeplay's invention. A cluster of popular projects have converged on the same
+shape, which is the best evidence the `Device` seam is worth filling. None of
+these are umeplay dependencies or integrations — they're **neighbors** that show
+the target hardware is real, active, and waiting for exactly this kind of driver:
+
+- **[AWTRIX 3](https://github.com/Blueforcer/awtrix3)** (~2.3k★ at the time of
+  writing) — ESP32 firmware that turns a 32×8 LED matrix into a clock/dashboard
+  driven by small draw commands over the network. Almost exactly umeplay's
+  `draw()` / `flush()` seam, expressed in firmware.
+- **[M5Stack StackChan](https://github.com/m5stack/StackChan)** (994★) — an
+  M5Stack desktop robot whose faces and animations are a thin display layer over
+  the same M5 panel that `device-mirror` already emulates in your terminal.
+- **[badge.team](https://github.com/badgeteam)** (132 public repos) — an
+  event-badge firmware community built around swappable apps on shared badge
+  hardware: the same "many small display apps, one HAL" split umeplay uses.
+
 ## 5. Try it without hardware
 
 You don't need a gadget to see the HAL work. Everything in umeplay already

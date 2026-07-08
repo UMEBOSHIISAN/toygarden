@@ -59,6 +59,20 @@
 | workshop | 部品を目で選ぶと、おもちゃが生える。 | Pick parts by eye, and a toy grows. |
 | お題 | はじめての1本は、お題から選ぶのもいい。 | Your first toy can start from a prompt. |
 
+## 組み合わせフロンティア（combination）
+
+> README「Combination Frontier / 組み合わせのフロンティア」節・SNS・showcase で使い回す公式コピー。
+> オーナー方針の目玉 =「組み合わせの面白さ」。ここが一番のフックだと思って使う。
+
+| 用途 | JP | EN |
+|---|---|---|
+| 地図 | 8部品 × 28通り。13が探索済み、15が未踏。空きマスはあなたのもの。 | 8 parts, 28 pairs — 13 explored, 15 unexplored. The empty cells are yours. |
+| 掛け算 | 部品を1個足すと、遊びは足し算じゃなく掛け算で増える。 | Add one part and the play grows by multiplication, not addition. |
+| 未踏 | いちばん面白いおもちゃは、まだ誰も掛け合わせていない2つの部品。 | The most interesting toy is the two parts nobody has crossed yet. |
+| レシピ | 「これとこれを組み合わせたら面白いじゃん」を、みんなが試せる。 | "What if I crossed this with that?" — now anyone can. |
+| 拡張 | ラズパイなら今日そのまま動く。ESP32 や M5Stack はドライバ募集中。 | Runs on a Raspberry Pi today; ESP32 and M5Stack drivers are wanted. |
+| 空きマス | 光っていないマスは、穴じゃない。招待状だ。 | An unlit cell isn't a gap — it's an invitation. |
+
 ## SNS 投稿案（X向け・下書き）
 
 > ⚠️ 投稿は human 判断。ここは下書き置き場。
@@ -76,6 +90,11 @@ LZWも8bitフォントも全部手元。#umeplay
 **案3（哲学）**
 「アプリを作る」より「部品を掛け合わせたら遊びが生えた」の方が楽しい。
 core 7個 × 契約1枚 = 遊び21本。掛け算はまだ終わらない。
+
+**案4（組み合わせフロンティア）**
+8つの部品でできる組み合わせは28通り。今そのうち13を作った。
+残り15マスは、まだ誰も掛け合わせていない。
+「これとこれを混ぜたら面白いじゃん」を、みんなで埋めていくキットです🎛️ #umeplay
 
 ## リリースノート用ボイラープレート
 

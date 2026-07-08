@@ -28,7 +28,7 @@ Read this as your first day, not a command dump:
 
 ```sh
 npm install              # devDeps only: typescript + vitest + esbuild
-npm run hello            # an Undertale-style greeter walks you in
+npm run hello            # a cinematic splash, then an Undertale-style greeter walks you in (UMEPLAY_NO_SPLASH=1 to skip)
 npm run tour             # sit back — all 21 toys, 8 seconds each, with save-point interludes
 npm run play daily       # "today's toy": a date-seeded pick (same day → same toy)
 npm run workshop         # pick parts by eye and grow a toy of your own
@@ -40,9 +40,10 @@ From there, the everyday commands:
 npm run play             # list every toy, with taglines
 npm run play tamagotchi  # names match by substring; an ambiguous name gets a numbered menu (TTY)
 npm run play random      # feeling lucky? launch a random one
-npm run check            # typecheck + tests (25 files / 125 tests)
+npm run check            # typecheck + tests — 130+, all green (the count climbs as toys land)
 npm run gifs             # re-render every demo GIF from code → demo/gifs/
 npm run banner           # re-render the hero banner → demo/banner.gif
+npm run frontier         # re-render the combination map → demo/frontier.gif
 ```
 
 > **`npx umeplay` is coming soon.** The bin entrypoint and ahead-of-time bundling
@@ -196,6 +197,12 @@ app's demo()  ──ANSI frames──▶  core-termgif  ──▶  demo/gifs/<na
 - `npm run gifs` re-renders every app's GIF plus `manifest.json`; `npm run showcase`
   rebuilds the gallery HTML; `npm run banner` rebuilds the hero.
 - Same code → same GIF. **Demo freshness = repository honesty.**
+- **Optional CRT look** — `npm run gifs -- --crt ascii-aquarium` re-renders any toy
+  through a self-written scanline/glow/vignette post-pass (the cool-retro-term
+  aesthetic, our own code) into `demo/crt/`. It never touches the canonical
+  `demo/gifs/` or `manifest.json` — it's purely additive.
+
+<img src="demo/crt/ascii-aquarium.gif" alt="CRT-filtered ascii-aquarium" width="360">
 
 The font is a public-domain IBM-VGA-era bitmap ([dhepper/font8x8](https://github.com/dhepper/font8x8))
 plus hand-drawn glyphs. Even hiragana swim across the tank.
@@ -216,6 +223,35 @@ The generated toy already passes `check`, runs under `play`, and renders a GIF �
 so you start from something alive and reshape it. From there, add a `@umeplay/*`
 core to its `package.json` and cross parts to taste. Full guide (and how to add a
 new core, device, or event): **[CONTRIBUTING.md](CONTRIBUTING.md)**.
+
+## Combination Frontier
+
+The 8 `core-*` parts can pair up **28 ways**. Today **13 of those cells are filled**
+by a shipped toy — and **15 are still empty**. This map is computed from
+`manifest.json` by `npm run frontier`, so it can't lie: a cell only lights up when a
+real toy actually crosses those two parts. The dark cells with a blinking `?` are the
+combinations nobody has built yet.
+
+![combination frontier](demo/frontier.gif)
+
+> **28 combinations possible — 13 explored, 15 unexplored. The empty cells are yours.**
+
+Here are six ideas sitting in empty cells right now. None of them ship today — they're
+invitations, each one an `npm run new` away:
+
+| idea | cross these two | what it'd do |
+|---|---|---|
+| **Sweaty Console** | `worker-data × device` | agent collapse rate makes a real panel's LED pulse red |
+| **TUI Rave** | `tui × chiptune` | drawing bars lock to 8-bit sound — a terminal turned visual instrument |
+| **Commit Flipbook** | `git-observe × termgif` | a day of commits flip-booked into one shareable GIF |
+| **Whisper Bus** | `events × focus-log` | a broken focus streak emits a "sigh" event that ripples across every toy |
+| **Panel Deck** | `device × tui` | your secretary's priority lanes, mirrored onto a physical M5Stack panel |
+| **Blame Radar** | `git-observe × worker-data` | cross commit authorship with dispatch data — see which agent actually shipped what |
+
+A new **part** widens the frontier faster than a new toy: add one `core-*` and it can
+pair with all eight existing parts at once — a whole new row of empty cells to fill.
+[Grab a `toy-idea`](../../issues/new?template=toy-idea.yml) or
+[propose a core](../../issues/new?template=new-core.yml).
 
 ## The kit grows
 
@@ -258,7 +294,8 @@ npm run check   # tsc --noEmit + vitest (cores tested seriously, apps are smoke 
 
 `demo/wiring.test.ts` proves one event reaches four apps through loose coupling;
 `demo/showcase.test.ts` renders every app for real; `core-termgif`'s LZW is
-round-tripped against an independent decoder. **25 test files, 125 tests.**
+round-tripped against an independent decoder. **130+ tests, all green — and the count
+climbs with every toy, part, and CRT/frontier renderer added.**
 
 ## Contributing
 

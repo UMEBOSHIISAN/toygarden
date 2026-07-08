@@ -14,10 +14,12 @@
 import { encodeGif, type GifFrame, type Palette } from "./gif.ts";
 import { parseFrame } from "./ansi.ts";
 import { glyph } from "./font.ts";
+import { renderCrtFrames, type CrtOptions } from "./crt.ts";
 
 export { lzwEncode, encodeGif, type Palette, type GifFrame } from "./gif.ts";
 export { parseFrame, isWide, type Cell, type Grid } from "./ansi.ts";
 export { glyph, hasGlyph } from "./font.ts";
+export { applyCrt, quantizeShared, renderCrtFrames, type CrtOptions } from "./crt.ts";
 
 /** app が demo.ts で export する規約。frames は「画面全体」を表す文字列（ANSI 可・\n 区切り）。 */
 export interface DemoSpec {
@@ -93,11 +95,18 @@ export interface RenderOptions {
   rows?: number;
 }
 
+interface IndexedFrames {
+  width: number;
+  height: number;
+  palette: Palette;
+  gifFrames: GifFrame[];
+}
+
 /**
- * ANSI フレーム列 → アニメーション GIF バイト列。
- * 全フレームを同一サイズの格子に正規化してから描く（サイズ揺れで壊れない）。
+ * ANSI フレーム列 → パレット index 画像列（encodeGif に渡す直前の中間表現）。
+ * renderGif() と renderCrtGif() で共有する（全フレームを同一サイズの格子に正規化してから描く）。
  */
-export function renderGif(frames: ReadonlyArray<string>, opts: RenderOptions = {}): Uint8Array {
+function buildIndexedFrames(frames: ReadonlyArray<string>, opts: RenderOptions): IndexedFrames {
   if (frames.length === 0) throw new Error("renderGif: frames が空");
   const fps = opts.fps ?? 5;
   const px = opts.pxScale ?? 2;
@@ -141,5 +150,27 @@ export function renderGif(frames: ReadonlyArray<string>, opts: RenderOptions = {
     return { indices, delayCs };
   });
 
-  return encodeGif(width, height, PALETTE, gifFrames);
+  return { width, height, palette: PALETTE, gifFrames };
+}
+
+/**
+ * ANSI フレーム列 → アニメーション GIF バイト列。
+ * 全フレームを同一サイズの格子に正規化してから描く（サイズ揺れで壊れない）。
+ */
+export function renderGif(frames: ReadonlyArray<string>, opts: RenderOptions = {}): Uint8Array {
+  const { width, height, palette, gifFrames } = buildIndexedFrames(frames, opts);
+  return encodeGif(width, height, palette, gifFrames);
+}
+
+/**
+ * renderGif() と同じ入力から、レトロ CRT 風後処理（走査線・グロー・ビネット）を
+ * 適用したアニメーション GIF バイト列を作る（additive・renderGif の出力には影響しない）。
+ */
+export function renderCrtGif(
+  frames: ReadonlyArray<string>,
+  opts: RenderOptions & CrtOptions = {},
+): Uint8Array {
+  const { width, height, palette, gifFrames } = buildIndexedFrames(frames, opts);
+  const { palette: crtPalette, frames: crtFrames } = renderCrtFrames(width, height, palette, gifFrames, opts);
+  return encodeGif(width, height, crtPalette, crtFrames);
 }
