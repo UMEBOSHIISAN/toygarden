@@ -1,0 +1,11 @@
+{
+  "name": "@toygarden/routing-radar",
+  "version": "0.0.0",
+  "type": "module",
+  "main": "src/index.ts",
+  "dependencies": {
+    "@toygarden/core-termgif": "*",
+    "@toygarden/core-tui": "*",
+    "@toygarden/core-worker-data": "*"
+  }
+}

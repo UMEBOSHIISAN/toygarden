@@ -1,0 +1,13 @@
+{
+  "name": "@toygarden/collapse-siren",
+  "version": "0.0.0",
+  "type": "module",
+  "main": "src/index.ts",
+  "dependencies": {
+    "@toygarden/contracts": "*",
+    "@toygarden/core-chiptune": "*",
+    "@toygarden/core-events": "*",
+    "@toygarden/core-termgif": "*",
+    "@toygarden/core-worker-data": "*"
+  }
+}

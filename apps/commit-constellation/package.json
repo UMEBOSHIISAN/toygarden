@@ -1,0 +1,11 @@
+{
+  "name": "@toygarden/commit-constellation",
+  "version": "0.0.0",
+  "type": "module",
+  "main": "src/index.ts",
+  "dependencies": {
+    "@toygarden/core-device": "*",
+    "@toygarden/core-git-observe": "*",
+    "@toygarden/core-termgif": "*"
+  }
+}

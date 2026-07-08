@@ -1,0 +1,10 @@
+{
+  "name": "@toygarden/focus-aquarium",
+  "version": "0.0.0",
+  "type": "module",
+  "main": "src/index.ts",
+  "dependencies": {
+    "@toygarden/core-focus-log": "*",
+    "@toygarden/core-termgif": "*"
+  }
+}

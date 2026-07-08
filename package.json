@@ -1,7 +1,7 @@
 {
   "name": "toygarden",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "module",
   "description": "UMEBOSHI 遊び枠プラットフォーム — apps/ を core-* 部品で組む modular monorepo",
   "workspaces": [

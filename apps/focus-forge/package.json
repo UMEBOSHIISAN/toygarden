@@ -1,0 +1,12 @@
+{
+  "name": "@toygarden/focus-forge",
+  "version": "0.0.0",
+  "type": "module",
+  "main": "src/index.ts",
+  "dependencies": {
+    "@toygarden/core-chiptune": "*",
+    "@toygarden/core-device": "*",
+    "@toygarden/core-focus-log": "*",
+    "@toygarden/core-termgif": "*"
+  }
+}

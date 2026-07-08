@@ -1,0 +1,11 @@
+{
+  "name": "@toygarden/focus-tally",
+  "version": "0.0.0",
+  "type": "module",
+  "main": "src/index.ts",
+  "dependencies": {
+    "@toygarden/core-focus-log": "*",
+    "@toygarden/core-termgif": "*",
+    "@toygarden/core-tui": "*"
+  }
+}
