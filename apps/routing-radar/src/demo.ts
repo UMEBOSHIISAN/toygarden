@@ -12,7 +12,8 @@ const CYAN = "\x1b[36m";
 const DIM = "\x1b[2m";
 const RESET = "\x1b[0m";
 
-const FINAL: RoutingTrial[] = [
+/** demo() と cli.ts のフォールバック描画の両方から使う共通サンプル。 */
+export const FINAL: RoutingTrial[] = [
   { taxonomy: "read_only_scan", predictedWorker: "qwen", confidence: 0.85 },
   { taxonomy: "impl_1_3_files", predictedWorker: "codex", confidence: 0.72 },
   { taxonomy: "design_gate", predictedWorker: "cc", confidence: 0.63 },
