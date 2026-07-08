@@ -13,7 +13,7 @@ const DIM = "\x1b[2m";
 const BOLD = "\x1b[1m";
 const MAGENTA = "\x1b[35m";
 
-export const HEADER = `  ${CYAN}~ routing-slot ~${RESET}  ${DIM}まわして worker はいしゃ を きめる${RESET}`;
+export const HEADER = `  ${CYAN}~ routing-slot ~${RESET}  ${DIM}spin to pick the worker${RESET}`;
 
 const REEL_W = 18;
 const fit = (s: string): string => (s.length >= REEL_W ? s.slice(0, REEL_W) : s.padEnd(REEL_W, " "));
@@ -26,7 +26,7 @@ export function renderSpinning(trials: RoutingTrial[], blurIdx: number): string 
     `  │${DIM}${fit(t.taxonomy)}${RESET}│${DIM}${fit(t.predictedWorker)}${RESET}│${DIM}${" ??% ".padEnd(10)}${RESET}│`,
     `  └${"─".repeat(REEL_W)}┴${"─".repeat(REEL_W)}┴${"─".repeat(10)}┘`,
   ];
-  return [HEADER, "", "        [ まわしちゅう ... ]", "", ...box, "", ""].join("\n");
+  return [HEADER, "", "        [ spinning ... ]", "", ...box, "", ""].join("\n");
 }
 
 /** 停止: spin() の結果をそのまま表示。jackpot は金色フラッシュ。 */
@@ -40,6 +40,6 @@ export function renderStopped(r: SpinResult, flash: boolean): string {
   ];
   const banner = r.jackpot
     ? `      ${YELLOW}${BOLD}★★★ JACKPOT !! ★★★${RESET}`
-    : `      ${DIM}はずれ...もういっかい${RESET}`;
-  return [HEADER, "", "        [   ていし   ]", "", ...box, "", banner].join("\n");
+    : `      ${DIM}miss...spin again${RESET}`;
+  return [HEADER, "", "        [   stopped   ]", "", ...box, "", banner].join("\n");
 }

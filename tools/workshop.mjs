@@ -1,13 +1,17 @@
 /**
- * workshop.mjs — 部品を目で見て選ぶと、おもちゃが生える対話型ワークショップ。
+ * workshop.mjs — pick parts, and a toy grows. Interactive visual assembly tool.
  *
  *   npm run workshop
  *
- * packages/ の8つの core を「部品カード」として並べ、カーソルで選んで組み合わせると、
- * 画面下に「あなたのおもちゃ」へ繋がるレシピ図がリアルタイムで更新される。
- * 名前を決めて Enter すると apps/<name>/ が生成される（scaffold の実体は new-toy.mjs を再利用）。
+ * Lists the 8 core packages as "part cards"; move the cursor and toggle parts on,
+ * and a live recipe diagram below updates to show them wiring into "your toy".
+ * Confirm a name and apps/<name>/ is generated (scaffold reuses new-toy.mjs).
  *
- * TTY 前提のツール（1キー選択に raw mode を使う）。非TTYでは使い方を出して exit 1。
+ * TTY-only tool (uses raw mode for single-key selection). Non-TTY prints usage and exit 1.
+ *
+ * UI is EN-primary (matches hello.mjs's convention: this repo's audience skews international).
+ * Any text placed inside a bordered box (cards / the completion box) is ASCII-only on purpose —
+ * see the "display width" section below for why.
  */
 import { readdirSync, existsSync, readFileSync, mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
@@ -36,27 +40,73 @@ const WHITE = "\x1b[37m";
 
 if (!process.stdin.isTTY) {
   console.error(
-    "workshop は対話式ツール（TTY が必要）。使い方: npm run workshop\n" +
-      "対話的に部品カードを選んでおもちゃを組み立てる。非対話環境（CI・パイプ経由）では\n" +
-      "npm run new -- <name> で直接 scaffold して。",
+    "workshop is an interactive tool (needs a TTY). Usage: npm run workshop\n" +
+      "Pick part cards interactively and grow a toy. In non-interactive environments\n" +
+      "(CI, pipes), scaffold directly with: npm run new -- <name>",
   );
   process.exit(1);
 }
 
-// --- 部品カードのデータ（packages/ を実走査。8個決め打ちにしない） -----------
+// --- display width -----------------------------------------------------
+// Root cause of the card-border corruption bug (2026-07 real-terminal report): full-width
+// (CJK/kana/fullwidth-form) characters render as 2 terminal columns but were being counted
+// as 1 when padding card content, so the right-hand border landed in the wrong column and
+// (worse, on narrow terminals) long lines wrapped mid-card, cascading misalignment into every
+// row drawn after them (including the cursor marker and the footer). Fix has two parts:
+//   1. any text placed inside a bordered box is ASCII-only (ASCII width is always 1, so this
+//      class of bug structurally can't recur there — see TAGLINES below).
+//   2. padding/truncation is done with a real display-width count regardless, as defense in
+//      depth for any future core name / text that isn't ASCII.
+function stripAnsi(s) {
+  return s.replace(/\x1b\[[0-9;?]*[a-zA-Z]/g, "");
+}
+
+/** Simplified wcwidth: East-Asian-wide/fullwidth ranges = 2 columns, everything else = 1. */
+function charWidth(cp) {
+  if (
+    (cp >= 0x1100 && cp <= 0x115f) || // Hangul Jamo
+    cp === 0x2329 ||
+    cp === 0x232a ||
+    (cp >= 0x2e80 && cp <= 0xa4cf && cp !== 0x303f) || // CJK radicals .. Yi
+    (cp >= 0xac00 && cp <= 0xd7a3) || // Hangul syllables
+    (cp >= 0xf900 && cp <= 0xfaff) || // CJK compatibility ideographs
+    (cp >= 0xfe30 && cp <= 0xfe6f) || // CJK compatibility forms
+    (cp >= 0xff00 && cp <= 0xff60) || // fullwidth forms
+    (cp >= 0xffe0 && cp <= 0xffe6) ||
+    (cp >= 0x20000 && cp <= 0x3fffd) // CJK extension planes
+  ) {
+    return 2;
+  }
+  return 1;
+}
+
+function displayWidth(s) {
+  let w = 0;
+  for (const ch of stripAnsi(s)) w += charWidth(ch.codePointAt(0));
+  return w;
+}
+
+/** Pad with plain spaces (ANSI-safe: only counts visible columns) until `target` display columns. */
+function padDisplayEnd(s, target) {
+  const w = displayWidth(s);
+  return w >= target ? s : s + " ".repeat(target - w);
+}
+
+// --- part cards (scans packages/ for real; does not hard-code "8") ----------
 const packagesDir = join(root, "packages");
 const CORE_NAMES = readdirSync(packagesDir)
   .filter((n) => existsSync(join(packagesDir, n, "README.md")))
   .sort();
 
-// manifest.json はデモGIFの副産物（uses 一覧）。無い/壊れていても一覧表示自体は諦めない。
+// manifest.json is a by-product of the demo GIFs (has each toy's `uses`). Missing/broken
+// manifest shouldn't take down the whole tool -- fall back to usage=0 / no bloodline match.
 const manifestPath = join(root, "demo", "gifs", "manifest.json");
 let manifestEntries = [];
 if (existsSync(manifestPath)) {
   try {
     manifestEntries = JSON.parse(readFileSync(manifestPath, "utf8"));
   } catch {
-    manifestEntries = []; // 壊れた manifest は無視して usage=0 / blood-line なしにフォールバック
+    manifestEntries = [];
   }
 }
 
@@ -64,36 +114,37 @@ function usageCount(core) {
   return manifestEntries.filter((e) => Array.isArray(e.uses) && e.uses.includes(core)).length;
 }
 
-/** README.md の見出し直後の説明パラグラフから最初の一文だけを抜く（1行責務用）。壊れていたら空文字。 */
-function readCoreSummary(core) {
-  try {
-    const text = readFileSync(join(packagesDir, core, "README.md"), "utf8");
-    const paras = text.split(/\r?\n\r?\n/).map((p) => p.trim());
-    const desc = paras.find((p, i) => i > 0 && p.length > 0 && !p.startsWith("#")) ?? "";
-    const oneLine = desc.replace(/\r?\n/g, "");
-    const period = oneLine.indexOf("。");
-    const sentence = period >= 0 ? oneLine.slice(0, period + 1) : oneLine;
-    return sentence.replace(/\*\*/g, "").replace(/`/g, "");
-  } catch {
-    return "";
-  }
-}
+// One-line EN taglines, hard-coded on purpose (not extracted from README.md): keeps card
+// content ASCII-only, which structurally rules out the full-width-column bug for this text.
+const TAGLINES = {
+  "core-chiptune": "Turns events into 8-bit chiptune blips.",
+  "core-device": "One HAL for tiny panel devices (M5Stack, Ajazz).",
+  "core-events": "A minimal event bus wiring producers to consumers.",
+  "core-focus-log": "Read-only feed from your focus-cam log.",
+  "core-git-observe": "Reads git history: additions, deletions, co-authors.",
+  "core-save": "Fail-soft JSON persistence: keep your toy's memory safe.",
+  "core-sysmon": "Feel the pulse of your machine (CPU / mem / load).",
+  "core-termgif": "Bakes terminal frames into a GIF.",
+  "core-tui": "Tiny terminal UI: lanes, badges, ANSI color.",
+  "core-worker-data": "Read-only feed of worker routing + collapse stats.",
+};
 
 const CORES = CORE_NAMES.map((name) => ({
   name,
-  summary: readCoreSummary(name),
+  tagline: TAGLINES[name] ?? "(no tagline registered for this core)",
   usage: usageCount(name),
 }));
 
-// --- core ごとの「最小配線サンプル」（index.ts に import + export として足すコード） ---
-// index.ts は「純ロジックのみ・副作用なし」がこのリポジトリの一貫した設計（core-device の
-// selectDevice() / MockDevice はどのアプリも cli.ts 側で生成しており index.ts では作らない）。
-// ここに足す関数も同じ流儀に揃える: 引数で state/deviceを受け取るだけの純関数にする。
+// --- per-core "minimal wiring sample" (import + export added to index.ts) ---
+// index.ts stays "pure logic, no side effects" everywhere in this repo (core-device's
+// selectDevice()/MockDevice is always instantiated in cli.ts, never in index.ts). The
+// snippets below follow the same convention: plain functions that take state/device as a
+// parameter instead of owning an instance at module scope.
 const WIRING = {
   "core-events": {
     imports: ['import { EventBus } from "@umeplay/core-events";', 'import type { PlayEvent } from "@umeplay/contracts";'],
     extras: [
-      "/** core-events 配線サンプル: バスに繋いで、来たイベントの種類を受け取る。 */",
+      "/** core-events wiring sample: subscribe to a bus and receive event kinds. */",
       "export function attachTicker(bus: EventBus, onEvent: (e: PlayEvent) => void): () => void {",
       "  return bus.subscribe(onEvent);",
       "}",
@@ -102,7 +153,7 @@ const WIRING = {
   "core-device": {
     imports: ['import type { Device } from "@umeplay/core-device";'],
     extras: [
-      "/** core-device 配線サンプル: 選んだデバイス（既定は mock）に1フレーム描く。 */",
+      "/** core-device wiring sample: draw one frame to whichever device you pass in (default: mock). */",
       "export function drawToDevice(device: Device, name: string, tick: number): void {",
       '  device.draw({ op: "clear" });',
       '  device.draw({ op: "text", x: 4, y: 4, text: name });',
@@ -114,7 +165,7 @@ const WIRING = {
   "core-chiptune": {
     imports: ['import { motifForEvent, type Motif } from "@umeplay/core-chiptune";', 'import type { PlayEvent } from "@umeplay/contracts";'],
     extras: [
-      "/** core-chiptune 配線サンプル: deploy.success のファンファーレ Motif を返す。 */",
+      "/** core-chiptune wiring sample: the fanfare Motif for a deploy.success event. */",
       "export function fanfare(): Motif | null {",
       '  const e: PlayEvent = { kind: "deploy.success" };',
       "  return motifForEvent(e);",
@@ -124,7 +175,7 @@ const WIRING = {
   "core-focus-log": {
     imports: ['import { activityTally, type FocusEvent } from "@umeplay/core-focus-log";'],
     extras: [
-      "/** core-focus-log 配線サンプル: focus イベント列を活動集計に変換する。 */",
+      "/** core-focus-log wiring sample: turn a list of focus events into an activity tally. */",
       "export function tallyFocus(events: FocusEvent[]) {",
       "  return activityTally(events);",
       "}",
@@ -133,7 +184,7 @@ const WIRING = {
   "core-git-observe": {
     imports: ['import { parseGitLog, type GitCommit } from "@umeplay/core-git-observe";'],
     extras: [
-      "/** core-git-observe 配線サンプル: git log 生テキストをコミット列にパースする。 */",
+      "/** core-git-observe wiring sample: parse raw `git log` text into commits. */",
       "export function commitsFromLog(raw: string): GitCommit[] {",
       "  return parseGitLog(raw);",
       "}",
@@ -142,7 +193,7 @@ const WIRING = {
   "core-termgif": {
     imports: ['import { hasGlyph } from "@umeplay/core-termgif";'],
     extras: [
-      "/** core-termgif 配線サンプル: この文字がフォントに実在するか（塗りつぶし化けの事前チェック）。 */",
+      "/** core-termgif wiring sample: does the font actually have this glyph (avoids silent block-fill fallback)? */",
       "export function isRenderable(ch: string): boolean {",
       "  return hasGlyph(ch.codePointAt(0) ?? 0);",
       "}",
@@ -151,7 +202,7 @@ const WIRING = {
   "core-tui": {
     imports: ['import { renderLanes, type Lane } from "@umeplay/core-tui";'],
     extras: [
-      "/** core-tui 配線サンプル: 名前を1レーンの ok 表示にする。 */",
+      "/** core-tui wiring sample: render the toy's name as a single ok lane. */",
       "export function statusLane(name: string): string {",
       '  const lanes: Lane[] = [{ title: name, items: [{ label: "ready", status: "ok" }] }];',
       "  return renderLanes(lanes);",
@@ -161,7 +212,7 @@ const WIRING = {
   "core-worker-data": {
     imports: ['import { parseCollapseStats, collapseToEvents } from "@umeplay/core-worker-data";'],
     extras: [
-      "/** core-worker-data 配線サンプル: collapse stats TSV を PlayEvent 列に変換する。 */",
+      "/** core-worker-data wiring sample: turn a collapse-stats TSV into PlayEvents. */",
       "export function eventsFromTsv(raw: string) {",
       "  return collapseToEvents(parseCollapseStats(raw));",
       "}",
@@ -169,7 +220,7 @@ const WIRING = {
   },
 };
 
-// --- 血筋判定: 選んだ組合せと同じ core セットの既存おもちゃがあるか ---------
+// --- bloodline check: does an existing toy use the exact same core set? -----
 function bloodLine(selectedNames) {
   if (selectedNames.length === 0) return null;
   const selectedSet = new Set(selectedNames);
@@ -181,11 +232,11 @@ function bloodLine(selectedNames) {
   return null;
 }
 
-// --- レシピ図（選んだ core → あなたのおもちゃ、を ASCII の線でつなぐ） ------
+// --- recipe diagram: selected cores -> "your toy", drawn as ASCII branches --
 function renderRecipe(selectedNames) {
-  const box = "[ あなたのおもちゃ ]";
+  const box = "[ your toy ]";
   if (selectedNames.length === 0) {
-    return [`${DIM}  (まだ何も選んでいない — このままでも最小トイは生える)${RESET}`, `  ${DIM}${box}${RESET}`];
+    return [`${DIM}  (nothing picked yet -- you'll still get a minimal toy)${RESET}`, `  ${DIM}${box}${RESET}`];
   }
   const lines = [];
   selectedNames.forEach((name, i) => {
@@ -197,44 +248,77 @@ function renderRecipe(selectedNames) {
   return lines;
 }
 
-// --- 画面描画（カード一覧 + レシピ図 + 血筋メッセージ） ---------------------
+// --- card box drawing (display-width safe, always closes on the right) -----
+// CARD_INNER is the number of display columns between the vertical bars/corners. Every row of
+// a card (top, name, tagline, bottom) is built through cardTop/cardRow/cardBottom so they are
+// guaranteed to share the same total display width -- assertCardIntegrity below is a runtime
+// self-check for that invariant (same convention as banner.mjs's assertGlyph guard).
+const CARD_INNER = 60;
+
+function cardTop(border) {
+  return `${border}┌${"─".repeat(CARD_INNER)}┐${RESET}`;
+}
+function cardBottom(border) {
+  return `${border}└${"─".repeat(CARD_INNER)}┘${RESET}`;
+}
+function cardRow(border, content) {
+  return `${border}│${RESET}${padDisplayEnd(content, CARD_INNER)}${border}│${RESET}`;
+}
+
+function assertCardIntegrity(rows) {
+  const widths = rows.map((r) => displayWidth(r));
+  const first = widths[0];
+  if (widths.some((w) => w !== first)) {
+    throw new Error(
+      `workshop.mjs: card row widths don't match (${widths.join(", ")}) -- a border would be misaligned. ` +
+        "This should be structurally impossible via cardTop/cardRow/cardBottom; something bypassed them.",
+    );
+  }
+}
+
+// --- screen render (card list + recipe diagram + bloodline message) --------
 const CLEAR = "\x1b[2J\x1b[H";
 
 function renderScreen(cursor, selected) {
   const out = [];
   out.push(`${CYAN}${BOLD}=== umeplay workshop ===${RESET}`);
-  out.push(`${DIM}部品を選ぶと、おもちゃが生える。${RESET}`);
+  out.push(`${DIM}Pick parts, and a toy grows.${RESET}`);
   out.push("");
-  const BORDER_WIDTH = 58;
   CORES.forEach((core, i) => {
     const isCursor = i === cursor;
     const isSelected = selected.has(i);
     const border = isCursor ? CYAN : DIM;
+    const marker = isCursor ? `${CYAN}▶${RESET}` : " ";
     const heart = isSelected ? `${MAGENTA}♥${RESET}` : " ";
     const nameColor = isSelected ? MAGENTA + BOLD : isCursor ? WHITE + BOLD : DIM;
-    const marker = isCursor ? `${CYAN}▶${RESET}` : " ";
-    const usageLabel = `${DIM}(使用中のおもちゃ: ${core.usage})${RESET}`;
-    out.push(`${marker} ${border}┌${"─".repeat(BORDER_WIDTH)}┐${RESET}`);
-    out.push(`${marker} ${border}│${RESET} ${heart} ${i + 1}) ${nameColor}${core.name}${RESET}  ${usageLabel}`);
-    const summary = core.summary || "(README.md から一言責務を読めなかった)";
-    out.push(`${marker} ${border}│${RESET}   ${DIM}${summary}${RESET}`);
-    out.push(`${marker} ${border}└${"─".repeat(BORDER_WIDTH)}┘${RESET}`);
+    const usageLabel = `${DIM}used by ${core.usage} toy${core.usage === 1 ? "" : "s"}${RESET}`;
+
+    const top = cardTop(border);
+    const nameRow = cardRow(border, ` ${heart} ${i + 1}) ${nameColor}${core.name}${RESET}  ${usageLabel}`);
+    const taglineRow = cardRow(border, `   ${DIM}${core.tagline}${RESET}`);
+    const bottom = cardBottom(border);
+    assertCardIntegrity([top, nameRow, taglineRow, bottom]);
+
+    out.push(`${marker} ${top}`);
+    out.push(`${marker} ${nameRow}`);
+    out.push(`${marker} ${taglineRow}`);
+    out.push(`${marker} ${bottom}`);
   });
   out.push("");
-  out.push(`${YELLOW}${BOLD}レシピ${RESET}`);
+  out.push(`${YELLOW}${BOLD}RECIPE${RESET}`);
   const selectedNames = [...selected].sort((a, b) => a - b).map((i) => CORES[i].name);
   out.push(...renderRecipe(selectedNames));
   const blood = bloodLine(selectedNames);
   if (selectedNames.length > 0) {
-    if (blood) out.push(`  ${YELLOW}この組合せは ${BOLD}${blood}${RESET}${YELLOW} とおなじ血筋!${RESET}`);
-    else out.push(`  ${YELLOW}はじめての組合せ!${RESET}`);
+    if (blood) out.push(`  ${YELLOW}same bloodline as ${BOLD}${blood}${RESET}${YELLOW}!${RESET}`);
+    else out.push(`  ${YELLOW}a brand-new combination!${RESET}`);
   }
   out.push("");
-  out.push(`${DIM}j/k or 数字(1-${CORES.length}) = カーソル移動  space = 選択切替  Enter = 決定  q = やめる${RESET}`);
+  out.push(`${DIM}j/k or 1-${CORES.length} = move   space = toggle   Enter = confirm   q = quit${RESET}`);
   return out.join("\n");
 }
 
-// --- ステップ1: カード選択（raw mode・1キー） -------------------------------
+// --- step 1: card selection (raw mode, single-key) --------------------------
 function pickCores() {
   return new Promise((settle) => {
     let cursor = 0;
@@ -251,12 +335,12 @@ function pickCores() {
     const onKey = (str, key) => {
       if (key?.ctrl && key.name === "c") {
         cleanup();
-        console.log("中断した。");
+        console.log("Aborted.");
         process.exit(130);
       }
       if (str === "q") {
         cleanup();
-        console.log("キャンセルした。");
+        console.log("Cancelled.");
         process.exit(0);
       }
       if (str === "j" || key?.name === "down") {
@@ -285,7 +369,7 @@ function pickCores() {
         settle([...selected].sort((a, b) => a - b).map((i) => CORES[i].name));
         return;
       }
-      // 無効キーは無視（再描画もしない — ちらつき防止）
+      // ignore anything else (and don't redraw -- avoids flicker on unmapped keys)
     };
 
     function cleanup() {
@@ -298,31 +382,32 @@ function pickCores() {
   });
 }
 
-// --- ステップ2: 名前入力（行バッファ・kebab-case バリデーションは new-toy と共通） ---
+// --- step 2: name entry (line-buffered; kebab-case validation shared with new-toy) ---
 function askName() {
   const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
   return new Promise((settle) => {
     process.stdout.write("\n");
     const ask = () => {
-      rl.question(`${CYAN}おもちゃの名前 (kebab-case, 例: my-toy): ${RESET}`, (answer) => {
+      rl.question(`${CYAN}Name your toy (kebab-case, e.g. my-toy): ${RESET}`, (answer) => {
         const rawName = answer.trim();
         if (!rawName) {
-          console.log("キャンセルした。");
+          console.log("Cancelled.");
           rl.close();
           process.exit(0);
         }
         if (!KEBAB.test(rawName)) {
           console.log(
-            `${YELLOW}"${rawName}" はケバブケースじゃない（小文字英数字とハイフンのみ・数字/ハイフン始まり・連続ハイフン不可）。例: my-toy${RESET}`,
+            `${YELLOW}"${rawName}" isn't kebab-case (lowercase letters/digits and hyphens only, ` +
+              `no leading digit/hyphen, no double hyphens). Try: my-toy${RESET}`,
           );
           return ask();
         }
         if (RESERVED.has(rawName)) {
-          console.log(`${YELLOW}"${rawName}" は予約語（npm run play ${rawName} と衝突する）。別の名前にして。${RESET}`);
+          console.log(`${YELLOW}"${rawName}" is reserved (it collides with npm run play ${rawName}). Pick another name.${RESET}`);
           return ask();
         }
         if (existsSync(join(appsDir, rawName))) {
-          console.log(`${YELLOW}apps/${rawName}/ は既に存在する。別の名前にして。${RESET}`);
+          console.log(`${YELLOW}apps/${rawName}/ already exists. Pick another name.${RESET}`);
           return ask();
         }
         rl.close();
@@ -333,7 +418,7 @@ function askName() {
   });
 }
 
-// --- ステップ3+4: scaffold 実行 + 完了画面 ---------------------------------
+// --- step 3+4: run the scaffold + completion screen -------------------------
 function scaffold(name, cores) {
   const dir = join(appsDir, name);
 
@@ -370,18 +455,18 @@ function scaffold(name, cores) {
   const lines = [];
   lines.push(`${WHITE}┌${"─".repeat(boxWidth)}┐${RESET}`);
   const say = (text) => lines.push(`${WHITE}│${RESET} ${text}`);
-  say(`${GREEN}${BOLD}apps/${name}/ が生えた!${RESET}`);
+  say(`${GREEN}${BOLD}apps/${name}/ grew!${RESET}`);
   say("");
   for (const f of files) say(`  ${DIM}${f}${RESET}`);
   say("");
-  if (cores.length > 0) say(`${MAGENTA}使った部品: ${cores.join(", ")}${RESET}`);
-  else say(`${DIM}部品なし（最小トイのまま）${RESET}`);
+  if (cores.length > 0) say(`${MAGENTA}Parts used: ${cores.join(", ")}${RESET}`);
+  else say(`${DIM}No parts (still a minimal toy)${RESET}`);
   say("");
-  say(`${YELLOW}つぎの一歩${RESET}`);
+  say(`${YELLOW}Next steps${RESET}`);
   say(`  ${CYAN}npm run check${RESET}          typecheck + test`);
-  say(`  ${CYAN}npm run play ${name}${RESET}   起動して見る`);
-  say(`  ${CYAN}npm run gifs -- ${name}${RESET}   demo/gifs/${name}.gif を焼く`);
-  say(`  README.md の「遊びカタログ（apps/）」表に1行追加するのを忘れずに`);
+  say(`  ${CYAN}npm run play ${name}${RESET}   watch it run`);
+  say(`  ${CYAN}npm run gifs -- ${name}${RESET}   bake demo/gifs/${name}.gif`);
+  say(`  Remember to add a row to the "Play catalog (apps/)" table in README.md`);
   lines.push(`${WHITE}└${"─".repeat(boxWidth)}┘${RESET}`);
   console.log("\n" + lines.join("\n"));
 }

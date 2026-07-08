@@ -16,7 +16,8 @@ export type PlayEvent =
   | { kind: "gate.pending"; label: string } // human-gate 待ち
   | { kind: "deploy.success" }
   | { kind: "task.done"; project: string }
-  | { kind: "focus.activity"; activity: string; at: number }; // focus-cam ログ由来（at = epoch ms）
+  | { kind: "focus.activity"; activity: string; at: number } // focus-cam ログ由来（at = epoch ms）
+  | { kind: "sys.pulse"; busyness: number; cpuRatio: number; memRatio: number; loadRatio: number }; // core-sysmon 由来
 
 export type PlayEventKind = PlayEvent["kind"];
 

@@ -46,6 +46,6 @@ export function demo(): DemoSpec {
     fps: 6,
     frames,
     uses: ["core-worker-data"],
-    tagline: "崩壊率の高いエージェントを撃墜するシューティング。撃つ＝レビュー",
+    tagline: "High collapse-rate agents become enemies. Shooting one = a review.",
   };
 }

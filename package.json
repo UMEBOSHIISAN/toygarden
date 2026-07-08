@@ -35,6 +35,7 @@
     "showcase": "node tools/showcase.mjs",
     "play": "node tools/play.mjs",
     "banner": "node tools/banner.mjs",
+    "logo": "node tools/logo.mjs",
     "diagram": "node tools/diagram.mjs",
     "frontier": "node tools/frontier.mjs",
     "new": "node tools/new-toy.mjs",

@@ -34,6 +34,8 @@ function demoLabel(e: PlayEvent): string {
       return color(GREEN, `ok ${e.project}`);
     case "focus.activity":
       return color(DIM, `o ${e.activity}`);
+    case "sys.pulse":
+      return color(DIM, `~ busy:${(e.busyness * 100).toFixed(0)}%`);
   }
 }
 
@@ -56,20 +58,20 @@ function demoDashboard(recent: string[], counts: Counts): string {
 /** index.ts の demoStream() と同じイベント列だが、文字列フィールドを収録済み文字に置き換えたもの。 */
 function demoStreamRenderable(base = 1_783_200_000_000): PlayEvent[] {
   return [
-    { kind: "focus.activity", activity: "PCにむかっている", at: base },
-    { kind: "agent.dispatch", from: "cc", to: "codex", task: "じっそう" },
+    { kind: "focus.activity", activity: "at the PC", at: base },
+    { kind: "agent.dispatch", from: "cc", to: "codex", task: "implement" },
     { kind: "git.commit", added: 42, removed: 3, coauthoredByClaude: true },
     { kind: "worker.route", taxonomy: "read_only_scan", worker: "qwen", confidence: 0.85 },
     { kind: "git.commit", added: 7, removed: 1, coauthoredByClaude: false },
-    { kind: "gate.pending", label: "しょうにんまち" },
+    { kind: "gate.pending", label: "awaiting approval" },
     { kind: "agent.collapse", agent: "codex", rate: 0.2 },
-    { kind: "task.done", project: "とうこう" },
-    { kind: "focus.activity", activity: "かんがえごとをしている", at: base + 60000 },
-    { kind: "agent.dispatch", from: "cc", to: "qwen", task: "ぶんるい" },
+    { kind: "task.done", project: "posting" },
+    { kind: "focus.activity", activity: "thinking", at: base + 60000 },
+    { kind: "agent.dispatch", from: "cc", to: "qwen", task: "classify" },
     { kind: "git.commit", added: 15, removed: 8, coauthoredByClaude: true },
     { kind: "worker.route", taxonomy: "impl_1_3_files", worker: "codex", confidence: 0.6 },
     { kind: "deploy.success" },
-    { kind: "task.done", project: "はっそう" },
+    { kind: "task.done", project: "shipping" },
   ];
 }
 
@@ -97,6 +99,6 @@ export function demo(): DemoSpec {
     fps: 6,
     frames,
     uses: ["core-events", "core-tui", "contracts"],
-    tagline: "1本のイベントバスに疎結合な複数の購読者がそのまま繋がる",
+    tagline: "Weaves every event on one bus into a live universal viewer.",
   };
 }

@@ -23,7 +23,7 @@ const ICON: Record<Weather, readonly string[]> = {
 };
 
 const COLOR: Record<Weather, string> = { sunny: YELLOW, cloudy: WHITE, rain: BLUE, storm: RED };
-const LABEL: Record<Weather, string> = { sunny: "はれ", cloudy: "くもり", rain: "あめ", storm: "あらし" };
+const LABEL: Record<Weather, string> = { sunny: "sunny", cloudy: "cloudy", rain: "rain", storm: "storm" };
 
 function bar(n: number, max: number, width: number): string {
   const filled = Math.max(0, Math.min(width, Math.round((n / max) * width)));
@@ -35,7 +35,7 @@ export function renderScreen(m: Metrics, tick: number): string {
   const w = weatherFor(m);
   const c = COLOR[w];
   const flicker = w === "storm" && tick % 2 === 0;
-  const header = `  ${CYAN}~ desk-weather ~${RESET}  ${DIM}さぎょうかんきょうの てんきけい${RESET}`;
+  const header = `  ${CYAN}~ desk-weather ~${RESET}  ${DIM}a weather gauge for your workspace${RESET}`;
   const icon = ICON[w].map((l) => c + (flicker ? l.replace("★", " ") : l) + RESET).join("\n");
   const label = `        ${BOLD}${c}${LABEL[w]}${RESET}  ${DIM}score:${score(m)}${RESET}`;
   const gauges = [
@@ -65,6 +65,6 @@ export function demo(): DemoSpec {
     fps: 6,
     frames,
     uses: ["core-device"],
-    tagline: "dirty/fail/stale の量を天気で見る作業環境ゲージ",
+    tagline: "Your repo's health becomes desk weather; a dirty tree clouds over.",
   };
 }

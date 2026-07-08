@@ -17,11 +17,11 @@ const RESET = "\x1b[0m";
 
 /** 漢字レーン名 → かな表示（GIF フォント都合の表示写像。ロジックは PRIORITY のまま） */
 const KANA: Record<LaneKey, string> = {
-  投稿: "とうこう",
-  発送: "はっそう",
-  データ: "でーた",
-  経理: "けいり",
-  開発: "かいはつ",
+  投稿: "posting",
+  発送: "shipping",
+  データ: "data",
+  経理: "accounting",
+  開発: "dev",
 };
 
 interface Step {
@@ -35,25 +35,25 @@ export function demo(): DemoSpec {
   // 一日の進行: 優先順位の高いレーンから順に blocked → ok に変わる
   const state: TodayState = {
     投稿: [
-      { label: "けさの とうこうあん", status: "blocked" },
-      { label: "よやくとうこう 20:45", status: "blocked" },
+      { label: "this morning's post draft", status: "blocked" },
+      { label: "scheduled post 20:45", status: "blocked" },
     ],
     発送: [
-      { label: "ちゅうもん 3けん", status: "blocked" },
-      { label: "らべる いんさつ", status: "blocked" },
+      { label: "3 orders", status: "blocked" },
+      { label: "label printing", status: "blocked" },
     ],
-    データ: [{ label: "utm しゅうけい", status: "blocked" }],
-    経理: [{ label: "つきじの しわけ", status: "blocked" }],
-    開発: [{ label: "あんていしてる ので さわらない", status: "idle" }],
+    データ: [{ label: "UTM tally", status: "blocked" }],
+    経理: [{ label: "monthly bookkeeping", status: "blocked" }],
+    開発: [{ label: "stable, don't touch", status: "idle" }],
   };
 
   const resolveOrder: Step[] = [
-    { lane: "投稿", label: "けさの とうこうあん" },
-    { lane: "投稿", label: "よやくとうこう 20:45" },
-    { lane: "発送", label: "ちゅうもん 3けん" },
-    { lane: "発送", label: "らべる いんさつ" },
-    { lane: "データ", label: "utm しゅうけい" },
-    { lane: "経理", label: "つきじの しわけ" },
+    { lane: "投稿", label: "this morning's post draft" },
+    { lane: "投稿", label: "scheduled post 20:45" },
+    { lane: "発送", label: "3 orders" },
+    { lane: "発送", label: "label printing" },
+    { lane: "データ", label: "UTM tally" },
+    { lane: "経理", label: "monthly bookkeeping" },
   ];
 
   const frames: string[] = [];
@@ -65,7 +65,7 @@ export function demo(): DemoSpec {
     const n = blockedCount(state);
     const header =
       `  ${CYAN}~ secretary-today ~${RESET}  ` +
-      `${DIM}とまってるものから かたづける${RESET}  ${badge(n)}`;
+      `${DIM}clear what's stopped first${RESET}  ${badge(n)}`;
     frames.push(header + "\n\n" + renderLanes(lanes));
   };
 
@@ -89,7 +89,7 @@ export function demo(): DemoSpec {
     fps: 4,
     frames,
     uses: ["core-tui"],
-    tagline: "今日の優先順位をレーンで表示。blocked は赤く沈む",
+    tagline: "Today's priorities as lanes; blocked items sink in red.",
   };
 }
 

@@ -3,11 +3,16 @@
  *
  *   npm run frontier
  *
- * コンセプト: packages/core-* は 8 個ある（contracts は別枠なので除外）。
- * 8 個から 2 個を選ぶ組み合わせは 8x8 の下三角 = 28 通り。そのうち「両方を同時に
- * uses する既存アプリが demo/gifs/manifest.json に実在する組」は埋まったマス、
- * 存在しない組は誰も作っていないフロンティア（暗いマスに "?" が明滅する）。
- * N（探索済み）/ M（未探索）は manifest.json から実計算する（ハードコード禁止）。
+ * コンセプト: packages/core-* は N 個ある（contracts は別枠なので除外。当初8個で
+ * 設計したが、core-save / core-sysmon 追加により N=10 に増えた。以後も部品が増える
+ * 前提で N に一般化してある）。N 個から 2 個を選ぶ組み合わせは N(N-1)/2 通り、
+ * それを N-1 行の下三角ヒートマップとして描く。そのうち「両方を同時に uses する
+ * 既存アプリが demo/gifs/manifest.json に実在する組」は埋まったマス、存在しない組は
+ * 誰も作っていないフロンティア（暗いマスに "?" が明滅する）。
+ * 探索済み/未探索の数は manifest.json から実計算する（ハードコード禁止）。
+ *
+ * CORE_META に無い未知の core パッケージが増えても壊れないよう、名前から決定論的に
+ * label/icon/color を自動生成するフォールバックを持つ（fallbackMeta）。
  *
  * banner.mjs / diagram.mjs と同じ流儀: core-termgif の低レベル API
  * （encodeGif / glyph / hasGlyph / isWide / seeded）を直接使い、rect合成と
@@ -45,10 +50,10 @@ const { encodeGif, glyph, hasGlyph, isWide, seeded } = await import(
 // --- データ層: core 一覧 + manifest から実際の共起ペアを算出 --------------
 // ラベル/アイコン/色は表示メタ情報のみ。どの2つが「探索済み」かは一切ここに書かず、
 // 下の集計ロジックが manifest.json を読んで決める。
-// label は4文字以下に固定する: HEADER_SCALE=1(8px/字)・CELL=48pxの列見出しで
+// label は4文字以下に固定する: HEADER_SCALE=1(8px/字)・CELL<=48pxの列見出しで
 // 6文字ラベル(旧 "events"/"device")がちょうど列幅いっぱいになり、中央寄せの余白が
 // ゼロになって隣接列と密着する事故があったため（"deviceevents" に見えた）。
-// 4文字以下(<=32px)なら (CELL-32)/2=8px の余白が両側に必ず残る。
+// 4文字以下(<=32px)なら CELL=48px でも (48-32)/2=8px の余白が両側に必ず残る。
 const CORE_META = {
   "core-events": { label: "evt", icon: "@", rgb: [63, 185, 80] },
   "core-device": { label: "dev", icon: "#", rgb: [88, 166, 255] },
@@ -58,23 +63,55 @@ const CORE_META = {
   "core-worker-data": { label: "work", icon: "$", rgb: [210, 153, 34] },
   "core-focus-log": { label: "foc", icon: "^", rgb: [219, 80, 120] },
   "core-termgif": { label: "gif", icon: "*", rgb: [140, 148, 158] },
+  "core-save": { label: "save", icon: "S", rgb: [99, 102, 241] }, // indigo（永続化の落ち着いた色）
+  "core-sysmon": { label: "sys", icon: "%", rgb: [220, 70, 60] }, // 熱っぽい赤（CPUが汗をかくテーマ）
 };
+
+// --- 未知 core への決定論的フォールバック（メタ未登録でも壊れない） ----------
+// name の文字コード和から hue を決め、固定 s/l で HSL→RGB する（乱数不使用・純粋関数）。
+// label は "core-" を除いた英数字先頭4文字、icon はその頭文字。どちらも ASCII のみなので
+// assertGlyph は必ず通る。
+function hashStr(s) {
+  let h = 5381;
+  for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) >>> 0;
+  return h;
+}
+function hslToRgb(h, s, l) {
+  const hue2rgb = (p, q, t) => {
+    if (t < 0) t += 1;
+    if (t > 1) t -= 1;
+    if (t < 1 / 6) return p + (q - p) * 6 * t;
+    if (t < 1 / 2) return q;
+    if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+    return p;
+  };
+  const hh = h / 360;
+  const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+  const p = 2 * l - q;
+  const r = hue2rgb(p, q, hh + 1 / 3);
+  const g = hue2rgb(p, q, hh);
+  const b = hue2rgb(p, q, hh - 1 / 3);
+  return [r, g, b].map((v) => Math.round(v * 255));
+}
+function fallbackMeta(name) {
+  const stripped = name.replace(/^core-/, "").replace(/[^a-z0-9]/gi, "");
+  const label = (stripped.slice(0, 4) || "core").toLowerCase();
+  const icon = (label[0] || "c").toUpperCase();
+  const hue = hashStr(name) % 360;
+  return { label, icon, rgb: hslToRgb(hue, 0.55, 0.58) };
+}
 
 const CORES = readdirSync(join(root, "packages"), { withFileTypes: true })
   .filter((d) => d.isDirectory() && d.name.startsWith("core-"))
   .map((d) => d.name)
   .sort();
 
-if (CORES.length !== 8) {
-  throw new Error(
-    `frontier.mjs: packages/core-* が8個ではない（実測${CORES.length}件）。8x8マトリクス前提のレイアウトが崩れている。`,
-  );
+if (CORES.length < 2) {
+  throw new Error(`frontier.mjs: packages/core-* が2個未満（実測${CORES.length}件）。組み合わせマトリクスが成立しない。`);
 }
-for (const name of CORES) {
-  if (!CORE_META[name]) {
-    throw new Error(`frontier.mjs: 未知の core パッケージ "${name}" の表示メタ情報（label/icon/color）が未定義`);
-  }
-}
+
+/** core パッケージ名 -> {label, icon, rgb}。CORE_META未登録は fallbackMeta で自動生成する。 */
+const META = new Map(CORES.map((name) => [name, CORE_META[name] ?? fallbackMeta(name)]));
 
 const manifest = JSON.parse(readFileSync(join(root, "demo", "gifs", "manifest.json"), "utf8"));
 const coreIndex = new Map(CORES.map((name, i) => [name, i]));
@@ -96,16 +133,16 @@ for (const app of manifest) {
 }
 
 const TOTAL_PAIRS = (CORES.length * (CORES.length - 1)) / 2;
-if (TOTAL_PAIRS !== 28) {
-  throw new Error(`frontier.mjs: 総組み合わせ数が28にならない（実測${TOTAL_PAIRS}）。CORES.length=${CORES.length}`);
-}
 const EXPLORED = pairOwner.size;
 const UNEXPLORED = TOTAL_PAIRS - EXPLORED;
 
-// グリッドのセル一覧を先に確定する。row(視覚行 0..6) は CORES[row+1]、col(視覚列 0..row) は
-// CORES[col]。row+1 > col が常に成り立つので下三角 1+2+...+7=28 マスちょうどになる。
+// グリッドのセル一覧を先に確定する。row(視覚行 0..N-2) は CORES[row+1]、
+// col(視覚列 0..row) は CORES[col]。row+1 > col が常に成り立つので
+// 下三角 1+2+...+(N-1) = N(N-1)/2 マスちょうどになる（N非依存の一般式）。
+const ROWS = CORES.length - 1;
+const COLS = CORES.length - 1;
 const cells = [];
-for (let row = 0; row < 7; row++) {
+for (let row = 0; row < ROWS; row++) {
   for (let col = 0; col <= row; col++) {
     const colCoreIdx = col;
     const rowCoreIdx = row + 1;
@@ -122,10 +159,8 @@ if (cells.filter((c) => c.owner).length !== EXPLORED) {
 
 // --- キャンバス定数 -------------------------------------------------------
 const WIDTH = 960;
-const CELL = 48;
-const ROWS = 7;
-const COLS = 7;
-const ROW_LABEL_W = 64;
+const MARGIN = 24;
+const ROW_LABEL_W = 64; // ラベル最大4文字(32px)+8px余白+αで足りる固定幅（N非依存）
 const TITLE_SCALE = 2;
 const HEADER_SCALE = 1;
 const CAPTION_SCALE = 1;
@@ -134,6 +169,25 @@ const ICON_SCALE = 2;
 const FPS = 6;
 const FRAMES = 24;
 const DELAY_CS = Math.max(2, Math.round(100 / FPS));
+
+// セル幅: 理想48pxを基本にするが、core数が増えて960幅に収まらなくなったら縮める
+// （「セルサイズを縮める方式」採用。高さは伸ばす方式を採らず、幅はここで吸収する）。
+const CELL_IDEAL = 48;
+const CELL_MIN = 24;
+const maxCellByWidth = Math.floor((WIDTH - MARGIN * 2 - ROW_LABEL_W) / COLS);
+const CELL = Math.max(CELL_MIN, Math.min(CELL_IDEAL, maxCellByWidth));
+if (maxCellByWidth < CELL_MIN) {
+  throw new Error(
+    `frontier.mjs: core数${CORES.length}個だと列幅が${CELL_MIN}px未満になる（計算値${maxCellByWidth}px）。` +
+      `幅960pxのレイアウトでは収まらないので設計を見直すこと（例: 複数ページ分割）。`,
+  );
+}
+if (8 * ICON_SCALE > CELL - 8) {
+  throw new Error(
+    `frontier.mjs: ICON_SCALE=${ICON_SCALE}のアイコン幅(${8 * ICON_SCALE}px)がセル幅${CELL}pxに収まらない。` +
+      `ICON_SCALEを下げること。`,
+  );
+}
 
 const TITLE = "FRONTIER MAP";
 const CAPTION = `${TOTAL_PAIRS} combinations possible - ${EXPLORED} explored, ${UNEXPLORED} unexplored. The empty cells are yours.`;
@@ -173,7 +227,7 @@ const SPOTLIGHT_IDX = reg(SPOTLIGHT);
 const coreBaseIdx = new Map();
 const coreBoldIdx = new Map();
 for (const name of CORES) {
-  const { rgb } = CORE_META[name];
+  const { rgb } = META.get(name);
   coreBaseIdx.set(name, reg(rgb));
   coreBoldIdx.set(name, reg(scaleColor(rgb, 1.3)));
 }
@@ -182,16 +236,14 @@ for (const name of CORES) {
 const exploredStyle = new Map();
 for (const cell of cells) {
   if (!cell.owner) continue;
-  const rgbA = CORE_META[CORES[cell.colCoreIdx]].rgb;
-  const rgbB = CORE_META[CORES[cell.rowCoreIdx]].rgb;
+  const rgbA = META.get(CORES[cell.colCoreIdx]).rgb;
+  const rgbB = META.get(CORES[cell.rowCoreIdx]).rgb;
   const blend = [0, 1, 2].map((k) => Math.round((rgbA[k] + rgbB[k]) / 2));
   exploredStyle.set(cell.key, {
     fillIdx: reg(scaleColor(blend, 0.32)),
     borderIdx: reg(scaleColor(blend, 1.15)),
   });
 }
-
-const C = (rgb) => reg(rgb);
 
 // --- 低レベル描画（banner.mjs / diagram.mjs と同じ流儀） ------------------
 let HEIGHT = 0; // レイアウト計算後に確定する（fillRect の境界チェックで使う）
@@ -263,7 +315,7 @@ function drawCellBorder(buf, x0, y0, w, h, colorIdx) {
 }
 
 // --- 文字検証（起動時に一度だけ。グリフ未定義があればここで即 throw） ------
-for (const text of [TITLE, CAPTION, "?", ...Object.values(CORE_META).flatMap((m) => [m.label, m.icon])]) {
+for (const text of [TITLE, CAPTION, "?", ...[...META.values()].flatMap((m) => [m.label, m.icon])]) {
   for (const ch of text) assertGlyph(ch);
 }
 
@@ -271,7 +323,7 @@ for (const text of [TITLE, CAPTION, "?", ...Object.values(CORE_META).flatMap((m)
 // 列幅 CELL に対して最低8px（1文字分の空白グリフ相当）の余白を両側に残せる幅か検証する。
 const MIN_HEADER_GAP_PX = 8;
 for (const name of CORES) {
-  const label = CORE_META[name].label;
+  const label = META.get(name).label;
   const w = textWidth(label, HEADER_SCALE);
   if (w > CELL - MIN_HEADER_GAP_PX * 2) {
     throw new Error(
@@ -290,7 +342,6 @@ const MATRIX_H = ROWS * CELL;
 const GAP_MATRIX_CAPTION = 22;
 const CAPTION_H = 8 * CAPTION_SCALE;
 const BOTTOM_MARGIN = 24;
-const MARGIN = 24;
 
 let y = MARGIN;
 const TITLE_Y = y;
@@ -303,8 +354,11 @@ const CAPTION_Y = y;
 y += CAPTION_H + BOTTOM_MARGIN;
 HEIGHT = y;
 
-if (HEIGHT < 400 || HEIGHT > 560) {
-  throw new Error(`frontier.mjs: レイアウト計算後の高さ ${HEIGHT}px が許容範囲 400〜560px を外れている`);
+// N=8 前提だった 400〜560px の固定レンジは廃止（「高さを伸ばす方式」を採用: core数が
+// 増えるほど行数が増えて自然に高くなる）。ここでは暴走検知用の緩い安全弁のみ残す。
+const HEIGHT_SANITY_MAX = 2000;
+if (HEIGHT > HEIGHT_SANITY_MAX) {
+  throw new Error(`frontier.mjs: レイアウト計算後の高さ ${HEIGHT}px が安全上限 ${HEIGHT_SANITY_MAX}px を超えた`);
 }
 
 const MATRIX_BLOCK_W = ROW_LABEL_W + COLS * CELL;
@@ -319,13 +373,13 @@ const staticBuf = new Uint8Array(WIDTH * HEIGHT);
 drawText(staticBuf, centerX(TITLE, TITLE_SCALE), TITLE_Y, TITLE, FG_IDX, TITLE_SCALE);
 
 for (let col = 0; col < COLS; col++) {
-  const label = CORE_META[CORES[col]].label;
+  const label = META.get(CORES[col]).label;
   const x = MATRIX_X0 + col * CELL + Math.floor((CELL - textWidth(label, HEADER_SCALE)) / 2);
   drawText(staticBuf, x, COLHEAD_Y, label, coreBaseIdx.get(CORES[col]), HEADER_SCALE);
 }
 for (let row = 0; row < ROWS; row++) {
   const coreName = CORES[row + 1];
-  const label = CORE_META[coreName].label;
+  const label = META.get(coreName).label;
   const x = MATRIX_X0 - 8 - textWidth(label, HEADER_SCALE);
   const yy = MATRIX_Y0 + row * CELL + Math.floor((CELL - 8 * HEADER_SCALE) / 2);
   drawText(staticBuf, x, yy, label, coreBaseIdx.get(coreName), HEADER_SCALE);
@@ -369,7 +423,7 @@ function buildFrame(f) {
       const phase = (cell.row * 3 + cell.col * 5) % 6;
       const useA = (f + phase) % 6 < 3;
       const coreName = useA ? CORES[cell.colCoreIdx] : CORES[cell.rowCoreIdx];
-      const icon = CORE_META[coreName].icon;
+      const icon = META.get(coreName).icon;
       const iconColor = coreBoldIdx.get(coreName);
       const ix = x0 + Math.floor((CELL - charAdvance(icon, ICON_SCALE)) / 2);
       const iy = y0 + Math.floor((CELL - 8 * ICON_SCALE) / 2);

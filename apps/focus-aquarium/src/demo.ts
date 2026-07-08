@@ -18,10 +18,10 @@ const YELLOW = "\x1b[33m";
 
 const WIDTH = 48;
 const ACTIVITY_COLOR: Record<string, string> = {
-  "しごと": CYAN,
-  "きゅうけい": GREEN,
-  "かいぎ": YELLOW,
-  "しゅうちゅう": BLUE,
+  "work": CYAN,
+  "break": GREEN,
+  "meeting": YELLOW,
+  "focus": BLUE,
 };
 
 /** 魚の文字だけを彩色する（枠・空白はそのまま）。 */
@@ -36,7 +36,7 @@ function colorizeRow(row: string): string {
 
 /** 1画面ぶんの描画。demo と cli の両方から呼ばれる共通レンダラ。 */
 export function renderScreen(events: FocusEvent[], hint = ""): string {
-  const header = `  ${CYAN}~ focus-aquarium ~${RESET}  ${DIM}focus log が さかなに なる${hint}${RESET}`;
+  const header = `  ${CYAN}~ focus-aquarium ~${RESET}  ${DIM}focus log becomes fish${hint}${RESET}`;
   const wave = "  " + BLUE + "~".repeat(WIDTH + 2) + RESET;
   const tank = "  " + colorizeRow(render(events, WIDTH));
   const floor = "  " + DIM + "_".repeat(WIDTH + 2) + RESET;
@@ -49,7 +49,7 @@ export function renderScreen(events: FocusEvent[], hint = ""): string {
 
 /** 1日ぶんの合成 focus ログ（しごと中心・ときどき休憩・かいぎ・しゅうちゅう）。 */
 export function dayStream(base = 1_783_200_000_000): FocusEvent[] {
-  const pattern = ["しごと", "しごと", "しごと", "きゅうけい", "しごと", "かいぎ", "しごと", "しゅうちゅう"];
+  const pattern = ["work", "work", "work", "break", "work", "meeting", "work", "focus"];
   return Array.from({ length: 20 }, (_, i) => ({
     id: i,
     at: base + i * 15 * 60_000,
@@ -68,6 +68,6 @@ export function demo(): DemoSpec {
     fps: 6,
     frames,
     uses: ["core-focus-log"],
-    tagline: "1日の focus ログをそのまま水槽にする",
+    tagline: "A day's focus log swims out as a school of fish at night.",
   };
 }

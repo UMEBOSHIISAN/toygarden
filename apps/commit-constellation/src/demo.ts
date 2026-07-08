@@ -31,7 +31,7 @@ function bar(n: number, max: number, width: number): string {
 export function renderScreen(commits: GitCommit[], repoLabel: string): string {
   const stars: AuthorStar[] = authorStars(commits);
   const max = Math.max(1, ...stars.map((s) => s.weight));
-  const header = `  ${CYAN}~ commit-constellation ~${RESET}  ${DIM}${repoLabel} の ひとを ほしざにする${RESET}`;
+  const header = `  ${CYAN}~ commit-constellation ~${RESET}  ${DIM}turning ${repoLabel}'s people into stars${RESET}`;
   const rows = stars
     .map((s) => {
       const c = AUTHOR_COLOR[s.author] ?? YELLOW;
@@ -67,6 +67,6 @@ export function demo(): DemoSpec {
     fps: 5,
     frames,
     uses: ["core-git-observe", "core-device"],
-    tagline: "コントリビューターの重みを星の大きさで見せる",
+    tagline: "Commit authors become stars; the bigger the contribution, the brighter.",
   };
 }

@@ -4,118 +4,129 @@
     "file": "agent-constellation.gif",
     "frames": 26,
     "fps": 5,
-    "kb": 75,
+    "kb": 77,
     "uses": [
       "contracts",
       "core-device",
       "core-events"
     ],
-    "tagline": "dispatch は星座線に、collapse は赤い星に"
+    "tagline": "dispatch draws the line, collapse turns the star red"
   },
   {
     "name": "ascii-aquarium",
     "file": "ascii-aquarium.gif",
     "frames": 36,
     "fps": 7,
-    "kb": 188,
+    "kb": 185,
     "uses": [
       "contracts"
     ],
-    "tagline": "ASCII 水槽。task.done イベントで魚が増える"
+    "tagline": "An ASCII fish tank that gains a fish on every task.done. A moon rises at night."
   },
   {
     "name": "chiptune-clock",
     "file": "chiptune-clock.gif",
     "frames": 26,
     "fps": 6,
-    "kb": 80,
+    "kb": 89,
     "uses": [
       "core-chiptune",
       "core-device"
     ],
-    "tagline": "正時ごとに 8bit の鐘が鳴るターミナル置き時計"
+    "tagline": "A desk clock that tells the hour with an 8-bit bell."
   },
   {
     "name": "chiptune-themes",
     "file": "chiptune-themes.gif",
     "frames": 28,
     "fps": 6,
-    "kb": 64,
+    "kb": 66,
     "uses": [
       "core-chiptune",
       "core-events"
     ],
-    "tagline": "gate待ち/collapse/deploy成功をそれぞれの音テーマで知らせる"
+    "tagline": "Each event kind gets a theme; a successful deploy plays a fanfare."
   },
   {
     "name": "collapse-arcade",
     "file": "collapse-arcade.gif",
     "frames": 24,
     "fps": 6,
-    "kb": 76,
+    "kb": 80,
     "uses": [
       "core-worker-data"
     ],
-    "tagline": "崩壊率の高いエージェントを撃墜するシューティング。撃つ＝レビュー"
+    "tagline": "High collapse-rate agents become enemies. Shooting one = a review."
   },
   {
     "name": "collapse-siren",
     "file": "collapse-siren.gif",
     "frames": 21,
     "fps": 6,
-    "kb": 72,
+    "kb": 75,
     "uses": [
       "core-worker-data",
       "core-chiptune",
       "core-events"
     ],
-    "tagline": "崩壊率が閾値を超えたエージェントに不協和音のサイレンを鳴らす監視アラーム"
+    "tagline": "When collapse rate crosses a threshold, the terminal blares a dissonant siren."
   },
   {
     "name": "commit-constellation",
     "file": "commit-constellation.gif",
     "frames": 26,
     "fps": 5,
-    "kb": 74,
+    "kb": 78,
     "uses": [
       "core-git-observe",
       "core-device"
     ],
-    "tagline": "コントリビューターの重みを星の大きさで見せる"
+    "tagline": "Commit authors become stars; the bigger the contribution, the brighter."
   },
   {
     "name": "commit-symphony",
     "file": "commit-symphony.gif",
     "frames": 24,
     "fps": 6,
-    "kb": 91,
+    "kb": 93,
     "uses": [
       "core-git-observe",
       "core-chiptune"
     ],
-    "tagline": "git log を聴く。追加行数=音の高さ、AI共著=1オクターブ上"
+    "tagline": "Your git history becomes an 8-bit tune; AI co-authored commits ring an octave up."
+  },
+  {
+    "name": "cpu-diner",
+    "file": "cpu-diner.gif",
+    "frames": 40,
+    "fps": 8,
+    "kb": 172,
+    "uses": [
+      "core-sysmon"
+    ],
+    "tagline": "customers rush in when your CPU sweats"
   },
   {
     "name": "desk-weather",
     "file": "desk-weather.gif",
     "frames": 32,
     "fps": 6,
-    "kb": 91,
+    "kb": 97,
     "uses": [
       "core-device"
     ],
-    "tagline": "dirty/fail/stale の量を天気で見る作業環境ゲージ"
+    "tagline": "Your repo's health becomes desk weather; a dirty tree clouds over."
   },
   {
     "name": "device-mirror",
     "file": "device-mirror.gif",
     "frames": 20,
     "fps": 4,
-    "kb": 106,
+    "kb": 107,
     "uses": [
       "core-device"
     ],
-    "tagline": "実機を買う前に、実機が見える。M5Stack風ガジェットにHALのDrawCommandをミラー"
+    "tagline": "See the hardware before you buy it: a virtual M5Stack panel mirrors the HAL's DrawCommands"
   },
   {
     "name": "event-loom",
@@ -128,43 +139,43 @@
       "core-tui",
       "contracts"
     ],
-    "tagline": "1本のイベントバスに疎結合な複数の購読者がそのまま繋がる"
+    "tagline": "Weaves every event on one bus into a live universal viewer."
   },
   {
     "name": "focus-aquarium",
     "file": "focus-aquarium.gif",
     "frames": 24,
     "fps": 6,
-    "kb": 73,
+    "kb": 71,
     "uses": [
       "core-focus-log"
     ],
-    "tagline": "1日の focus ログをそのまま水槽にする"
+    "tagline": "A day's focus log swims out as a school of fish at night."
   },
   {
     "name": "focus-forge",
     "file": "focus-forge.gif",
     "frames": 27,
     "fps": 5,
-    "kb": 66,
+    "kb": 62,
     "uses": [
       "core-focus-log",
       "core-chiptune",
       "core-device"
     ],
-    "tagline": "実測の集中ログ(focus-cam)で鉱石を鍛える。自己申告じゃない pomodoro"
+    "tagline": "A pomodoro that isn't self-reported. Only measured focus swings the hammer."
   },
   {
     "name": "focus-tally",
     "file": "focus-tally.gif",
     "frames": 40,
     "fps": 6,
-    "kb": 124,
+    "kb": 110,
     "uses": [
       "core-focus-log",
       "core-tui"
     ],
-    "tagline": "sqliteの活動ログをゼロ依存で端末チャート化する"
+    "tagline": "What you did today stacks up as a terminal bar chart."
   },
   {
     "name": "git-replay",
@@ -176,75 +187,75 @@
       "core-git-observe",
       "core-tui"
     ],
-    "tagline": "git log を古い順のタイムラプスに。人間とAIの寄与を色分け"
+    "tagline": "Time-lapse playback of a repo's history, human and AI color-coded."
   },
   {
     "name": "git-weather",
     "file": "git-weather.gif",
     "frames": 28,
     "fps": 6,
-    "kb": 103,
+    "kb": 104,
     "uses": [
       "core-git-observe",
       "core-device"
     ],
-    "tagline": "直近コミットの churn をリポジトリの天気にする"
+    "tagline": "High-churn days storm, quiet days stay clear."
   },
   {
     "name": "pomodoro-forge",
     "file": "pomodoro-forge.gif",
     "frames": 22,
     "fps": 5,
-    "kb": 66,
+    "kb": 63,
     "uses": [
       "core-chiptune",
       "core-device"
     ],
-    "tagline": "25分の集中で鉱石が育ち、git.commit で精錬。完成でファンファーレ"
+    "tagline": "Mine ore by focusing, smelt it on commit - a blacksmith's pomodoro."
   },
   {
     "name": "routing-radar",
     "file": "routing-radar.gif",
     "frames": 30,
     "fps": 6,
-    "kb": 130,
+    "kb": 128,
     "uses": [
       "core-worker-data",
       "core-tui"
     ],
-    "tagline": "LLMルーティング実験を confidence バーで一覧"
+    "tagline": "A radar surveying dispatch hit-rate with confidence bars."
   },
   {
     "name": "routing-slot",
     "file": "routing-slot.gif",
     "frames": 24,
     "fps": 6,
-    "kb": 63,
+    "kb": 62,
     "uses": [
       "core-worker-data"
     ],
-    "tagline": "worker 配車をスロットで回す。routing_trial_ledger の予測を娯楽化"
+    "tagline": "Worker dispatch as a slot machine; the right fit hits the jackpot."
   },
   {
     "name": "secretary-today",
     "file": "secretary-today.gif",
     "frames": 13,
     "fps": 4,
-    "kb": 63,
+    "kb": 67,
     "uses": [
       "core-tui"
     ],
-    "tagline": "今日の優先順位をレーンで表示。blocked は赤く沈む"
+    "tagline": "Today's priorities as lanes; blocked items sink in red."
   },
   {
     "name": "ume-tamagotchi",
     "file": "ume-tamagotchi.gif",
     "frames": 20,
     "fps": 5,
-    "kb": 58,
+    "kb": 65,
     "uses": [
       "contracts"
     ],
-    "tagline": "うめこ育成。投稿で喜び、承認待ちが積もると弱る売上導線の体感版"
+    "tagline": "Raise Umeko: she's happy when you post, sulks when things stall."
   }
 ]

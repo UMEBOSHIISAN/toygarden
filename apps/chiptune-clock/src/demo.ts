@@ -55,11 +55,11 @@ export function demo(): DemoSpec {
     const hh = String(hour).padStart(2, "0");
     const mm = String(minute).padStart(2, "0");
     const color = hour === 3 && minute <= 4 ? YELLOW : CYAN;
-    const header = `  ${CYAN}~ chiptune-clock ~${RESET}  ${DIM}8bit の じこく つげ どけい${RESET}`;
+    const header = `  ${CYAN}~ chiptune-clock ~${RESET}  ${DIM}an 8-bit clock that tolls the hour${RESET}`;
     const clock = bigClock(hh, mm, i % 2 === 0, color);
     const chimeLabel = hour === 3 && minute <= 4
-      ? `  ${YELLOW}${BOLD}かね ${strikesShown}/${strikes}${RESET}`
-      : `  ${DIM}つぎの かねは 3じ${RESET}`;
+      ? `  ${YELLOW}${BOLD}bell ${strikesShown}/${strikes}${RESET}`
+      : `  ${DIM}next bell at 3:00${RESET}`;
     frames.push(`${header}\n\n${clock}\n\n${bell(strikes, hour === 3 ? strikesShown : 0)}\n${chimeLabel}`);
     if (i < 10) {
       minute++;
@@ -82,6 +82,6 @@ export function demo(): DemoSpec {
     fps: 6,
     frames,
     uses: ["core-chiptune", "core-device"],
-    tagline: "正時ごとに 8bit の鐘が鳴るターミナル置き時計",
+    tagline: "A desk clock that tells the hour with an 8-bit bell.",
   };
 }

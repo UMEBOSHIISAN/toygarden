@@ -32,7 +32,7 @@ export function demo(): DemoSpec {
       ...f,
       confidence: Math.min(f.confidence, f.confidence * t + rnd() * 0.01),
     }));
-    const header = `  ${CYAN}~ routing radar ~${RESET}  ${DIM}どの worker にふるとあたるか${RESET}`;
+    const header = `  ${CYAN}~ routing radar ~${RESET}  ${DIM}which worker to route to${RESET}`;
     frames.push(header + "\n" + radar(trials));
   }
   for (let i = 0; i < 6; i++) frames.push(frames[frames.length - 1]);
@@ -41,6 +41,6 @@ export function demo(): DemoSpec {
     fps: 6,
     frames,
     uses: ["core-worker-data", "core-tui"],
-    tagline: "LLMルーティング実験を confidence バーで一覧",
+    tagline: "A radar surveying dispatch hit-rate with confidence bars.",
   };
 }

@@ -15,17 +15,17 @@ export function demo(): DemoSpec {
 
   const pushTick = (): void => {
     state = tick(state, STEP_MS); // 実際の tick() を叩く
-    frames.push(renderForge(state, "こつこつ さぎょうちゅう...", false));
+    frames.push(renderForge(state, "chipping away...", false));
   };
   const pushCommit = (): void => {
     state = applyEvent(state, { kind: "git.commit", added: 12, removed: 2, coauthoredByClaude: true });
-    frames.push(renderForge(state, "せいれん !", true));
-    frames.push(renderForge(state, "せいれん !", true));
-    frames.push(renderForge(state, "せいれん !", true));
+    frames.push(renderForge(state, "smelting !", true));
+    frames.push(renderForge(state, "smelting !", true));
+    frames.push(renderForge(state, "smelting !", true));
   };
 
-  frames.push(renderForge(state, "こうせき が そだつのを まつ", false));
-  frames.push(renderForge(state, "こうせき が そだつのを まつ", false));
+  frames.push(renderForge(state, "waiting for ore to grow", false));
+  frames.push(renderForge(state, "waiting for ore to grow", false));
 
   for (let i = 0; i < 3; i++) pushTick();
   pushCommit();
@@ -40,6 +40,6 @@ export function demo(): DemoSpec {
     fps: 5,
     frames,
     uses: ["core-chiptune", "core-device"],
-    tagline: "25分の集中で鉱石が育ち、git.commit で精錬。完成でファンファーレ",
+    tagline: "Mine ore by focusing, smelt it on commit - a blacksmith's pomodoro.",
   };
 }

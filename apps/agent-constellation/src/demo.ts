@@ -69,11 +69,11 @@ export function renderScreen(state: ConstellationState, hint = ""): string {
 
   const legend = state.stars
     .map((s: Star) => {
-      const mark = s.collapsed ? `${RED}★ はたん${RESET}` : `${CYAN}☆${RESET}`;
+      const mark = s.collapsed ? `${RED}★ collapsed${RESET}` : `${CYAN}☆${RESET}`;
       return `  ${s.agent.padEnd(6)} ${mark}`;
     })
     .join("  ");
-  const header = `  ${CYAN}~ agent-constellation ~${RESET}  ${DIM}dispatch で ほしが つながる${hint}${RESET}`;
+  const header = `  ${CYAN}~ agent-constellation ~${RESET}  ${DIM}dispatch links the stars${hint}${RESET}`;
   return `${header}\n\n${body}\n\n${legend}`;
 }
 
@@ -105,6 +105,6 @@ export function demo(): DemoSpec {
     fps: 5,
     frames,
     uses: ["contracts", "core-device", "core-events"],
-    tagline: "dispatch は星座線に、collapse は赤い星に",
+    tagline: "dispatch draws the line, collapse turns the star red",
   };
 }

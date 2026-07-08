@@ -10,22 +10,22 @@ import { renderPet } from "./view.ts";
 
 // 投稿(売上の入口)×3 → 承認待ち×4(積もって弱る) → deploy成功(持ち直す)
 const SCRIPT: { event: PlayEvent; caption: string }[] = [
-  { event: { kind: "task.done", project: "投稿" }, caption: "とうこう!" },
-  { event: { kind: "task.done", project: "投稿" }, caption: "とうこう!" },
-  { event: { kind: "task.done", project: "投稿" }, caption: "とうこう!" },
-  { event: { kind: "gate.pending", label: "review" }, caption: "しょうにん まち..." },
-  { event: { kind: "gate.pending", label: "review" }, caption: "しょうにん まち..." },
-  { event: { kind: "gate.pending", label: "review" }, caption: "しょうにん まち..." },
-  { event: { kind: "gate.pending", label: "review" }, caption: "しょうにん まち..." },
-  { event: { kind: "deploy.success" }, caption: "でぷろい せいこう!" },
+  { event: { kind: "task.done", project: "投稿" }, caption: "post!" },
+  { event: { kind: "task.done", project: "投稿" }, caption: "post!" },
+  { event: { kind: "task.done", project: "投稿" }, caption: "post!" },
+  { event: { kind: "gate.pending", label: "review" }, caption: "awaiting approval..." },
+  { event: { kind: "gate.pending", label: "review" }, caption: "awaiting approval..." },
+  { event: { kind: "gate.pending", label: "review" }, caption: "awaiting approval..." },
+  { event: { kind: "gate.pending", label: "review" }, caption: "awaiting approval..." },
+  { event: { kind: "deploy.success" }, caption: "deploy success!" },
 ];
 
 export function demo(): DemoSpec {
-  let pet: Pet = initPet("うめこ");
+  let pet: Pet = initPet("Umeko");
   const frames: string[] = [];
 
-  frames.push(renderPet(pet, "きょうも いちにち はじまる"));
-  frames.push(renderPet(pet, "きょうも いちにち はじまる"));
+  frames.push(renderPet(pet, "today begins"));
+  frames.push(renderPet(pet, "today begins"));
 
   for (const { event, caption } of SCRIPT) {
     pet = applyEvent(pet, event); // 実際の applyEvent() を叩く
@@ -33,14 +33,14 @@ export function demo(): DemoSpec {
     frames.push(renderPet(pet, caption));
   }
 
-  frames.push(renderPet(pet, "また あした ね"));
-  frames.push(renderPet(pet, "また あした ね"));
+  frames.push(renderPet(pet, "see you tomorrow"));
+  frames.push(renderPet(pet, "see you tomorrow"));
 
   return {
     name: "ume-tamagotchi",
     fps: 5,
     frames,
     uses: ["contracts"],
-    tagline: "うめこ育成。投稿で喜び、承認待ちが積もると弱る売上導線の体感版",
+    tagline: "Raise Umeko: she's happy when you post, sulks when things stall.",
   };
 }

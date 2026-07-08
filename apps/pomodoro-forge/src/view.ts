@@ -12,7 +12,7 @@ const DIM = "\x1b[2m";
 const BOLD = "\x1b[1m";
 const ORANGE = "\x1b[33m";
 
-export const HEADER = `  ${CYAN}~ pomodoro-forge ~${RESET}  ${DIM}こうせき が そだち git.commit で せいれん${RESET}`;
+export const HEADER = `  ${CYAN}~ pomodoro-forge ~${RESET}  ${DIM}ore grows, git.commit smelts it${RESET}`;
 
 function mmss(ms: number): string {
   const total = Math.round(ms / 1000);
@@ -46,11 +46,11 @@ export function renderDone(state: ForgeState): string {
   const lines = [
     HEADER,
     "",
-    `        ${YELLOW}${BOLD}♪♪♪ かんせい !! ♪♪♪${RESET}`,
+    `        ${YELLOW}${BOLD}♪♪♪ DONE !! ♪♪♪${RESET}`,
     "",
     `        ${GREEN}ingots: ${"◆".repeat(Math.min(state.ingots, 20))}  (${state.ingots})${RESET}`,
     "",
-    `        ${DIM}time ${mmss(state.elapsedMs)} で しゅうりょう${RESET}`,
+    `        ${DIM}time ${mmss(state.elapsedMs)} elapsed${RESET}`,
   ];
   return lines.join("\n");
 }

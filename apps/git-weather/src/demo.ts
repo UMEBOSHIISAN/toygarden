@@ -25,7 +25,7 @@ const ICON: Record<Weather, readonly string[]> = {
 };
 
 const COLOR: Record<Weather, string> = { sunny: YELLOW, cloudy: WHITE, rain: BLUE, storm: RED };
-const LABEL: Record<Weather, string> = { sunny: "はれ", cloudy: "くもり", rain: "あめ", storm: "あらし" };
+const LABEL: Record<Weather, string> = { sunny: "sunny", cloudy: "cloudy", rain: "rain", storm: "storm" };
 
 const WINDOW = 6; // 直近何件で天気を判定するか（実運用の "直近コミット" に相当）
 
@@ -39,7 +39,7 @@ export function renderScreen(recent: GitCommit[], repoLabel: string, tick: numbe
   const c = COLOR[w];
   const flicker = w === "storm" && tick % 2 === 0;
   const churn = recent.reduce((s, cm) => s + cm.added + cm.removed, 0);
-  const header = `  ${CYAN}~ git-weather ~${RESET}  ${DIM}${repoLabel} の てんき (さいきん${recent.length}こみっと)${RESET}`;
+  const header = `  ${CYAN}~ git-weather ~${RESET}  ${DIM}${repoLabel}'s weather (last ${recent.length} commits)${RESET}`;
   const icon = ICON[w].map((l) => c + (flicker ? l.replace("★", " ") : l) + RESET).join("\n");
   const label = `      ${BOLD}${c}${LABEL[w]}${RESET}  ${DIM}churn:${churn}${RESET}`;
   const gauge = `  churn  ${bar(churn, 400, 20)} ${String(churn).padStart(4)}`;
@@ -87,6 +87,6 @@ export function demo(): DemoSpec {
     fps: 6,
     frames,
     uses: ["core-git-observe", "core-device"],
-    tagline: "直近コミットの churn をリポジトリの天気にする",
+    tagline: "High-churn days storm, quiet days stay clear.",
   };
 }

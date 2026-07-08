@@ -12,15 +12,15 @@ import { mirror, labelFor, ledFor } from "./index.ts";
 import { renderGadget } from "./view.ts";
 
 // event.project 等の文字列は labelFor() 経由でそのまま液晶(=GIFフレーム)へ描かれるため、
-// demo 専用シナリオでは漢字を使わずひらがなで書く（cli.ts の SCRIPT は OS フォント表示なので
+// demo 専用シナリオでは font8x8 収録済みの ASCII/EN で書く（cli.ts の SCRIPT は OS フォント表示なので
 // 実際の project 名「投稿」のままでよい。demo と cli で文言が割れているのは意図的）。
 const SCRIPT: { event: PlayEvent; caption: string }[] = [
-  { event: { kind: "task.done", project: "とうこう" }, caption: "とうこう done" },
-  { event: { kind: "task.done", project: "とうこう" }, caption: "とうこう done" },
-  { event: { kind: "gate.pending", label: "review" }, caption: "しょうにん まち..." },
+  { event: { kind: "task.done", project: "posting" }, caption: "posting done" },
+  { event: { kind: "task.done", project: "posting" }, caption: "posting done" },
+  { event: { kind: "gate.pending", label: "review" }, caption: "awaiting approval..." },
   { event: { kind: "agent.dispatch", from: "cc", to: "codex", task: "impl" }, caption: "dispatch" },
   { event: { kind: "worker.route", taxonomy: "impl", worker: "codex", confidence: 0.8 }, caption: "route ok" },
-  { event: { kind: "deploy.success" }, caption: "でぷろい OK" },
+  { event: { kind: "deploy.success" }, caption: "deploy OK" },
 ];
 
 export function demo(): DemoSpec {
@@ -53,6 +53,6 @@ export function demo(): DemoSpec {
     fps: 4,
     frames,
     uses: ["core-device"],
-    tagline: "実機を買う前に、実機が見える。M5Stack風ガジェットにHALのDrawCommandをミラー",
+    tagline: "See the hardware before you buy it: a virtual M5Stack panel mirrors the HAL's DrawCommands",
   };
 }

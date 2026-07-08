@@ -10,7 +10,7 @@ const GREEN = "\x1b[32m";
 const DIM = "\x1b[2m";
 const BOLD = "\x1b[1m";
 
-export const HEADER = `  ${CYAN}~ collapse-arcade ~${RESET}  ${DIM}たかい くずれりつ を うちおとす${RESET}`;
+export const HEADER = `  ${CYAN}~ collapse-arcade ~${RESET}  ${DIM}shoot down the high collapse-rate agents${RESET}`;
 
 const COL_W = 13;
 const col = (s: string): string => (s.length >= COL_W ? s.slice(0, COL_W) : s.padEnd(COL_W, " "));
@@ -64,7 +64,7 @@ export function renderBattle(rows: EnemyView[], targetIdx: number, phase: Phase,
     spriteCells.push(spriteColor + col(sprite) + RESET);
 
     const barColor = !alive ? DIM : hitNow ? YELLOW : GREEN;
-    barCells.push(barColor + col(alive ? bar(r.hp, r.maxHp) : "  たおした") + RESET);
+    barCells.push(barColor + col(alive ? bar(r.hp, r.maxHp) : "  down") + RESET);
     hpCells.push(DIM + col(alive ? `${Math.max(r.hp, 0)}/${r.maxHp}` : "  --/--") + RESET);
   }
 
@@ -96,7 +96,7 @@ export function renderClear(score: number, defeated: number): string {
     HEADER,
     "",
     "",
-    `        ${YELLOW}${BOLD}★★★ ぜんめつ !! ★★★${RESET}`,
+    `        ${YELLOW}${BOLD}★★★ ALL CLEAR !! ★★★${RESET}`,
     "",
     `        ${GREEN}score: ${score}${RESET}`,
     "",
@@ -104,7 +104,7 @@ export function renderClear(score: number, defeated: number): string {
     "",
     DIM + "─".repeat(56) + RESET,
     "",
-    `  ${DIM}おつかれさま${RESET}`,
+    `  ${DIM}well played${RESET}`,
   ];
   return lines.join("\n");
 }

@@ -188,24 +188,24 @@ function main() {
   const rawName = process.argv[2];
 
   if (!rawName) {
-    console.error("使い方: npm run new -- <name>   (例: npm run new -- my-toy)");
+    console.error("usage: npm run new -- <name>   (e.g. npm run new -- my-toy)");
     process.exit(1);
   }
   if (!KEBAB.test(rawName)) {
     console.error(
-      `"${rawName}" はケバブケースじゃない（小文字英数字とハイフンのみ・数字/ハイフン始まり・連続ハイフン不可）。例: my-toy`,
+      `"${rawName}" is not kebab-case (lowercase letters/digits and hyphens only; can't start with a digit/hyphen, no double hyphens). example: my-toy`,
     );
     process.exit(1);
   }
   if (RESERVED.has(rawName)) {
-    console.error(`"${rawName}" は予約語（npm run play ${rawName} と衝突する）。別の名前にして。`);
+    console.error(`"${rawName}" is reserved (collides with npm run play ${rawName}). pick another name.`);
     process.exit(1);
   }
 
   const name = rawName;
   const dir = join(appsDir, name);
   if (existsSync(dir)) {
-    console.error(`apps/${name}/ は既に存在する。別の名前にして。`);
+    console.error(`apps/${name}/ already exists. pick another name.`);
     process.exit(1);
   }
 
@@ -219,7 +219,7 @@ function main() {
   writeFileSync(join(dir, "src", "demo.ts"), demoTsFile(name));
   writeFileSync(join(dir, "test", `${name}.test.ts`), testTsFile(name));
 
-  console.log(`apps/${name}/ を生成した:`);
+  console.log(`grew apps/${name}/ (6 files):`);
   console.log(`  apps/${name}/package.json`);
   console.log(`  apps/${name}/tsconfig.json`);
   console.log(`  apps/${name}/src/index.ts`);
@@ -227,11 +227,11 @@ function main() {
   console.log(`  apps/${name}/src/demo.ts`);
   console.log(`  apps/${name}/test/${name}.test.ts`);
   console.log("");
-  console.log("次の一歩:");
-  console.log(`  npm run check              # typecheck + test（このまま緑になるはず）`);
-  console.log(`  npm run play ${name}   # 起動して見る（Ctrl+C で終了）`);
-  console.log(`  npm run gifs -- ${name}   # demo/gifs/${name}.gif を生成`);
-  console.log(`  README.md の「遊びカタログ（apps/）」表に1行追加するのを忘れずに`);
+  console.log("next steps:");
+  console.log(`  npm run check              # typecheck + test (should already be green)`);
+  console.log(`  npm run play ${name}       # run it (Ctrl+C to stop)`);
+  console.log(`  npm run gifs -- ${name}    # generate demo/gifs/${name}.gif`);
+  console.log(`  don't forget to add a row to the "遊びカタログ（apps/）" table in README.md`);
 }
 
 const isMain = process.argv[1] ? import.meta.url === pathToFileURL(resolve(process.argv[1])).href : false;

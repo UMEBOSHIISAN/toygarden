@@ -16,6 +16,8 @@ export default defineConfig({
       "@umeplay/core-worker-data": resolve(root, "packages/core-worker-data/src/index.ts"),
       "@umeplay/core-focus-log": resolve(root, "packages/core-focus-log/src/index.ts"),
       "@umeplay/core-termgif": resolve(root, "packages/core-termgif/src/index.ts"),
+      "@umeplay/core-sysmon": resolve(root, "packages/core-sysmon/src/index.ts"),
+      "@umeplay/core-save": resolve(root, "packages/core-save/src/index.ts"),
     },
   },
   test: {

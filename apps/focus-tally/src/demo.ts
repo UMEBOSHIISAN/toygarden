@@ -11,8 +11,8 @@ const CYAN = "\x1b[36m";
 const DIM = "\x1b[2m";
 const RESET = "\x1b[0m";
 
-// デモ用の活動名（かな表記のみ。実データは実際の focus-cam ログの activity 文字列がそのまま入る）
-const ACTIVITIES = ["PCにむかっている", "かんがえごとをしている", "きゅうけいちゅう", "かいぎちゅう", "とうこうさぎょう"];
+// デモ用の活動名（EN 表記のみ。実データは実際の focus-cam ログの activity 文字列がそのまま入る）
+const ACTIVITIES = ["at the PC", "thinking", "on break", "in a meeting", "posting work"];
 
 /** 合成 FocusEvent 列。demo() と cli.ts のフォールバック描画の両方から使う共通ジェネレータ。 */
 export function synthEvents(rnd: () => number, n: number): FocusEvent[] {
@@ -36,7 +36,7 @@ export function demo(): DemoSpec {
   const events = synthEvents(rnd, 34);
   const frames: string[] = [];
   for (let revealed = 1; revealed <= events.length; revealed++) {
-    const header = `  ${CYAN}~ focus tally ~${RESET}  ${DIM}なにに じかんを つかったか${RESET}`;
+    const header = `  ${CYAN}~ focus tally ~${RESET}  ${DIM}where did the time go${RESET}`;
     frames.push(header + "\n" + barChart(events.slice(0, revealed)));
   }
   for (let i = 0; i < 6; i++) frames.push(frames[frames.length - 1]);
@@ -45,6 +45,6 @@ export function demo(): DemoSpec {
     fps: 6,
     frames,
     uses: ["core-focus-log", "core-tui"],
-    tagline: "sqliteの活動ログをゼロ依存で端末チャート化する",
+    tagline: "What you did today stacks up as a terminal bar chart.",
   };
 }

@@ -13,15 +13,15 @@ const BASE = 1_783_200_000_000;
 // activity は実際の isWork() 判定に使われる生ログ（漢字ヒント一致が必要）。
 // caption は画面表示専用のひらがな言い換え（activity はそのまま描画しない）。
 const EVENTS: { activity: string; caption: string; work: boolean }[] = [
-  { activity: "作業をしている", caption: "さぎょう ちゅう", work: true },
-  { activity: "書いていた", caption: "かいて いた", work: true },
-  { activity: "考え事をしていた", caption: "かんがえごと ちゅう", work: true },
-  { activity: "休憩中", caption: "きゅうけい", work: false },
-  { activity: "見ていた", caption: "みて いた", work: true },
-  { activity: "打っていた", caption: "うって いた", work: true },
-  { activity: "読んでいた", caption: "よんで いた", work: true },
-  { activity: "散歩中", caption: "さんぽ ちゅう", work: false },
-  { activity: "作業をしている", caption: "さぎょう ちゅう", work: true },
+  { activity: "作業をしている", caption: "working", work: true },
+  { activity: "書いていた", caption: "writing", work: true },
+  { activity: "考え事をしていた", caption: "thinking", work: true },
+  { activity: "休憩中", caption: "break", work: false },
+  { activity: "見ていた", caption: "watching", work: true },
+  { activity: "打っていた", caption: "typing", work: true },
+  { activity: "読んでいた", caption: "reading", work: true },
+  { activity: "散歩中", caption: "walking", work: false },
+  { activity: "作業をしている", caption: "working", work: true },
 ];
 
 export function demo(): DemoSpec {
@@ -33,7 +33,7 @@ export function demo(): DemoSpec {
   }));
 
   const frames: string[] = [];
-  frames.push(renderForge({ ore: 0, ingots: 0 }, "けいそく かいし", false, false));
+  frames.push(renderForge({ ore: 0, ingots: 0 }, "measuring starts", false, false));
   let prevIngots = 0;
   for (let i = 0; i < focusEvents.length; i++) {
     const f = forgeFromFocus(focusEvents.slice(0, i + 1)); // 実際の forgeFromFocus() を叩く
@@ -43,13 +43,13 @@ export function demo(): DemoSpec {
     prevIngots = f.ingots;
   }
   const final = forgeFromFocus(focusEvents);
-  for (let k = 0; k < 4; k++) frames.push(renderForge(final, "きょうの ぶんは ここまで", false, false));
+  for (let k = 0; k < 4; k++) frames.push(renderForge(final, "that's it for today", false, false));
 
   return {
     name: "focus-forge",
     fps: 5,
     frames,
     uses: ["core-focus-log", "core-chiptune", "core-device"],
-    tagline: "実測の集中ログ(focus-cam)で鉱石を鍛える。自己申告じゃない pomodoro",
+    tagline: "A pomodoro that isn't self-reported. Only measured focus swings the hammer.",
   };
 }

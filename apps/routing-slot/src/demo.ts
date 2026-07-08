@@ -32,6 +32,6 @@ export function demo(): DemoSpec {
     fps: 6,
     frames,
     uses: ["core-worker-data"],
-    tagline: "worker 配車をスロットで回す。routing_trial_ledger の予測を娯楽化",
+    tagline: "Worker dispatch as a slot machine; the right fit hits the jackpot.",
   };
 }

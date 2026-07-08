@@ -15,7 +15,7 @@ const GRAY = "\x1b[90m";
 // HEADER は demo.ts 経由で core-termgif の font8x8(漢字ゼロ収録)を通ってGIFへ焼かれるため、
 // ASCII+ひらがなのみで書く（漢字は未収録グリフの塗りつぶしブロックへ化ける。banner.mjs の
 // assertGlyph 事故と同種の罠。テストで hasGlyph の全数チェックあり）。
-export const HEADER = `  ${CYAN}~ device-mirror ~${RESET}  ${DIM}じっきを かうまえに じっきが みえる${RESET}`;
+export const HEADER = `  ${CYAN}~ device-mirror ~${RESET}  ${DIM}see the gadget before you buy it${RESET}`;
 
 // 8色 ANSI の代表色。led() に渡された RGB を一番近いものへ丸める（実機LEDの見え方の近似）。
 const ANSI_COLORS: ReadonlyArray<{ code: string; rgb: RGB }> = [

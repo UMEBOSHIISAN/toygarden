@@ -1,4 +1,4 @@
-# umeplay 🎛️
+<h1 align="center"><picture><source media="(prefers-color-scheme: light)" srcset="assets/logo-light.svg"><img src="assets/logo.svg" alt="umeplay" width="420"></picture></h1>
 
 > **A construction kit where terminal toys grow.**
 > 日本語版 → **[README.ja.md](README.ja.md)**
@@ -15,9 +15,9 @@
 > a GIF89a burned from code by our own encoder — run `npm run banner` and you get
 > the same bytes back.
 
-umeplay is a **zero-dependency TypeScript monorepo** where **21 terminal toys**
+umeplay is a **zero-dependency TypeScript monorepo** where **22 terminal toys**
 (an aquarium, a chiptune symphony, a tamagotchi, desk weather, a virtual M5Stack
-panel…) are assembled from **8 reusable `core-*` packages** wired together by a
+panel…) are assembled from **10 reusable `core-*` packages** wired together by a
 **single event contract**.
 You don't build apps — you cross parts, and play *grows*. It's all in your
 terminal: no build target, no browser, no hardware. `npm install && npm run play tamagotchi`.
@@ -29,7 +29,7 @@ Read this as your first day, not a command dump:
 ```sh
 npm install              # devDeps only: typescript + vitest + esbuild
 npm run hello            # a cinematic splash, then an Undertale-style greeter walks you in (UMEPLAY_NO_SPLASH=1 to skip)
-npm run tour             # sit back — all 21 toys, 8 seconds each, with save-point interludes
+npm run tour             # sit back — all 22 toys, 8 seconds each, with save-point interludes
 npm run play daily       # "today's toy": a date-seeded pick (same day → same toy)
 npm run workshop         # pick parts by eye and grow a toy of your own
 ```
@@ -40,7 +40,7 @@ From there, the everyday commands:
 npm run play             # list every toy, with taglines
 npm run play tamagotchi  # names match by substring; an ambiguous name gets a numbered menu (TTY)
 npm run play random      # feeling lucky? launch a random one
-npm run check            # typecheck + tests — 130+, all green (the count climbs as toys land)
+npm run check            # typecheck + tests — 150+, all green (the count climbs as toys land)
 npm run gifs             # re-render every demo GIF from code → demo/gifs/
 npm run banner           # re-render the hero banner → demo/banner.gif
 npm run frontier         # re-render the combination map → demo/frontier.gif
@@ -106,7 +106,7 @@ of the whole kit.
 
 ## Parts catalog (`packages/`)
 
-Eight `core-*` packages. Seven of them compose the toys; the eighth,
+Ten `core-*` packages. Nine of them compose the toys; the tenth,
 `core-termgif`, is the meta-core that renders every demo GIF (see
 [Demos that don't rot](#demos-that-dont-rot)).
 
@@ -119,9 +119,11 @@ Eight `core-*` packages. Seven of them compose the toys; the eighth,
 | [`core-tui`](packages/core-tui/) | terminal UI primitives (lanes / badges / ANSI) |
 | [`core-worker-data`](packages/core-worker-data/) | worker dispatch / collapse data supply (read-only) |
 | [`core-focus-log`](packages/core-focus-log/) | focus-cam log (sqlite) supplied read-only |
+| [`core-save`](packages/core-save/) | fail-soft, zero-dependency JSON persistence for small states in `~/.umeplay` |
+| [`core-sysmon`](packages/core-sysmon/) | host workload (CPU / memory / load via `node:os`) normalized to a 0..1 busyness score |
 | [`core-termgif`](packages/core-termgif/) | ANSI output → GIF. The part that keeps demos from rotting (GIF89a + LZW + a built-in 8×8 font) |
 
-## Toy catalog (`apps/` — all 21, all with GIFs)
+## Toy catalog (`apps/` — all 22, all with GIFs)
 
 **Full gallery → [demo/index.html](demo/index.html)** — self-contained, filter by
 core, dark/light aware, zero external references. Regenerate with `npm run showcase`.
@@ -149,13 +151,14 @@ core, dark/light aware, zero external references. Regenerate with `npm run showc
 | [chiptune-clock](demo/gifs/chiptune-clock.gif) | chiptune × device | A desk clock that tells the hour with an 8-bit bell. |
 | [chiptune-themes](demo/gifs/chiptune-themes.gif) | chiptune × events | Each event kind gets a theme; a successful deploy plays a fanfare. |
 | [commit-constellation](demo/gifs/commit-constellation.gif) | git-observe × device | Commit authors become stars; the bigger the contribution, the brighter. |
+| [cpu-diner](demo/gifs/cpu-diner.gif) | sysmon | An ASCII diner run by your machine's workload: customers flood in when your CPU sweats, the staff doze when it's idle. |
 
 Every toy is just a few files under `apps/<name>/src/`. You can add one without
 touching anything else — that additivity *is* the kit.
 
 ## Bring your gadget
 
-All 21 toys run with **zero hardware** — `core-device` defaults to a mock driver,
+All 22 toys run with **zero hardware** — `core-device` defaults to a mock driver,
 and that default is exactly what lets every app and every CI run work with nothing
 plugged in. But the `Device` HAL is real: a small screen and a button is enough to
 make umeplay drive a physical panel.
@@ -226,15 +229,15 @@ new core, device, or event): **[CONTRIBUTING.md](CONTRIBUTING.md)**.
 
 ## Combination Frontier
 
-The 8 `core-*` parts can pair up **28 ways**. Today **13 of those cells are filled**
-by a shipped toy — and **15 are still empty**. This map is computed from
-`manifest.json` by `npm run frontier`, so it can't lie: a cell only lights up when a
-real toy actually crosses those two parts. The dark cells with a blinking `?` are the
-combinations nobody has built yet.
+The 10 `core-*` parts can pair up **45 ways** — and most of those cells are still
+empty. This map is computed from `manifest.json` by `npm run frontier`, so it can't
+lie: a cell only lights up when a real toy actually crosses those two parts, and the
+map **re-draws itself every time a new part lands**. The dark cells with a blinking
+`?` are the combinations nobody has built yet.
 
 ![combination frontier](demo/frontier.gif)
 
-> **28 combinations possible — 13 explored, 15 unexplored. The empty cells are yours.**
+> **45 combinations possible, most of them still empty. The blank cells are yours.**
 
 Here are six ideas sitting in empty cells right now. None of them ship today — they're
 invitations, each one an `npm run new` away:
@@ -249,7 +252,7 @@ invitations, each one an `npm run new` away:
 | **Blame Radar** | `git-observe × worker-data` | cross commit authorship with dispatch data — see which agent actually shipped what |
 
 A new **part** widens the frontier faster than a new toy: add one `core-*` and it can
-pair with all eight existing parts at once — a whole new row of empty cells to fill.
+pair with every existing part at once — a whole new row of empty cells to fill.
 [Grab a `toy-idea`](../../issues/new?template=toy-idea.yml) or
 [propose a core](../../issues/new?template=new-core.yml).
 
@@ -294,7 +297,7 @@ npm run check   # tsc --noEmit + vitest (cores tested seriously, apps are smoke 
 
 `demo/wiring.test.ts` proves one event reaches four apps through loose coupling;
 `demo/showcase.test.ts` renders every app for real; `core-termgif`'s LZW is
-round-tripped against an independent decoder. **130+ tests, all green — and the count
+round-tripped against an independent decoder. **150+ tests, all green — and the count
 climbs with every toy, part, and CRT/frontier renderer added.**
 
 ## Contributing

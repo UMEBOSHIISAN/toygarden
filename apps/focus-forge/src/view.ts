@@ -13,7 +13,7 @@ const GREEN = "\x1b[32m";
 const DIM = "\x1b[2m";
 const BOLD = "\x1b[1m";
 
-export const HEADER = `  ${CYAN}~ focus-forge ~${RESET}  ${DIM}じっさいの しゅうちゅう で こうせき を きたえる${RESET}`;
+export const HEADER = `  ${CYAN}~ focus-forge ~${RESET}  ${DIM}forge ore with real, measured focus${RESET}`;
 
 /** work=true なら ● (作業ティック)、false なら idle の一言。 */
 export function renderForge(f: Forge, caption: string, work: boolean, harvestFlash: boolean): string {
@@ -27,7 +27,7 @@ export function renderForge(f: Forge, caption: string, work: boolean, harvestFla
     `  ore     ${oreColor}${"●".repeat(f.ore)}${DIM}${"░".repeat(Math.max(0, 6 - f.ore))}${RESET}  (${f.ore})`,
     `  ingots  ${GREEN}${"◆".repeat(Math.min(f.ingots, 20))}${RESET}  (${f.ingots})`,
     "",
-    harvestFlash ? `  ${YELLOW}${BOLD}きたえた !${RESET}` : "",
+    harvestFlash ? `  ${YELLOW}${BOLD}forged !${RESET}` : "",
   ];
   return lines.join("\n");
 }

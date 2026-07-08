@@ -37,6 +37,6 @@ export function demo(): DemoSpec {
     fps: 6,
     frames,
     uses: ["core-git-observe", "core-tui"],
-    tagline: "git log を古い順のタイムラプスに。人間とAIの寄与を色分け",
+    tagline: "Time-lapse playback of a repo's history, human and AI color-coded.",
   };
 }

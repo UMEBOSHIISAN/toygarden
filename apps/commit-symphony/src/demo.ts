@@ -58,7 +58,7 @@ export function demo(): DemoSpec {
       const ai = c.coauthoredByClaude ? DIM + "[AI]" + RESET : "    ";
       return `  ${cur} ${n.note.padEnd(3)} ${String(n.ms).padStart(3)}ms ${ai} +${c.added} -${c.removed}`;
     });
-    const header = `  ${CYAN}~ commit-symphony ~${RESET}  ${DIM}git log を 8bit のきょくに${RESET}`;
+    const header = `  ${CYAN}~ commit-symphony ~${RESET}  ${DIM}git log becomes an 8-bit tune${RESET}`;
     const pitch = `  pitch ${spark}`;
     frames.push([header, pitch, ...rows].join("\n"));
   }
@@ -70,6 +70,6 @@ export function demo(): DemoSpec {
     fps: 6,
     frames,
     uses: ["core-git-observe", "core-chiptune"],
-    tagline: "git log を聴く。追加行数=音の高さ、AI共著=1オクターブ上",
+    tagline: "Your git history becomes an 8-bit tune; AI co-authored commits ring an octave up.",
   };
 }

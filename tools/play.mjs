@@ -42,7 +42,7 @@ if (existsSync(manifestPath)) {
 
 function printList(names) {
   const prefixWidth = "  npm run play ".length + Math.max(...names.map((n) => n.length));
-  console.log(`${CYAN}おもちゃ箱（${names.length}本）:${RESET}`);
+  console.log(`${CYAN}toy box (${names.length}):${RESET}`);
   for (const n of names) {
     const label = `  npm run play ${n}`.padEnd(prefixWidth);
     const tag = taglines.get(n);
@@ -78,12 +78,12 @@ function resolveChoice(str, count) {
  * 1キー入力（Enter 不要）で選ばせる。q / Enter 空入力 / Ctrl+C はキャンセル。
  */
 function pickInteractive(hits) {
-  console.log(`${YELLOW}"${query}" が曖昧:${RESET}`);
+  console.log(`${YELLOW}"${query}" is ambiguous — which one?${RESET}`);
   hits.forEach((n, i) => {
     const tag = taglines.get(n);
     console.log(`  ${CYAN}${i + 1})${RESET} ${n}${tag ? DIM + " — " + tag + RESET : ""}`);
   });
-  process.stdout.write(`${DIM}どれであそぶ? [1-${hits.length}] (q でキャンセル)${RESET} `);
+  process.stdout.write(`${DIM}which one? [1-${hits.length}] (q to cancel)${RESET} `);
 
   return new Promise((settle) => {
     const stdin = process.stdin;
@@ -99,16 +99,16 @@ function pickInteractive(hits) {
       process.stdout.write("\n");
 
       if (key?.ctrl && key.name === "c") {
-        console.log("中断した。");
+        console.log("interrupted.");
         process.exit(130);
       }
       const choice = resolveChoice(str, hits.length);
       if (choice.kind === "cancel") {
-        console.log("キャンセルした。");
+        console.log("cancelled.");
         process.exit(0);
       }
       if (choice.kind === "invalid") {
-        console.error(`"${choice.input}" は範囲外。`);
+        console.error(`"${choice.input}" — out of range.`);
         process.exit(1);
       }
       settle(hits[choice.index]);
@@ -136,11 +136,11 @@ if (query === "random") {
   console.log(`${YELLOW}🎲 ${app}!${RESET}`);
 } else if (query === "daily") {
   app = pickDaily(all);
-  console.log(`${YELLOW}📅 きょうのおもちゃ: ${app}${RESET}`);
+  console.log(`${YELLOW}📅 today's toy: ${app}${RESET}`);
 } else {
   const hits = all.filter((n) => n.includes(query));
   if (hits.length === 0) {
-    console.error(`"${query}" に一致する app がない。候補:\n` + all.map((n) => `  ${n}`).join("\n"));
+    console.error(`no app matches "${query}". candidates:\n` + all.map((n) => `  ${n}`).join("\n"));
     process.exit(1);
   }
   const exact = hits.find((n) => n === query);
@@ -149,7 +149,7 @@ if (query === "random") {
   } else if (process.stdin.isTTY) {
     app = await pickInteractive(hits);
   } else {
-    console.error(`"${query}" が曖昧: ${hits.join(", ")}`);
+    console.error(`"${query}" is ambiguous: ${hits.join(", ")}`);
     process.exit(1);
   }
 }

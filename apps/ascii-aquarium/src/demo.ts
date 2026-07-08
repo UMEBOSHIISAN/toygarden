@@ -20,7 +20,7 @@ export function demo(): DemoSpec {
     for (let i = 0; i < 36; i++) {
       tank = step(tank);
       if (i % 9 === 4) tank = feed(tank, { kind: "task.done", project: "投稿" });
-      const header = `  ${CYAN}~ umeplay aquarium ~${RESET}  ${DIM}task.done で さかなが ふえる${RESET}`;
+      const header = `  ${CYAN}~ umeplay aquarium ~${RESET}  ${DIM}task.done adds a fish${RESET}`;
       frames.push(header + "\n" + colorize(render(tank), tank.night));
     }
     return {
@@ -28,7 +28,7 @@ export function demo(): DemoSpec {
       fps: 7,
       frames,
       uses: ["contracts"],
-      tagline: "ASCII 水槽。task.done イベントで魚が増える",
+      tagline: "An ASCII fish tank that gains a fish on every task.done. A moon rises at night.",
     };
   } finally {
     Math.random = orig;

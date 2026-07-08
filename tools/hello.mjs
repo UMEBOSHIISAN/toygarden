@@ -11,7 +11,9 @@
  *
  * UMEPLAY_CONTEXT=package のとき（npx 経由の bin から渡される契約）は案内コマンドを
  * `npx umeplay <sub>` 形式に切り替える。未設定 or "repo" なら従来の `npm run <sub>` 形式。
- * BUILD は package コンテキストではリポジトリ clone を案内する（workshop はリポジトリが要る）。
+ * BUILD は repo コンテキストでは tools/workshop.mjs を直接起動する（PLAY が tour.mjs を
+ * 起動するのと同じ流儀）。package コンテキストでは workshop がリポジトリを必要とするため
+ * clone を案内するだけに留める。
  *
  * TTY のときだけ冒頭で映画的スプラッシュ（splash.mjs）を1回流してから会話ボックスへ繋ぐ。
  * `UMEPLAY_NO_SPLASH=1` で省略できる（毎回見るとうざくなるため・playSplash 側も同じ変数を見る）。
@@ -46,7 +48,7 @@ function buildChoices() {
   const buildDesc =
     CONTEXT === "package"
       ? `building needs the repo -> ${REPO_CLONE_HINT}`
-      : `${cmd("workshop")} -- pick parts and grow a toy`;
+      : "pick parts and grow a toy";
   return [
     { key: "PLAY", label: "PLAY (あそぶ)", desc: "watch every toy, one after another" },
     { key: "BUILD", label: "BUILD (つくる)", desc: buildDesc },
@@ -204,10 +206,15 @@ async function runChoice(choices, index) {
     case "BUILD": {
       if (CONTEXT === "package") {
         console.log(`${WHITE}* Building needs the repo -> ${RESET}${REPO_CLONE_HINT}`);
-      } else {
-        console.log(`${WHITE}* ${cmd("workshop")} -- pick parts and grow a toy.${RESET}`);
+        process.exit(0);
+        break;
       }
-      process.exit(0);
+      console.log(`${WHITE}* BUILD selected!${RESET}`);
+      const child = spawn(process.execPath, [join(root, "tools", "workshop.mjs")], {
+        stdio: "inherit",
+      });
+      const code = await new Promise((r) => child.on("exit", (c) => r(c ?? 0)));
+      process.exit(code);
       break;
     }
     case "WATCH": {

@@ -8,7 +8,7 @@
 | 用途 | JP | EN |
 |---|---|---|
 | 一言 | **端末で遊びが生える組み立てキット** | **A construction kit where terminal toys grow** |
-| ヒーロー | 7つの部品を組むだけで、水槽が泳ぎ、git履歴が歌い、机に天気が降る。 | Wire 7 cores together — an aquarium swims, your git history sings, weather falls on your desk. |
+| ヒーロー | 9つの部品を組むだけで、水槽が泳ぎ、git履歴が歌い、机に天気が降る。 | Wire 9 cores together — an aquarium swims, your git history sings, weather falls on your desk. |
 | 哲学 | アプリを作るんじゃない。部品を掛け合わせると遊びが**生える**。 | You don't build apps. You cross parts, and play **grows**. |
 | 技術 | 依存ゼロ・TypeScript・全部ターミナル。GIFデモまでコードから再現可能。 | Zero deps, TypeScript, all in your terminal. Even the demo GIFs are reproducible from code. |
 
@@ -21,7 +21,7 @@
 - **8bitフォントの由来** — IBM VGA 時代の Public Domain フォント（font8x8）+ 手描きグリフ。ひらがなが泳ぐ端末は、ちょっといいでしょ。
 - **どうやって作る?（workshop）** — 部品を目で選ぶと、おもちゃが生える。`npm run workshop` で `core-*` をカーソルで選ぶと、レシピ図がライブで組み変わり、Enter でそのおもちゃが生える。
 
-## app別ワンライナー（21本）
+## app別ワンライナー（22本）
 
 | app | 一言 |
 |---|---|
@@ -46,6 +46,7 @@
 | chiptune-clock | 時刻を 8bit の鐘で告げる置時計 |
 | chiptune-themes | イベント種別ごとにテーマ曲が付く。deploy 成功はファンファーレ |
 | commit-constellation | コミット著者が星になる。寄与が大きいほど明るい |
+| cpu-diner | マシンの負荷が営む ASCII 食堂。CPU が忙しいと客が押し寄せ、暇だと店員が居眠りする |
 
 ## コミュニティ / 拡張性
 
@@ -66,7 +67,7 @@
 
 | 用途 | JP | EN |
 |---|---|---|
-| 地図 | 8部品 × 28通り。13が探索済み、15が未踏。空きマスはあなたのもの。 | 8 parts, 28 pairs — 13 explored, 15 unexplored. The empty cells are yours. |
+| 地図 | 10部品 × 45通りのペア。大半はまだ空き。`npm run frontier` が実数を焼く。空きマスはあなたのもの。 | 10 parts, 45 pairs — most still empty. `npm run frontier` burns the live count. The empty cells are yours. |
 | 掛け算 | 部品を1個足すと、遊びは足し算じゃなく掛け算で増える。 | Add one part and the play grows by multiplication, not addition. |
 | 未踏 | いちばん面白いおもちゃは、まだ誰も掛け合わせていない2つの部品。 | The most interesting toy is the two parts nobody has crossed yet. |
 | レシピ | 「これとこれを組み合わせたら面白いじゃん」を、みんなが試せる。 | "What if I crossed this with that?" — now anyone can. |
@@ -79,7 +80,7 @@
 
 **案1（開発物語）**
 ターミナルで魚を飼い始めた。task が終わると1匹増える。
-7つの部品を組み合わせるだけで、水槽も、8bitの曲も、机の天気も生えてくる。
+9つの部品を組み合わせるだけで、水槽も、8bitの曲も、机の天気も生えてくる。
 遊びの組み立てキット umeplay、OSSにしました🎛️
 
 **案2（技術フック）**
@@ -89,16 +90,16 @@ LZWも8bitフォントも全部手元。#umeplay
 
 **案3（哲学）**
 「アプリを作る」より「部品を掛け合わせたら遊びが生えた」の方が楽しい。
-core 7個 × 契約1枚 = 遊び21本。掛け算はまだ終わらない。
+core 9個 × 契約1枚 = 遊び22本。掛け算はまだ終わらない。
 
 **案4（組み合わせフロンティア）**
-8つの部品でできる組み合わせは28通り。今そのうち13を作った。
-残り15マスは、まだ誰も掛け合わせていない。
+10個の部品でできる組み合わせは45通り。その大半はまだ誰も掛け合わせていない。
+地図は `npm run frontier` が自動で実数を焼くから、埋まった数はいつも本物。
 「これとこれを混ぜたら面白いじゃん」を、みんなで埋めていくキットです🎛️ #umeplay
 
 ## リリースノート用ボイラープレート
 
 umeplay v0.x — 端末で遊びが生える組み立てキット
-- 7 cores × 1 contract = 21 toys, all in your terminal
+- 9 cores × 1 contract = 22 toys, all in your terminal
 - Zero-dependency GIF renderer included (your demos never rot)
 - MIT License. Play responsibly.

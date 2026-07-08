@@ -62,7 +62,7 @@
     <h1>ume<span class="c">play</span> 🎛️</h1>
     <p class="tag">端末で遊びが生える組み立てキット<br>A construction kit where terminal toys grow</p>
     <p class="big">7つの部品を組むだけで、水槽が泳ぎ、git履歴が歌い、机に天気が降る。</p>
-    <p class="stats">21 apps · 541 frames · 2025KB of pixels — all rendered from code</p>
+    <p class="stats">22 apps · 581 frames · 2213KB of pixels — all rendered from code</p>
     <div class="quick">npm install &amp;&amp; npm run play</div>
   </div>
 
@@ -72,9 +72,9 @@ packages/core-* 部品（再利用単位・依存ゼロ）
    │ import only ↓
 contracts/      型・スキーマ（PlayEvent という共通語彙）</div>
 
-  <h2>遊びカタログ — 全21本、すべてコードから焼いた GIF</h2>
+  <h2>遊びカタログ — 全22本、すべてコードから焼いた GIF</h2>
   <div class="filters">
-      <button class="chip active" data-filter="all">all <span class="n">21</span></button>
+      <button class="chip active" data-filter="all">all <span class="n">22</span></button>
       <button class="chip" data-filter="core-device">core-device <span class="n">8</span></button>
       <button class="chip" data-filter="core-chiptune">core-chiptune <span class="n">6</span></button>
       <button class="chip" data-filter="core-tui">core-tui <span class="n">5</span></button>
@@ -83,18 +83,19 @@ contracts/      型・スキーマ（PlayEvent という共通語彙）</div>
       <button class="chip" data-filter="core-git-observe">core-git-observe <span class="n">4</span></button>
       <button class="chip" data-filter="core-worker-data">core-worker-data <span class="n">4</span></button>
       <button class="chip" data-filter="core-focus-log">core-focus-log <span class="n">3</span></button>
+      <button class="chip" data-filter="core-sysmon">core-sysmon <span class="n">1</span></button>
   </div>
   <div class="grid">
     <figure class="card" data-uses="contracts core-device core-events">
       <img src="gifs/agent-constellation.gif" alt="agent-constellation" loading="lazy">
       <figcaption>
         <h3>agent-constellation</h3>
-        <p>dispatch は星座線に、collapse は赤い星に</p>
+        <p>dispatch draws the line, collapse turns the star red</p>
         <div class="meta">
           <span class="badge">contracts</span>
           <span class="badge">core-device</span>
           <span class="badge">core-events</span>
-          <span class="dim">26f @5fps · 75KB</span>
+          <span class="dim">26f @5fps · 77KB</span>
         </div>
       </figcaption>
     </figure>
@@ -102,10 +103,10 @@ contracts/      型・スキーマ（PlayEvent という共通語彙）</div>
       <img src="gifs/ascii-aquarium.gif" alt="ascii-aquarium" loading="lazy">
       <figcaption>
         <h3>ascii-aquarium</h3>
-        <p>ASCII 水槽。task.done イベントで魚が増える</p>
+        <p>An ASCII fish tank that gains a fish on every task.done. A moon rises at night.</p>
         <div class="meta">
           <span class="badge">contracts</span>
-          <span class="dim">36f @7fps · 188KB</span>
+          <span class="dim">36f @7fps · 185KB</span>
         </div>
       </figcaption>
     </figure>
@@ -113,11 +114,11 @@ contracts/      型・スキーマ（PlayEvent という共通語彙）</div>
       <img src="gifs/chiptune-clock.gif" alt="chiptune-clock" loading="lazy">
       <figcaption>
         <h3>chiptune-clock</h3>
-        <p>正時ごとに 8bit の鐘が鳴るターミナル置き時計</p>
+        <p>A desk clock that tells the hour with an 8-bit bell.</p>
         <div class="meta">
           <span class="badge">core-chiptune</span>
           <span class="badge">core-device</span>
-          <span class="dim">26f @6fps · 80KB</span>
+          <span class="dim">26f @6fps · 89KB</span>
         </div>
       </figcaption>
     </figure>
@@ -125,11 +126,11 @@ contracts/      型・スキーマ（PlayEvent という共通語彙）</div>
       <img src="gifs/chiptune-themes.gif" alt="chiptune-themes" loading="lazy">
       <figcaption>
         <h3>chiptune-themes</h3>
-        <p>gate待ち/collapse/deploy成功をそれぞれの音テーマで知らせる</p>
+        <p>Each event kind gets a theme; a successful deploy plays a fanfare.</p>
         <div class="meta">
           <span class="badge">core-chiptune</span>
           <span class="badge">core-events</span>
-          <span class="dim">28f @6fps · 64KB</span>
+          <span class="dim">28f @6fps · 66KB</span>
         </div>
       </figcaption>
     </figure>
@@ -137,10 +138,10 @@ contracts/      型・スキーマ（PlayEvent という共通語彙）</div>
       <img src="gifs/collapse-arcade.gif" alt="collapse-arcade" loading="lazy">
       <figcaption>
         <h3>collapse-arcade</h3>
-        <p>崩壊率の高いエージェントを撃墜するシューティング。撃つ＝レビュー</p>
+        <p>High collapse-rate agents become enemies. Shooting one = a review.</p>
         <div class="meta">
           <span class="badge">core-worker-data</span>
-          <span class="dim">24f @6fps · 76KB</span>
+          <span class="dim">24f @6fps · 80KB</span>
         </div>
       </figcaption>
     </figure>
@@ -148,12 +149,12 @@ contracts/      型・スキーマ（PlayEvent という共通語彙）</div>
       <img src="gifs/collapse-siren.gif" alt="collapse-siren" loading="lazy">
       <figcaption>
         <h3>collapse-siren</h3>
-        <p>崩壊率が閾値を超えたエージェントに不協和音のサイレンを鳴らす監視アラーム</p>
+        <p>When collapse rate crosses a threshold, the terminal blares a dissonant siren.</p>
         <div class="meta">
           <span class="badge">core-worker-data</span>
           <span class="badge">core-chiptune</span>
           <span class="badge">core-events</span>
-          <span class="dim">21f @6fps · 72KB</span>
+          <span class="dim">21f @6fps · 75KB</span>
         </div>
       </figcaption>
     </figure>
@@ -161,11 +162,11 @@ contracts/      型・スキーマ（PlayEvent という共通語彙）</div>
       <img src="gifs/commit-constellation.gif" alt="commit-constellation" loading="lazy">
       <figcaption>
         <h3>commit-constellation</h3>
-        <p>コントリビューターの重みを星の大きさで見せる</p>
+        <p>Commit authors become stars; the bigger the contribution, the brighter.</p>
         <div class="meta">
           <span class="badge">core-git-observe</span>
           <span class="badge">core-device</span>
-          <span class="dim">26f @5fps · 74KB</span>
+          <span class="dim">26f @5fps · 78KB</span>
         </div>
       </figcaption>
     </figure>
@@ -173,11 +174,22 @@ contracts/      型・スキーマ（PlayEvent という共通語彙）</div>
       <img src="gifs/commit-symphony.gif" alt="commit-symphony" loading="lazy">
       <figcaption>
         <h3>commit-symphony</h3>
-        <p>git log を聴く。追加行数=音の高さ、AI共著=1オクターブ上</p>
+        <p>Your git history becomes an 8-bit tune; AI co-authored commits ring an octave up.</p>
         <div class="meta">
           <span class="badge">core-git-observe</span>
           <span class="badge">core-chiptune</span>
-          <span class="dim">24f @6fps · 91KB</span>
+          <span class="dim">24f @6fps · 93KB</span>
+        </div>
+      </figcaption>
+    </figure>
+    <figure class="card" data-uses="core-sysmon">
+      <img src="gifs/cpu-diner.gif" alt="cpu-diner" loading="lazy">
+      <figcaption>
+        <h3>cpu-diner</h3>
+        <p>customers rush in when your CPU sweats</p>
+        <div class="meta">
+          <span class="badge">core-sysmon</span>
+          <span class="dim">40f @8fps · 172KB</span>
         </div>
       </figcaption>
     </figure>
@@ -185,10 +197,10 @@ contracts/      型・スキーマ（PlayEvent という共通語彙）</div>
       <img src="gifs/desk-weather.gif" alt="desk-weather" loading="lazy">
       <figcaption>
         <h3>desk-weather</h3>
-        <p>dirty/fail/stale の量を天気で見る作業環境ゲージ</p>
+        <p>Your repo's health becomes desk weather; a dirty tree clouds over.</p>
         <div class="meta">
           <span class="badge">core-device</span>
-          <span class="dim">32f @6fps · 91KB</span>
+          <span class="dim">32f @6fps · 97KB</span>
         </div>
       </figcaption>
     </figure>
@@ -196,10 +208,10 @@ contracts/      型・スキーマ（PlayEvent という共通語彙）</div>
       <img src="gifs/device-mirror.gif" alt="device-mirror" loading="lazy">
       <figcaption>
         <h3>device-mirror</h3>
-        <p>実機を買う前に、実機が見える。M5Stack風ガジェットにHALのDrawCommandをミラー</p>
+        <p>See the hardware before you buy it: a virtual M5Stack panel mirrors the HAL's DrawCommands</p>
         <div class="meta">
           <span class="badge">core-device</span>
-          <span class="dim">20f @4fps · 106KB</span>
+          <span class="dim">20f @4fps · 107KB</span>
         </div>
       </figcaption>
     </figure>
@@ -207,7 +219,7 @@ contracts/      型・スキーマ（PlayEvent という共通語彙）</div>
       <img src="gifs/event-loom.gif" alt="event-loom" loading="lazy">
       <figcaption>
         <h3>event-loom</h3>
-        <p>1本のイベントバスに疎結合な複数の購読者がそのまま繋がる</p>
+        <p>Weaves every event on one bus into a live universal viewer.</p>
         <div class="meta">
           <span class="badge">core-events</span>
           <span class="badge">core-tui</span>
@@ -220,10 +232,10 @@ contracts/      型・スキーマ（PlayEvent という共通語彙）</div>
       <img src="gifs/focus-aquarium.gif" alt="focus-aquarium" loading="lazy">
       <figcaption>
         <h3>focus-aquarium</h3>
-        <p>1日の focus ログをそのまま水槽にする</p>
+        <p>A day's focus log swims out as a school of fish at night.</p>
         <div class="meta">
           <span class="badge">core-focus-log</span>
-          <span class="dim">24f @6fps · 73KB</span>
+          <span class="dim">24f @6fps · 71KB</span>
         </div>
       </figcaption>
     </figure>
@@ -231,12 +243,12 @@ contracts/      型・スキーマ（PlayEvent という共通語彙）</div>
       <img src="gifs/focus-forge.gif" alt="focus-forge" loading="lazy">
       <figcaption>
         <h3>focus-forge</h3>
-        <p>実測の集中ログ(focus-cam)で鉱石を鍛える。自己申告じゃない pomodoro</p>
+        <p>A pomodoro that isn't self-reported. Only measured focus swings the hammer.</p>
         <div class="meta">
           <span class="badge">core-focus-log</span>
           <span class="badge">core-chiptune</span>
           <span class="badge">core-device</span>
-          <span class="dim">27f @5fps · 66KB</span>
+          <span class="dim">27f @5fps · 62KB</span>
         </div>
       </figcaption>
     </figure>
@@ -244,11 +256,11 @@ contracts/      型・スキーマ（PlayEvent という共通語彙）</div>
       <img src="gifs/focus-tally.gif" alt="focus-tally" loading="lazy">
       <figcaption>
         <h3>focus-tally</h3>
-        <p>sqliteの活動ログをゼロ依存で端末チャート化する</p>
+        <p>What you did today stacks up as a terminal bar chart.</p>
         <div class="meta">
           <span class="badge">core-focus-log</span>
           <span class="badge">core-tui</span>
-          <span class="dim">40f @6fps · 124KB</span>
+          <span class="dim">40f @6fps · 110KB</span>
         </div>
       </figcaption>
     </figure>
@@ -256,7 +268,7 @@ contracts/      型・スキーマ（PlayEvent という共通語彙）</div>
       <img src="gifs/git-replay.gif" alt="git-replay" loading="lazy">
       <figcaption>
         <h3>git-replay</h3>
-        <p>git log を古い順のタイムラプスに。人間とAIの寄与を色分け</p>
+        <p>Time-lapse playback of a repo's history, human and AI color-coded.</p>
         <div class="meta">
           <span class="badge">core-git-observe</span>
           <span class="badge">core-tui</span>
@@ -268,11 +280,11 @@ contracts/      型・スキーマ（PlayEvent という共通語彙）</div>
       <img src="gifs/git-weather.gif" alt="git-weather" loading="lazy">
       <figcaption>
         <h3>git-weather</h3>
-        <p>直近コミットの churn をリポジトリの天気にする</p>
+        <p>High-churn days storm, quiet days stay clear.</p>
         <div class="meta">
           <span class="badge">core-git-observe</span>
           <span class="badge">core-device</span>
-          <span class="dim">28f @6fps · 103KB</span>
+          <span class="dim">28f @6fps · 104KB</span>
         </div>
       </figcaption>
     </figure>
@@ -280,11 +292,11 @@ contracts/      型・スキーマ（PlayEvent という共通語彙）</div>
       <img src="gifs/pomodoro-forge.gif" alt="pomodoro-forge" loading="lazy">
       <figcaption>
         <h3>pomodoro-forge</h3>
-        <p>25分の集中で鉱石が育ち、git.commit で精錬。完成でファンファーレ</p>
+        <p>Mine ore by focusing, smelt it on commit - a blacksmith's pomodoro.</p>
         <div class="meta">
           <span class="badge">core-chiptune</span>
           <span class="badge">core-device</span>
-          <span class="dim">22f @5fps · 66KB</span>
+          <span class="dim">22f @5fps · 63KB</span>
         </div>
       </figcaption>
     </figure>
@@ -292,11 +304,11 @@ contracts/      型・スキーマ（PlayEvent という共通語彙）</div>
       <img src="gifs/routing-radar.gif" alt="routing-radar" loading="lazy">
       <figcaption>
         <h3>routing-radar</h3>
-        <p>LLMルーティング実験を confidence バーで一覧</p>
+        <p>A radar surveying dispatch hit-rate with confidence bars.</p>
         <div class="meta">
           <span class="badge">core-worker-data</span>
           <span class="badge">core-tui</span>
-          <span class="dim">30f @6fps · 130KB</span>
+          <span class="dim">30f @6fps · 128KB</span>
         </div>
       </figcaption>
     </figure>
@@ -304,10 +316,10 @@ contracts/      型・スキーマ（PlayEvent という共通語彙）</div>
       <img src="gifs/routing-slot.gif" alt="routing-slot" loading="lazy">
       <figcaption>
         <h3>routing-slot</h3>
-        <p>worker 配車をスロットで回す。routing_trial_ledger の予測を娯楽化</p>
+        <p>Worker dispatch as a slot machine; the right fit hits the jackpot.</p>
         <div class="meta">
           <span class="badge">core-worker-data</span>
-          <span class="dim">24f @6fps · 63KB</span>
+          <span class="dim">24f @6fps · 62KB</span>
         </div>
       </figcaption>
     </figure>
@@ -315,10 +327,10 @@ contracts/      型・スキーマ（PlayEvent という共通語彙）</div>
       <img src="gifs/secretary-today.gif" alt="secretary-today" loading="lazy">
       <figcaption>
         <h3>secretary-today</h3>
-        <p>今日の優先順位をレーンで表示。blocked は赤く沈む</p>
+        <p>Today's priorities as lanes; blocked items sink in red.</p>
         <div class="meta">
           <span class="badge">core-tui</span>
-          <span class="dim">13f @4fps · 63KB</span>
+          <span class="dim">13f @4fps · 67KB</span>
         </div>
       </figcaption>
     </figure>
@@ -326,10 +338,10 @@ contracts/      型・スキーマ（PlayEvent という共通語彙）</div>
       <img src="gifs/ume-tamagotchi.gif" alt="ume-tamagotchi" loading="lazy">
       <figcaption>
         <h3>ume-tamagotchi</h3>
-        <p>うめこ育成。投稿で喜び、承認待ちが積もると弱る売上導線の体感版</p>
+        <p>Raise Umeko: she's happy when you post, sulks when things stall.</p>
         <div class="meta">
           <span class="badge">contracts</span>
-          <span class="dim">20f @5fps · 58KB</span>
+          <span class="dim">20f @5fps · 65KB</span>
         </div>
       </figcaption>
     </figure>

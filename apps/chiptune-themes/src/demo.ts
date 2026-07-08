@@ -32,19 +32,19 @@ export interface Scene {
 }
 
 export const SCENES: Scene[] = [
-  { event: { kind: "gate.pending", label: "たいき" }, jp: "たいき", color: CYAN },
-  { event: { kind: "agent.collapse", agent: "codex", rate: 0.3 }, jp: "はたん", color: RED },
-  { event: { kind: "deploy.success" }, jp: "せいこう", color: GREEN },
-  { event: { kind: "task.done", project: "とうこう" }, jp: "むおん", color: GRAY },
+  { event: { kind: "gate.pending", label: "たいき" }, jp: "waiting", color: CYAN },
+  { event: { kind: "agent.collapse", agent: "codex", rate: 0.3 }, jp: "collapse", color: RED },
+  { event: { kind: "deploy.success" }, jp: "success", color: GREEN },
+  { event: { kind: "task.done", project: "とうこう" }, jp: "silent", color: GRAY },
 ];
 
 /** 1画面ぶんの描画。demo と cli の両方から呼ばれる共通レンダラ。hint は cli の操作説明用。 */
 export function renderScreen(scene: Scene, revealed: number, hint = ""): string {
   const theme = themeFor(scene.event);
-  const header = `  ${CYAN}~ chiptune-themes ~${RESET}  ${DIM}event → おと${hint}${RESET}`;
+  const header = `  ${CYAN}~ chiptune-themes ~${RESET}  ${DIM}event → sound${hint}${RESET}`;
   const eventLine = `  event: ${BOLD}${scene.event.kind}${RESET}  [${scene.color}${scene.jp}${RESET}]`;
   if (!theme) {
-    return `${header}\n\n${eventLine}\n\n  ${GRAY}(おと なし むおん)${RESET}\n\n  ${GRAY}...${RESET}`;
+    return `${header}\n\n${eventLine}\n\n  ${GRAY}(no sound - silent)${RESET}\n\n  ${GRAY}...${RESET}`;
   }
   const notes = theme.motif.notes.slice(0, revealed);
   const pitch = notes.map((n) => scene.color + barFor(n.note) + RESET).join("") || " ";
@@ -67,6 +67,6 @@ export function demo(): DemoSpec {
     fps: 6,
     frames,
     uses: ["core-chiptune", "core-events"],
-    tagline: "gate待ち/collapse/deploy成功をそれぞれの音テーマで知らせる",
+    tagline: "Each event kind gets a theme; a successful deploy plays a fanfare.",
   };
 }

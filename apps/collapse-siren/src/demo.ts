@@ -54,6 +54,6 @@ export function demo(): DemoSpec {
     fps: 6,
     frames,
     uses: ["core-worker-data", "core-chiptune", "core-events"],
-    tagline: "崩壊率が閾値を超えたエージェントに不協和音のサイレンを鳴らす監視アラーム",
+    tagline: "When collapse rate crosses a threshold, the terminal blares a dissonant siren.",
   };
 }

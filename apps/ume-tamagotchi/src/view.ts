@@ -14,7 +14,7 @@ const DIM = "\x1b[2m";
 const BOLD = "\x1b[1m";
 const MAGENTA = "\x1b[35m";
 
-export const HEADER = `  ${CYAN}~ ume-tamagotchi ~${RESET}  ${DIM}とうこう で よろこび・たいき で よわる${RESET}`;
+export const HEADER = `  ${CYAN}~ ume-tamagotchi ~${RESET}  ${DIM}posts make her happy, silence makes her sulk${RESET}`;
 
 function gauge(value: number, color: string): string {
   const filled = Math.max(0, Math.min(20, Math.round((value / 100) * 20)));

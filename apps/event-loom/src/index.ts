@@ -28,6 +28,8 @@ export function label(e: PlayEvent): string {
       return color(GREEN, `✔ ${e.project}`);
     case "focus.activity":
       return color(DIM, `◎ ${e.activity}`);
+    case "sys.pulse":
+      return color(DIM, `⚡ busy:${(e.busyness * 100).toFixed(0)}%`);
   }
 }
 
