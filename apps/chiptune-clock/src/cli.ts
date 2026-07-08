@@ -43,7 +43,7 @@ function frame(colonOn: boolean): string {
   const strikes = chimeFor(hour).notes.length;
   if (ringing && strikesShown < strikes) strikesShown++;
 
-  drawClock(device, hour, minute);
+  drawClock(device, hour, minute, now.getSeconds(), colonOn);
 
   const hh = String(hour).padStart(2, "0");
   const mm = String(minute).padStart(2, "0");

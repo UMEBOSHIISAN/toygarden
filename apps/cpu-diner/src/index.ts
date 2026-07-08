@@ -1,4 +1,5 @@
 import { startSysmonFeed, type SysmonSample } from "@toygarden/core-sysmon";
+import type { Device, RGB } from "@toygarden/core-device";
 
 /**
  * cpu-diner — an ASCII diner whose crowd swells and thins with your machine's CPU busyness.
@@ -11,6 +12,8 @@ export type CpuDinerOptions = {
   mockBusyness?: number;
   /** 描画フレームレート（既定 8 FPS） */
   frameRate?: number;
+  /** 実機パネル（未指定なら描画しない。cli.ts が selectDevice() で渡す） */
+  device?: Device;
 };
 
 export type CpuDinerState = {
@@ -134,6 +137,57 @@ export function renderDiner(state: CpuDinerState): string[] {
   ];
 }
 
+// 実機パネル用レイアウト定数（M5StickC Plus 実測 240x135 を想定。他パネルでも比率はそのまま縮尺される）。
+const TABLE_RECT_W = 50;
+const TABLE_RECT_H = 30;
+const TABLE_GAP = 10;
+const TABLE_START_X = 5;
+const TABLE_Y = 25;
+const GAUGE_X = 5;
+const GAUGE_Y = 95;
+const GAUGE_W = 230;
+const GAUGE_H = 12;
+
+const TABLE_OCCUPIED: RGB = { r: 255, g: 140, b: 40 }; // 暖色 = 客あり
+const TABLE_EMPTY: RGB = { r: 40, g: 40, b: 40 }; // 暗色 = 空卓
+const GAUGE_BG: RGB = { r: 50, g: 50, b: 50 };
+const GAUGE_FILL: RGB = { r: 0, g: 200, b: 120 };
+
+/**
+ * 実機パネル描画（純関数だが device への副作用境界）: state から DrawCommand を発行する。
+ * 上=chef 状態 / 中=テーブル4卓（客がいる卓=暖色・空卓=暗色）/ 下=busyness ゲージ+cpu%。
+ * busyness の生値は state に残らないため、customers/MAX_CUSTOMERS を表示用の近似として使う
+ * （renderDiner と同じく state だけから決定論的に描く）。
+ */
+export function drawDiner(device: Device, state: CpuDinerState): void {
+  const { tables } = seatingFor(state.customers);
+  const busynessPct = Math.round((state.customers / MAX_CUSTOMERS) * 100);
+
+  device.draw({ op: "clear" });
+
+  device.draw({ op: "text", x: 5, y: 5, text: state.staffAwake ? "chef: cooking!" : "chef: zzz" });
+
+  for (let i = 0; i < tables.length; i++) {
+    device.draw({
+      op: "rect",
+      x: TABLE_START_X + i * (TABLE_RECT_W + TABLE_GAP),
+      y: TABLE_Y,
+      w: TABLE_RECT_W,
+      h: TABLE_RECT_H,
+      color: tables[i] > 0 ? TABLE_OCCUPIED : TABLE_EMPTY,
+    });
+  }
+
+  device.draw({ op: "rect", x: GAUGE_X, y: GAUGE_Y, w: GAUGE_W, h: GAUGE_H, color: GAUGE_BG });
+  const filledW = Math.round((busynessPct / 100) * GAUGE_W);
+  if (filledW > 0) {
+    device.draw({ op: "rect", x: GAUGE_X, y: GAUGE_Y, w: filledW, h: GAUGE_H, color: GAUGE_FILL });
+  }
+  device.draw({ op: "text", x: GAUGE_X, y: GAUGE_Y + GAUGE_H + 5, text: `cpu ${busynessPct}%` });
+
+  device.flush();
+}
+
 const HIDE = "\x1b[?25l";
 const SHOW = "\x1b[?25h";
 const CLEAR = "\x1b[2J\x1b[H";
@@ -152,6 +206,7 @@ export function playCpuDiner(options: CpuDinerOptions = {}): () => void {
 
   const draw = (busyness: number): void => {
     state = dinerLogic(state, busyness);
+    if (options.device) drawDiner(options.device, state);
     process.stdout.write(CLEAR + renderDiner(state).join("\n") + "\n");
   };
 

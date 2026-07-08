@@ -40,3 +40,29 @@ export function draw(device: Device, f: Forge): void {
   device.draw({ op: "text", x: 8, y: 32, text: `ingots:${f.ingots}` });
   device.flush();
 }
+
+/** ボタン A（ハンマーを1回振る）。3 ore を強制的に1 ingot へ精錬する（forgeFromFocus と同じ換算）。 */
+export function strike(f: Forge): Forge {
+  if (f.ore < 3) return f;
+  return { ore: f.ore - 3, ingots: f.ingots + 1 };
+}
+
+/** ボタン B（休憩）。手動アイドル入力。forgeFromFocus の非work イベントと同じ精錬処理。 */
+export function rest(f: Forge): Forge {
+  if (f.ore === 0) return f;
+  return { ore: f.ore % 3, ingots: f.ingots + Math.floor(f.ore / 3) };
+}
+
+/**
+ * 実機ボタン A(0)=ハンマー/B(1)=休憩 を forge 状態へ配線する。
+ * 押下ごとに現在の forge を取得→変換→反映→即 draw() する。戻り値を呼ぶと購読解除。
+ */
+export function wireButtons(device: Device, getForge: () => Forge, setForge: (f: Forge) => void): () => void {
+  return device.onButton((button) => {
+    const current = getForge();
+    const next = button === 0 ? strike(current) : button === 1 ? rest(current) : current;
+    if (next === current) return;
+    setForge(next);
+    draw(device, next);
+  });
+}

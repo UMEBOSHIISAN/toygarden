@@ -5,7 +5,8 @@
  * `npm run gifs` が拾って demo/gifs/cpu-diner.gif を再生成する。
  */
 import type { DemoSpec } from "@toygarden/core-termgif";
-import { dinerLogic, initDinerState, renderDiner } from "./index.ts";
+import { MockDevice } from "@toygarden/core-device";
+import { dinerLogic, drawDiner, initDinerState, renderDiner } from "./index.ts";
 
 const FRAME_COUNT = 40;
 
@@ -26,17 +27,19 @@ function busynessAt(i: number): number {
 }
 
 export function demo(): DemoSpec {
+  const device = new MockDevice();
   let state = initDinerState(7);
   const frames: string[] = [];
   for (let i = 0; i < FRAME_COUNT; i++) {
     state = dinerLogic(state, busynessAt(i));
+    drawDiner(device, state); // GIF の見た目(frames)は端末側の renderDiner のまま。実機パネル配線を uses 通り実際に叩く
     frames.push(renderDiner(state).join("\n"));
   }
   return {
     name: "cpu-diner",
     fps: 8,
     frames,
-    uses: ["core-sysmon"],
+    uses: ["core-sysmon", "core-device"],
     tagline: "customers rush in when your CPU sweats",
   };
 }

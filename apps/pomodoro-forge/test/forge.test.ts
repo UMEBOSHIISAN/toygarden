@@ -37,4 +37,19 @@ describe("pomodoro-forge (合体 core の実証)", () => {
     expect(dev.drawn[0]).toEqual({ op: "clear" });
     expect(dev.lastLed).toEqual({ r: 255, g: 180, b: 0 });
   });
+
+  it("device draw obeys HAL contract (clear→…→flush, ASCII-only text, ≤30 commands)", () => {
+    const dev = new MockDevice();
+    let s = tick(initForge(), FOCUS_MS / 2);
+    s = applyEvent(s, { kind: "git.commit", added: 10, removed: 0, coauthoredByClaude: true });
+    s = tick(s, FOCUS_MS);
+    draw(dev, s);
+    expect(dev.drawn[0]).toEqual({ op: "clear" });
+    expect(dev.flushes.length).toBe(1);
+    expect(dev.flushes[0]).toEqual(dev.drawn);
+    expect(dev.drawn.length).toBeLessThanOrEqual(30);
+    for (const cmd of dev.drawn) {
+      if (cmd.op === "text") expect(/^[\x20-\x7e]*$/.test(cmd.text)).toBe(true);
+    }
+  });
 });

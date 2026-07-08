@@ -56,3 +56,27 @@ export function draw(device: Device, pet: Pet): void {
   device.draw({ op: "text", x: 20, y: 48, text: `umeko mood:${pet.mood} e:${pet.energy}` });
   device.flush();
 }
+
+/** ボタン A（なでる）。手でかまってもらえると機嫌が上がる。 */
+export function pat(pet: Pet): Pet {
+  return { ...pet, mood: clamp(pet.mood + 8) };
+}
+
+/** ボタン B（おやつ）。食べると元気が回復する。 */
+export function feed(pet: Pet): Pet {
+  return { ...pet, energy: clamp(pet.energy + 8) };
+}
+
+/**
+ * 実機ボタン A(0)=なでる/B(1)=おやつ を pet 状態へ配線する。
+ * 押下ごとに現在の pet を取得→変換→反映→即 draw() する。戻り値を呼ぶと購読解除。
+ */
+export function wireButtons(device: Device, getPet: () => Pet, setPet: (pet: Pet) => void): () => void {
+  return device.onButton((button) => {
+    const current = getPet();
+    const next = button === 0 ? pat(current) : button === 1 ? feed(current) : current;
+    if (next === current) return;
+    setPet(next);
+    draw(device, next);
+  });
+}

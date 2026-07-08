@@ -1,6 +1,6 @@
 import type { FocusEvent } from "@toygarden/core-focus-log";
 import { selectDevice } from "@toygarden/core-device";
-import { forgeFromFocus, draw } from "./index.ts";
+import { forgeFromFocus, draw, wireButtons, type Forge } from "./index.ts";
 import { renderForge } from "./view.ts";
 
 /**
@@ -33,6 +33,21 @@ const EVENTS: { activity: string; caption: string; work: boolean }[] = [
   { activity: "作業をしている", caption: "さぎょう ちゅう", work: true },
 ];
 
+/** ボタン A(0)=ハンマーを振る/B(1)=休憩 で操作される現在の forge。スクリプトの自動進行と共有する。 */
+let forge: Forge = { ore: 0, ingots: 0 };
+
+wireButtons(
+  device,
+  () => forge,
+  (f) => {
+    forge = f;
+  },
+);
+device.onButton((button) => {
+  if (button === 0) process.stdout.write(`* button A: ハンマー ゴンッ!（ore:${forge.ore} ingots:${forge.ingots}）\n`);
+  else if (button === 1) process.stdout.write(`* button B: きゅうけい...（ore:${forge.ore} ingots:${forge.ingots}）\n`);
+});
+
 /** サンプル1日分の活動ログで鍛えて→締めて、を無限に繰り返す画面ジェネレータ。 */
 function* play(): Generator<string> {
   for (;;) {
@@ -42,19 +57,19 @@ function* play(): Generator<string> {
       activity: e.activity,
       hasPhoto: false,
     }));
-    draw(device, { ore: 0, ingots: 0 });
-    yield renderForge({ ore: 0, ingots: 0 }, "けいそく かいし", false, false);
+    forge = { ore: 0, ingots: 0 };
+    draw(device, forge);
+    yield renderForge(forge, "けいそく かいし", false, false);
     let prevIngots = 0;
     for (let i = 0; i < focusEvents.length; i++) {
-      const f = forgeFromFocus(focusEvents.slice(0, i + 1));
-      draw(device, f);
-      const harvestFlash = f.ingots > prevIngots;
+      forge = forgeFromFocus(focusEvents.slice(0, i + 1));
+      draw(device, forge);
+      const harvestFlash = forge.ingots > prevIngots;
       const reps = harvestFlash ? 4 : 2;
-      for (let r = 0; r < reps; r++) yield renderForge(f, EVENTS[i].caption, EVENTS[i].work, harvestFlash);
-      prevIngots = f.ingots;
+      for (let r = 0; r < reps; r++) yield renderForge(forge, EVENTS[i].caption, EVENTS[i].work, harvestFlash);
+      prevIngots = forge.ingots;
     }
-    const final = forgeFromFocus(focusEvents);
-    for (let k = 0; k < 4; k++) yield renderForge(final, "きょうの ぶんは ここまで", false, false);
+    for (let k = 0; k < 4; k++) yield renderForge(forge, "きょうの ぶんは ここまで", false, false);
   }
 }
 

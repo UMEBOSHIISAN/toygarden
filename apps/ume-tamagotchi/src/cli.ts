@@ -1,6 +1,6 @@
 import type { PlayEvent } from "@toygarden/contracts";
 import { selectDevice } from "@toygarden/core-device";
-import { initPet, applyEvent, draw, type Pet } from "./index.ts";
+import { initPet, applyEvent, draw, wireButtons, type Pet } from "./index.ts";
 import { renderPet } from "./view.ts";
 
 /**
@@ -28,10 +28,25 @@ const SCRIPT: { event: PlayEvent; caption: string }[] = [
   { event: { kind: "deploy.success" }, caption: "でぷろい せいこう!" },
 ];
 
+/** ボタン A(0)=なでる/B(1)=おやつ で操作される現在の pet。SCRIPT の自動進行と共有する。 */
+let pet: Pet = initPet("うめこ");
+
+wireButtons(
+  device,
+  () => pet,
+  (p) => {
+    pet = p;
+  },
+);
+device.onButton((button) => {
+  if (button === 0) process.stdout.write(`* button A: なでなで〜（${pet.name} mood:${pet.mood}）\n`);
+  else if (button === 1) process.stdout.write(`* button B: おやつ もぐもぐ（${pet.name} energy:${pet.energy}）\n`);
+});
+
 /** 1日分のイベントで pet を育て、日が変わるとまた最初から。 */
 function* play(): Generator<string> {
   for (;;) {
-    let pet: Pet = initPet("うめこ");
+    pet = initPet("うめこ");
     draw(device, pet);
     yield renderPet(pet, "きょうも いちにち はじまる");
     yield renderPet(pet, "きょうも いちにち はじまる");

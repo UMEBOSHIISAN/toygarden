@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { initPet, applyEvent, face } from "../src/index.js";
+import { MockDevice } from "@toygarden/core-device";
+import { initPet, applyEvent, face, wireButtons } from "../src/index.js";
 
 describe("ume-tamagotchi", () => {
   it("posting (task.done 投稿) raises mood most", () => {
@@ -24,5 +25,36 @@ describe("ume-tamagotchi", () => {
     for (let i = 0; i < 20; i++) p = applyEvent(p, { kind: "deploy.success" });
     expect(p.mood).toBe(100);
     expect(p.energy).toBe(100);
+  });
+
+  it("button A (pressButton(0)) pats the pet: mood rises and redraws", () => {
+    const device = new MockDevice();
+    let pet = initPet();
+    wireButtons(
+      device,
+      () => pet,
+      (p) => {
+        pet = p;
+      },
+    );
+    device.pressButton(0);
+    expect(pet.mood).toBe(58);
+    expect(device.drawn.length).toBeGreaterThan(0);
+    expect(device.flushes.length).toBe(1);
+  });
+
+  it("button B (pressButton(1)) feeds the pet: energy rises and redraws", () => {
+    const device = new MockDevice();
+    let pet = initPet();
+    wireButtons(
+      device,
+      () => pet,
+      (p) => {
+        pet = p;
+      },
+    );
+    device.pressButton(1);
+    expect(pet.energy).toBe(58);
+    expect(device.flushes.length).toBe(1);
   });
 });

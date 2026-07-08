@@ -4,6 +4,7 @@
   "type": "module",
   "main": "src/index.ts",
   "dependencies": {
+    "@toygarden/core-device": "*",
     "@toygarden/core-sysmon": "*"
   }
 }

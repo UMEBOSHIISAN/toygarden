@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { dinerLogic, initDinerState, renderDiner, type CpuDinerState } from "../src/index.js";
+import { MockDevice } from "@toygarden/core-device";
+import { dinerLogic, drawDiner, initDinerState, renderDiner, type CpuDinerState } from "../src/index.js";
 
 function runTicks(state: CpuDinerState, busyness: number, count: number): CpuDinerState {
   let s = state;
@@ -71,5 +72,44 @@ describe("renderDiner", () => {
     const overflow: CpuDinerState = { customers: 19, staffAwake: true, seed: 1 };
     expect(renderDiner(full).join("\n")).toContain("(nobody waiting)");
     expect(renderDiner(overflow).join("\n")).toContain("waiting for a table");
+  });
+});
+
+describe("drawDiner", () => {
+  it("emits a command buffer that starts with clear and ends with flush", () => {
+    const device = new MockDevice();
+    const state: CpuDinerState = { customers: 5, staffAwake: true, seed: 1 };
+    drawDiner(device, state);
+    expect(device.flushes.length).toBe(1);
+    const buffer = device.flushes[0];
+    expect(buffer[0]).toEqual({ op: "clear" });
+    // flush 自体は DrawCommand ではないので、最後の要素が clear/flush 直前の描画コマンドであることを見る
+    expect(buffer.length).toBeGreaterThan(1);
+  });
+
+  it("only draws ASCII text (no wide/non-ASCII glyphs, since small panel fonts can't render them)", () => {
+    const device = new MockDevice();
+    const state: CpuDinerState = { customers: 10, staffAwake: false, seed: 1 };
+    drawDiner(device, state);
+    const texts = device.drawn.filter((c) => c.op === "text").map((c) => (c as { text: string }).text);
+    expect(texts.length).toBeGreaterThan(0);
+    for (const t of texts) {
+      expect(/^[\x00-\x7F]*$/.test(t)).toBe(true);
+    }
+  });
+
+  it("colors exactly as many tables warm as have seated customers (16 seats -> 4 tables of 4)", () => {
+    const device = new MockDevice();
+    // 8 customers -> tables 1-2 full (4 each), tables 3-4 empty (seatingFor fills tables in order)
+    const state: CpuDinerState = { customers: 8, staffAwake: true, seed: 1 };
+    drawDiner(device, state);
+    const rects = device.drawn.filter((c) => c.op === "rect") as Array<{
+      op: "rect";
+      color?: { r: number; g: number; b: number };
+    }>;
+    // 4 table rects + 2 gauge rects (bg + fill) = 6
+    const tableRects = rects.slice(0, 4);
+    const warmCount = tableRects.filter((r) => r.color && r.color.r === 255 && r.color.g === 140).length;
+    expect(warmCount).toBe(2);
   });
 });

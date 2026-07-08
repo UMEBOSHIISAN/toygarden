@@ -21,4 +21,16 @@ describe("desk-weather", () => {
     expect(dev.drawn[0]).toEqual({ op: "clear" });
     expect(dev.lastLed).toEqual({ r: 255, g: 0, b: 0 });
   });
+
+  it("device draw obeys HAL contract (clear→…→flush, ASCII-only text, ≤30 commands)", () => {
+    const dev = new MockDevice();
+    draw(dev, { dirtyFiles: 7, testFailures: 2, staleMemory: 4 });
+    expect(dev.drawn[0]).toEqual({ op: "clear" });
+    expect(dev.flushes.length).toBe(1);
+    expect(dev.flushes[0]).toEqual(dev.drawn);
+    expect(dev.drawn.length).toBeLessThanOrEqual(30);
+    for (const cmd of dev.drawn) {
+      if (cmd.op === "text") expect(/^[\x20-\x7e]*$/.test(cmd.text)).toBe(true);
+    }
+  });
 });

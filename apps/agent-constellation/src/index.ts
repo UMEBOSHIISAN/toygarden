@@ -1,5 +1,5 @@
 import type { PlayEvent, Agent } from "@toygarden/contracts";
-import type { Device } from "@toygarden/core-device";
+import type { Device, RGB } from "@toygarden/core-device";
 
 /**
  * agent-constellation — m5-agent-stars 拡張。
@@ -52,23 +52,60 @@ export function applyEvent(
   return state;
 }
 
-export function draw(device: Device, state: ConstellationState): void {
-  device.draw({ op: "clear" });
-  for (const edge of state.edges) {
-    const a = state.stars.find((s) => s.agent === edge.from);
-    const b = state.stars.find((s) => s.agent === edge.to);
-    if (a && b) {
-      device.draw({
-        op: "rect",
-        x: Math.min(a.x, b.x),
-        y: Math.min(a.y, b.y),
-        w: Math.abs(a.x - b.x) || 1,
-        h: Math.abs(a.y - b.y) || 1,
-      });
-    }
+// initState() のデフォルト座標空間（cli.ts が引数なしで呼ぶ既定値と一致させる）。
+// 実機パネルは座標空間が異なる（M5=240x135）ので、描画時に panelSize() へ再マップする。
+const SOURCE_W = 320;
+const SOURCE_H = 240;
+
+const STAR_COLOR: RGB = { r: 255, g: 255, b: 255 };
+const COLLAPSED_COLOR: RGB = { r: 255, g: 30, b: 30 };
+const LINE_COLOR: RGB = { r: 90, g: 90, b: 150 };
+
+const STAR_SIZE = 4;
+const COLLAPSED_SIZE = 7;
+const LINE_STEPS = 6;
+const LINE_DOT = 2;
+
+function toPanel(x: number, y: number, pw: number, ph: number): [number, number] {
+  return [Math.round((x / SOURCE_W) * pw), Math.round((y / SOURCE_H) * ph)];
+}
+
+/** 2点間を細い rect の連打（点線）で結ぶ。星座線を「塗りつぶし矩形」ではなく線らしく見せる。 */
+function drawLine(device: Device, ax: number, ay: number, bx: number, by: number): void {
+  for (let i = 1; i < LINE_STEPS; i++) {
+    const t = i / LINE_STEPS;
+    const x = Math.round(ax + (bx - ax) * t);
+    const y = Math.round(ay + (by - ay) * t);
+    device.draw({ op: "rect", x: x - 1, y: y - 1, w: LINE_DOT, h: LINE_DOT, color: LINE_COLOR });
   }
+}
+
+export function draw(device: Device, state: ConstellationState): void {
+  const { width, height } = device.panelSize();
+  device.draw({ op: "clear" });
+
+  const pos = new Map<Agent, [number, number]>();
+  for (const s of state.stars) pos.set(s.agent, toPanel(s.x, s.y, width, height));
+
+  for (const edge of state.edges) {
+    const a = pos.get(edge.from);
+    const b = pos.get(edge.to);
+    if (a && b) drawLine(device, a[0], a[1], b[0], b[1]);
+  }
+
   for (const s of state.stars) {
-    device.draw({ op: "text", x: s.x, y: s.y, text: s.collapsed ? "*" : "." });
+    const [sx, sy] = pos.get(s.agent)!;
+    const size = s.collapsed ? COLLAPSED_SIZE : STAR_SIZE;
+    const color = s.collapsed ? COLLAPSED_COLOR : STAR_COLOR;
+    device.draw({
+      op: "rect",
+      x: sx - Math.round(size / 2),
+      y: sy - Math.round(size / 2),
+      w: size,
+      h: size,
+      color,
+    });
+    device.draw({ op: "text", x: sx - 8, y: sy + size + 2, text: s.agent.slice(0, 6) });
     if (s.collapsed) device.led({ r: 255, g: 0, b: 0 });
   }
   device.flush();
