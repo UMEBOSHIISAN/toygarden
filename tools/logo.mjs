@@ -4,16 +4,16 @@
  *
  *   npm run logo
  *
- * tools/banner.mjs が焼く demo/banner.gif の「umeplay」ワードマーク（8x8 ピクセルフォント・
- * 文字ごとに色を変えるレインボー配色・色収差風のシアン/マゼンタ残像）と同じ字形・配色語彙を
- * SVG（rect タイル）で再現する。banner.mjs 本体は変更しない（フォント取得元の core-termgif を
- * 同じ手順でバンドルして読むだけ）。
+ * デザイン言語: MOTHER2 のタイトル画面。黒地に赤一色の太いワードマーク、余計な装飾なし。
+ * 一色の中に「上の行ほど明るく・下の行ほど暗い」縦シェーディングを入れて金属的な厚みを出し、
+ * 右下に硬い1段のドロップシャドウを落とす（8bit タイトルの実在感）。
+ * レインボー配色・色収差ゴースト・ハートは意図的に持たない — 可愛さは banner.gif と
+ * おもちゃ達の担当で、タイトルは黙って立っているのが仕事。
  *
- * ワードマークの右には、banner.mjs の「うめこの鼓動ハート」と同じ 8x7 ピクセルハートを
- * ガジェットマークとして添える（新規モチーフを増やさず、既存の視覚言語に揃える）。
+ * 字形は core-termgif の 8x8 ピクセルフォント（バナー/デモと同じ視覚言語の源泉）。
  *
  * 決定論: Date・Math.random は一切使わない。全ピクセル位置・配色は整数演算のみで求まるため、
- * 2回実行しても同一バイト列が焼ける（npm run logo を2回叩いて shasum で確認済み）。
+ * 2回実行しても同一バイト列が焼ける。
  */
 import { build } from "esbuild";
 import { mkdirSync, writeFileSync } from "node:fs";
@@ -45,28 +45,11 @@ const { glyph, hasGlyph } = await import(
 );
 
 // --- グリッド定数 ---------------------------------------------------------
-// UNIT=6 は banner.mjs の SCALE_LOGO と同じ値。これにより下のゴースト残像オフセット
-// (-3px / +3px,+1px) は banner.mjs 506〜509行目の生ピクセル値をそのまま流用できる
-// （字形の拡大率が同じなので、残像の見え方の比率も一致する）。
-const UNIT = 6;
+const UNIT = 7; // 旧6→7。タイトルは一回り太く立たせる
 const MARGIN_UNITS = 2;
-const LETTER_GAP_UNITS = 1; // banner はスペース文字の全角ぶん空けるが、ワードマークとして
-// 読ませたいロゴでは字間を詰める（banner.mjs は変更しない・ここだけの意図的な差）。
-const GAP_TO_HEART_UNITS = 4;
+const LETTER_GAP_UNITS = 1;
 
-const LETTERS = "umeplay".split("");
-// banner.mjs の LOGO_COLOR_NAMES（cyan/green/yellow/magenta/blue/cyan/green）と同じ並び。
-const COLOR_ORDER = ["cyan", "green", "yellow", "magenta", "blue", "cyan", "green"];
-const BASE = {
-  cyan: [57, 197, 207],
-  green: [63, 185, 80],
-  yellow: [210, 153, 34],
-  magenta: [188, 140, 242],
-  blue: [88, 166, 255],
-};
-
-// banner.mjs の HEART_BITMAP と同一（うめこの鼓動ハートと同じモチーフを流用）。
-const HEART_BITMAP = ["01100110", "11111111", "11111111", "11111111", "01111110", "00111100", "00011000"];
+const LETTERS = "UMEPLAY".split(""); // MOTHER2 と同じく大文字で組む
 
 for (const ch of LETTERS) {
   const cp = ch.codePointAt(0);
@@ -75,12 +58,15 @@ for (const ch of LETTERS) {
   }
 }
 
-function scaleColor(rgb, factor) {
-  return rgb.map((v) => Math.min(255, Math.round(v * factor)));
-}
-
-function toHex(rgb) {
-  return `#${rgb.map((v) => v.toString(16).padStart(2, "0")).join("")}`;
+// --- 配色: 赤一色 + 縦シェーディング ---------------------------------------
+// MOTHER2 タイトルの赤。行(0=上,7=下)ごとに明→暗のバンドを敷いて金属の厚みを出す。
+// テーマ差は「同じ赤をどこまで沈めるか」だけ（dark=GitHubダーク背景 / light=白背景）。
+function rowShade(theme, gy) {
+  // 上端 1.0 → 下端 0.62 の線形バンド(8段・整数演算で決定論)
+  const t = 1000 - Math.round((gy * 380) / 7); // 1000..620 (‰)
+  const [r, g, b] = theme.base;
+  const f = (v) => Math.min(255, Math.round((v * t) / 1000));
+  return `#${[f(r), f(g), f(b)].map((v) => v.toString(16).padStart(2, "0")).join("")}`;
 }
 
 /** グリフの8バイト(bit0=左端)を、行ごとの "01..." 文字列8本に変換する。 */
@@ -115,15 +101,7 @@ function rowToRects(row, originX, y, color) {
   return rects;
 }
 
-function bitmapToRects(rows, originX, originY, color, dx = 0, dy = 0) {
-  const rects = [];
-  for (let r = 0; r < rows.length; r++) {
-    rects.push(...rowToRects(rows[r], originX + dx, originY + r * UNIT + dy, color));
-  }
-  return rects;
-}
-
-// --- レイアウト（全letter/heart原点を先に確定させる。ゴーストと本体で同じ原点を使い回す） ---
+// --- レイアウト -------------------------------------------------------------
 const marginPx = MARGIN_UNITS * UNIT;
 const textY = marginPx;
 let cursor = marginPx;
@@ -133,71 +111,57 @@ for (let i = 0; i < LETTERS.length; i++) {
   cursor += 8 * UNIT;
   if (i < LETTERS.length - 1) cursor += LETTER_GAP_UNITS * UNIT;
 }
-cursor += GAP_TO_HEART_UNITS * UNIT;
-const heartOrigin = { x: cursor, y: textY + 0.5 * UNIT }; // 8行の文字高に7行のハートを縦centering
-cursor += 8 * UNIT;
 
-const WIDTH = cursor + marginPx;
-const HEIGHT = (8 + MARGIN_UNITS * 2) * UNIT;
-
-// banner.mjs 508〜509行目の生オフセットをそのまま踏襲(UNIT=SCALE_LOGOが同値のため)。
-const GHOST_CYAN = { dx: -3, dy: 0 };
-const GHOST_MAGENTA = { dx: 3, dy: 1 };
+const SHADOW = { dx: 3, dy: 3 }; // 硬い1段の落ち影(px)。柔らかいぼかしは使わない
+const WIDTH = cursor + marginPx + SHADOW.dx;
+const HEIGHT = (8 + MARGIN_UNITS * 2) * UNIT + SHADOW.dy;
 
 function buildSvg(theme) {
-  const mainColors = Object.fromEntries(
-    Object.entries(BASE).map(([name, rgb]) => [name, toHex(scaleColor(rgb, theme.mainFactor))]),
-  );
-  const ghostColor = toHex(scaleColor(BASE.cyan, theme.ghostFactor));
-  const ghostColorMagenta = toHex(scaleColor(BASE.magenta, theme.ghostFactor));
-  const heartColor = toHex(scaleColor(BASE.magenta, theme.mainFactor));
+  const shadowColor = theme.shadow;
 
-  const ghostCyanRects = LETTERS.flatMap((ch, i) =>
-    bitmapToRects(glyphRows(ch), letterOrigins[i].x, letterOrigins[i].y, ghostColor, GHOST_CYAN.dx, GHOST_CYAN.dy),
-  );
-  const ghostMagentaRects = LETTERS.flatMap((ch, i) =>
-    bitmapToRects(
-      glyphRows(ch),
-      letterOrigins[i].x,
-      letterOrigins[i].y,
-      ghostColorMagenta,
-      GHOST_MAGENTA.dx,
-      GHOST_MAGENTA.dy,
-    ),
-  );
-  const mainRects = LETTERS.flatMap((ch, i) =>
-    bitmapToRects(glyphRows(ch), letterOrigins[i].x, letterOrigins[i].y, mainColors[COLOR_ORDER[i]]),
-  );
-  const heartRects = bitmapToRects(HEART_BITMAP, heartOrigin.x, heartOrigin.y, heartColor);
+  // 影レイヤ(単色・行シェーディングなし)
+  const shadowRects = LETTERS.flatMap((ch, i) => {
+    const rows = glyphRows(ch);
+    const out = [];
+    for (let gy = 0; gy < 8; gy++) {
+      out.push(
+        ...rowToRects(rows[gy], letterOrigins[i].x + SHADOW.dx, letterOrigins[i].y + gy * UNIT + SHADOW.dy, shadowColor),
+      );
+    }
+    return out;
+  });
+
+  // 本体レイヤ(行ごとの明→暗バンド)
+  const mainRects = LETTERS.flatMap((ch, i) => {
+    const rows = glyphRows(ch);
+    const out = [];
+    for (let gy = 0; gy < 8; gy++) {
+      out.push(...rowToRects(rows[gy], letterOrigins[i].x, letterOrigins[i].y + gy * UNIT, rowShade(theme, gy)));
+    }
+    return out;
+  });
 
   return [
     `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${WIDTH} ${HEIGHT}" width="${WIDTH}" height="${HEIGHT}">`,
     `  <title>umeplay</title>`,
-    `  <!-- tools/logo.mjs が焼く決定論的ロゴ (${theme.name}) — banner.mjs のワードマーク字形/配色を再現 -->`,
-    `  <g opacity="${theme.ghostOpacity}">`,
-    ...ghostCyanRects.map((r) => `    ${r}`),
-    `  </g>`,
-    `  <g opacity="${theme.ghostOpacity}">`,
-    ...ghostMagentaRects.map((r) => `    ${r}`),
+    `  <!-- tools/logo.mjs が焼く決定論的ロゴ (${theme.name}) — MOTHER2風: 赤一色・縦シェーディング・硬い落ち影 -->`,
+    `  <g>`,
+    ...shadowRects.map((r) => `    ${r}`),
     `  </g>`,
     `  <g>`,
     ...mainRects.map((r) => `    ${r}`),
-    `  </g>`,
-    `  <g>`,
-    ...heartRects.map((r) => `    ${r}`),
     `  </g>`,
     `</svg>`,
     "",
   ].join("\n");
 }
 
-// dark: GitHub ダークテーマ背景で映えるよう banner.mjs と同じ "bold" (×1.3) 相当を使う。
-const DARK = { name: "dark", mainFactor: 1.3, ghostFactor: 0.5, ghostOpacity: 0.55 };
-// light: 白背景でも視認できるよう、同じ色相を暗め(×0.65)に締めて使う("ink" 相当・banner.mjs
-// には存在しないバリアントだが同じ scaleColor 式で導出しているため配色語彙は共通)。
-const LIGHT = { name: "light", mainFactor: 0.65, ghostFactor: 0.32, ghostOpacity: 0.4 };
+// dark: GitHub ダーク背景。MOTHER2 の赤(明るめの緋)+ほぼ黒の影。
+const DARK = { name: "dark", base: [224, 56, 40], shadow: "#1a0505" };
+// light: 白背景。同じ赤を少し沈め、影は薄い赤茶で紙に落ちた印刷物のように。
+const LIGHT = { name: "light", base: [190, 38, 26], shadow: "#e8c9c4" };
 
 writeFileSync(join(assetsDir, "logo.svg"), buildSvg(DARK));
 writeFileSync(join(assetsDir, "logo-light.svg"), buildSvg(LIGHT));
 
-console.log(`OK assets/logo.svg + assets/logo-light.svg  ${WIDTH}x${HEIGHT}`);
+console.log(`OK assets/logo.svg + assets/logo-light.svg  ${WIDTH}x${HEIGHT}  (MOTHER2-red / caps / hard shadow)`);
