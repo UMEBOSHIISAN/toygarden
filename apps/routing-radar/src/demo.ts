@@ -32,7 +32,7 @@ export function demo(): DemoSpec {
       ...f,
       confidence: Math.min(f.confidence, f.confidence * t + rnd() * 0.01),
     }));
-    const header = `  ${CYAN}~ routing radar ~${RESET}  ${DIM}どの worker に振ると当たるか${RESET}`;
+    const header = `  ${CYAN}~ routing radar ~${RESET}  ${DIM}どの worker にふるとあたるか${RESET}`;
     frames.push(header + "\n" + radar(trials));
   }
   for (let i = 0; i < 6; i++) frames.push(frames[frames.length - 1]);

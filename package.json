@@ -26,6 +26,7 @@
     "showcase": "node tools/showcase.mjs",
     "play": "node tools/play.mjs",
     "banner": "node tools/banner.mjs",
+    "diagram": "node tools/diagram.mjs",
     "new": "node tools/new-toy.mjs"
   },
   "devDependencies": {

@@ -58,7 +58,7 @@ export function demo(): DemoSpec {
       const ai = c.coauthoredByClaude ? DIM + "[AI]" + RESET : "    ";
       return `  ${cur} ${n.note.padEnd(3)} ${String(n.ms).padStart(3)}ms ${ai} +${c.added} -${c.removed}`;
     });
-    const header = `  ${CYAN}~ commit-symphony ~${RESET}  ${DIM}git log を 8bit の曲に${RESET}`;
+    const header = `  ${CYAN}~ commit-symphony ~${RESET}  ${DIM}git log を 8bit のきょくに${RESET}`;
     const pitch = `  pitch ${spark}`;
     frames.push([header, pitch, ...rows].join("\n"));
   }

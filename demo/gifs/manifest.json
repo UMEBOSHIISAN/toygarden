@@ -88,7 +88,7 @@
     "file": "commit-symphony.gif",
     "frames": 24,
     "fps": 6,
-    "kb": 88,
+    "kb": 91,
     "uses": [
       "core-git-observe",
       "core-chiptune"
@@ -107,11 +107,22 @@
     "tagline": "dirty/fail/stale の量を天気で見る作業環境ゲージ"
   },
   {
+    "name": "device-mirror",
+    "file": "device-mirror.gif",
+    "frames": 20,
+    "fps": 4,
+    "kb": 106,
+    "uses": [
+      "core-device"
+    ],
+    "tagline": "実機を買う前に、実機が見える。M5Stack風ガジェットにHALのDrawCommandをミラー"
+  },
+  {
     "name": "event-loom",
     "file": "event-loom.gif",
     "frames": 28,
     "fps": 6,
-    "kb": 191,
+    "kb": 197,
     "uses": [
       "core-events",
       "core-tui",

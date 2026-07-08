@@ -62,7 +62,7 @@
     <h1>ume<span class="c">play</span> 🎛️</h1>
     <p class="tag">端末で遊びが生える組み立てキット<br>A construction kit where terminal toys grow</p>
     <p class="big">7つの部品を組むだけで、水槽が泳ぎ、git履歴が歌い、机に天気が降る。</p>
-    <p class="stats">20 apps · 521 frames · 1910KB of pixels — all rendered from code</p>
+    <p class="stats">21 apps · 541 frames · 2025KB of pixels — all rendered from code</p>
     <div class="quick">npm install &amp;&amp; npm run play</div>
   </div>
 
@@ -72,10 +72,10 @@ packages/core-* 部品（再利用単位・依存ゼロ）
    │ import only ↓
 contracts/      型・スキーマ（PlayEvent という共通語彙）</div>
 
-  <h2>遊びカタログ — 全20本、すべてコードから焼いた GIF</h2>
+  <h2>遊びカタログ — 全21本、すべてコードから焼いた GIF</h2>
   <div class="filters">
-      <button class="chip active" data-filter="all">all <span class="n">20</span></button>
-      <button class="chip" data-filter="core-device">core-device <span class="n">7</span></button>
+      <button class="chip active" data-filter="all">all <span class="n">21</span></button>
+      <button class="chip" data-filter="core-device">core-device <span class="n">8</span></button>
       <button class="chip" data-filter="core-chiptune">core-chiptune <span class="n">6</span></button>
       <button class="chip" data-filter="core-tui">core-tui <span class="n">5</span></button>
       <button class="chip" data-filter="contracts">contracts <span class="n">4</span></button>
@@ -177,7 +177,7 @@ contracts/      型・スキーマ（PlayEvent という共通語彙）</div>
         <div class="meta">
           <span class="badge">core-git-observe</span>
           <span class="badge">core-chiptune</span>
-          <span class="dim">24f @6fps · 88KB</span>
+          <span class="dim">24f @6fps · 91KB</span>
         </div>
       </figcaption>
     </figure>
@@ -192,6 +192,17 @@ contracts/      型・スキーマ（PlayEvent という共通語彙）</div>
         </div>
       </figcaption>
     </figure>
+    <figure class="card" data-uses="core-device">
+      <img src="gifs/device-mirror.gif" alt="device-mirror" loading="lazy">
+      <figcaption>
+        <h3>device-mirror</h3>
+        <p>実機を買う前に、実機が見える。M5Stack風ガジェットにHALのDrawCommandをミラー</p>
+        <div class="meta">
+          <span class="badge">core-device</span>
+          <span class="dim">20f @4fps · 106KB</span>
+        </div>
+      </figcaption>
+    </figure>
     <figure class="card" data-uses="core-events core-tui contracts">
       <img src="gifs/event-loom.gif" alt="event-loom" loading="lazy">
       <figcaption>
@@ -201,7 +212,7 @@ contracts/      型・スキーマ（PlayEvent という共通語彙）</div>
           <span class="badge">core-events</span>
           <span class="badge">core-tui</span>
           <span class="badge">contracts</span>
-          <span class="dim">28f @6fps · 191KB</span>
+          <span class="dim">28f @6fps · 197KB</span>
         </div>
       </figcaption>
     </figure>

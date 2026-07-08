@@ -15,9 +15,10 @@
 > a GIF89a burned from code by our own encoder — run `npm run banner` and you get
 > the same bytes back.
 
-umeplay is a **zero-dependency TypeScript monorepo** where **20 terminal toys**
-(an aquarium, a chiptune symphony, a tamagotchi, desk weather…) are assembled
-from **8 reusable `core-*` packages** wired together by a **single event contract**.
+umeplay is a **zero-dependency TypeScript monorepo** where **21 terminal toys**
+(an aquarium, a chiptune symphony, a tamagotchi, desk weather, a virtual M5Stack
+panel…) are assembled from **8 reusable `core-*` packages** wired together by a
+**single event contract**.
 You don't build apps — you cross parts, and play *grows*. It's all in your
 terminal: no build target, no browser, no hardware. `npm install && npm run play aquarium`.
 
@@ -28,12 +29,33 @@ npm install              # devDeps only: typescript + vitest + esbuild
 npm run play             # list every toy, with taglines
 npm run play aquarium    # names match by substring — Ctrl+C to quit
 npm run play random      # feeling lucky? launch a random one
-npm run check            # typecheck + tests (22 files / 88 tests)
+npm run check            # typecheck + tests (24 files / 119 tests)
 npm run gifs             # re-render every demo GIF from code → demo/gifs/
 npm run banner           # re-render the hero banner → demo/banner.gif
 ```
 
 Everything runs without hardware (`core-device` defaults to a mock driver).
+
+## Choose your door
+
+Three ways in, depending on why you're here:
+
+- 🎮 **Terminal tinkerers** — `npm run play` lists every toy; `npm run play random`
+  if you feel lucky. Want your own? `npm run new -- my-toy` scaffolds a living toy
+  in ~60 seconds — green tests, running CLI, and a rendered GIF out of the box.
+- 🔌 **Gadget people (M5Stack, macropads)** — start with
+  `npm run play device-mirror` to watch a virtual M5Stack panel light up in your
+  terminal, then read **[docs/DEVICES.md](docs/DEVICES.md)** and write a driver in
+  ~50 lines. Real hardware drivers are **wanted, not shipped** — that gap is your
+  PR's opening, not an apology.
+- 🤖 **Agent people** — the toys visualize how autonomous agents actually behave.
+  [git-replay](demo/gifs/git-replay.gif) color-codes human vs. AI commits,
+  [commit-symphony](demo/gifs/commit-symphony.gif) rings AI co-authored commits an
+  octave up, and [agent-constellation](demo/gifs/agent-constellation.gif),
+  [routing-radar](demo/gifs/routing-radar.gif), and
+  [collapse-siren](demo/gifs/collapse-siren.gif) turn dispatch, routing, and
+  collapse rates into things you can watch. The loose event design underneath is in
+  [Three-layer architecture](#three-layer-architecture).
 
 ## Three-layer architecture
 
@@ -50,6 +72,12 @@ other. They collaborate loosely through the `PlayEvent` type in
 [`contracts/events.ts`](contracts/events.ts): a producer never knows who's
 listening, a consumer never knows who spoke. That shared vocabulary is the spine
 of the whole kit.
+
+![how it works](demo/how-it-works.gif)
+
+> **One event, three toys — nobody knows each other.** A single `PlayEvent` hits the
+> bus and an aquarium, desk weather, and a chiptune all react at once, none aware the
+> others exist. Drawn by `npm run diagram`, so the picture can't drift from the code.
 
 ![event-loom](demo/gifs/event-loom.gif)
 
@@ -74,7 +102,7 @@ Eight `core-*` packages. Seven of them compose the toys; the eighth,
 | [`core-focus-log`](packages/core-focus-log/) | focus-cam log (sqlite) supplied read-only |
 | [`core-termgif`](packages/core-termgif/) | ANSI output → GIF. The part that keeps demos from rotting (GIF89a + LZW + a built-in 8×8 font) |
 
-## Toy catalog (`apps/` — all 20, all with GIFs)
+## Toy catalog (`apps/` — all 21, all with GIFs)
 
 **Full gallery → [demo/index.html](demo/index.html)** — self-contained, filter by
 core, dark/light aware, zero external references. Regenerate with `npm run showcase`.
@@ -89,6 +117,7 @@ core, dark/light aware, zero external references. Regenerate with `npm run showc
 | [agent-constellation](demo/gifs/agent-constellation.gif) | device × events | Agents become a constellation; a dispatch draws a line between stars. |
 | [collapse-arcade](demo/gifs/collapse-arcade.gif) | worker-data | High collapse-rate agents become enemies. Shooting one = a review. |
 | [collapse-siren](demo/gifs/collapse-siren.gif) | worker-data × chiptune × events | When collapse rate crosses a threshold, the terminal blares a dissonant siren. |
+| [device-mirror](demo/gifs/device-mirror.gif) | device | See the hardware before you buy it: a virtual M5Stack panel in your terminal, mirroring the `DrawCommand`s a real driver would receive. |
 | [desk-weather](demo/gifs/desk-weather.gif) | device | Your repo's health becomes desk weather; a dirty tree clouds over. |
 | [git-weather](demo/gifs/git-weather.gif) | git-observe × device | High-churn days storm, quiet days stay clear. |
 | [pomodoro-forge](demo/gifs/pomodoro-forge.gif) | chiptune × device | Mine ore by focusing, smelt it on commit — a blacksmith's pomodoro. |
@@ -104,6 +133,35 @@ core, dark/light aware, zero external references. Regenerate with `npm run showc
 
 Every toy is just a few files under `apps/<name>/src/`. You can add one without
 touching anything else — that additivity *is* the kit.
+
+## Bring your gadget
+
+All 21 toys run with **zero hardware** — `core-device` defaults to a mock driver,
+and that default is exactly what lets every app and every CI run work with nothing
+plugged in. But the `Device` HAL is real: a small screen and a button is enough to
+make umeplay drive a physical panel.
+
+![device-mirror](demo/gifs/device-mirror.gif)
+
+> `npm run play device-mirror` — *see the hardware before you buy it.* A virtual
+> M5Stack Core panel (real 320×240 resolution, `[A][B][C]` buttons, an LED) rendered
+> in your terminal, mirroring the exact `DrawCommand`s a real driver would receive.
+
+Writing a driver is ~50 lines: implement six methods, add one `case` to
+`select.ts`, and every existing toy runs against your gadget unmodified. Real
+M5Stack and Ajazz AKP153 drivers are **wanted, not shipped** — the interface tour,
+the ~50-line walkthrough, and the PR checklist are in
+**[docs/DEVICES.md](docs/DEVICES.md)**.
+
+## Human × AI, and the repo knows it
+
+umeplay was built by a human and AI agents working side by side, and the git history
+still carries the `Co-Authored-By` trailers that prove it. That isn't a footnote
+here — it's playable. [commit-symphony](demo/gifs/commit-symphony.gif) sings this
+repo's own log, ringing the AI co-authored commits an octave up;
+[git-replay](demo/gifs/git-replay.gif) replays the same history with human and AI
+contributions color-coded. The toys that visualize collaboration are pointed at the
+collaboration that made them.
 
 ## Demos that don't rot
 
@@ -149,7 +207,7 @@ npm run check   # tsc --noEmit + vitest (cores tested seriously, apps are smoke 
 
 `demo/wiring.test.ts` proves one event reaches four apps through loose coupling;
 `demo/showcase.test.ts` renders every app for real; `core-termgif`'s LZW is
-round-tripped against an independent decoder. **22 test files, 88 tests.**
+round-tripped against an independent decoder. **24 test files, 119 tests.**
 
 ## Contributing
 

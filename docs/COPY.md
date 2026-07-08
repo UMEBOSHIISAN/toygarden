@@ -20,7 +20,7 @@
 - **なぜGIFを自前で焼く?** — スクリーン録画は腐る。コードから焼いたGIFは、コードが生きてる限り新鮮。デモの鮮度=リポジトリの誠実さ。
 - **8bitフォントの由来** — IBM VGA 時代の Public Domain フォント（font8x8）+ 手描きグリフ。ひらがなが泳ぐ端末は、ちょっといいでしょ。
 
-## app別ワンライナー（20本）
+## app別ワンライナー（21本）
 
 | app | 一言 |
 |---|---|
@@ -32,6 +32,7 @@
 | agent-constellation | エージェントたちが星座になる。dispatch で線が走る |
 | collapse-arcade | 崩壊率の高いエージェントが敵に。撃墜=レビュー |
 | collapse-siren | 崩壊率が閾値を越えると端末が不協和音で騒ぎ出す |
+| device-mirror | 実機を買う前に、実機が見える。端末の仮想 M5Stack 液晶へ、実ドライバが受け取るのと同じ DrawCommand をミラー |
 | desk-weather | リポジトリの調子が机の天気になる。dirty は曇り |
 | git-weather | churn が強い日は嵐。静かな日は快晴 |
 | pomodoro-forge | 集中で鉱石を掘り、commit で精錬する鍛冶ポモドーロ |
@@ -61,11 +62,11 @@ LZWも8bitフォントも全部手元。#umeplay
 
 **案3（哲学）**
 「アプリを作る」より「部品を掛け合わせたら遊びが生えた」の方が楽しい。
-core 7個 × 契約1枚 = 遊び20本。掛け算はまだ終わらない。
+core 7個 × 契約1枚 = 遊び21本。掛け算はまだ終わらない。
 
 ## リリースノート用ボイラープレート
 
 umeplay v0.x — 端末で遊びが生える組み立てキット
-- 7 cores × 1 contract = 20 toys, all in your terminal
+- 7 cores × 1 contract = 21 toys, all in your terminal
 - Zero-dependency GIF renderer included (your demos never rot)
 - MIT License. Play responsibly.
