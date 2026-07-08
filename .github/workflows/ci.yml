@@ -15,3 +15,20 @@ jobs:
       - run: npm install
       - run: npm run typecheck
       - run: npm test
+
+  # 「デモは腐らない」の機械保証: 全デモGIF/バナー/図解/ギャラリーを
+  # コードから再生成し、コミット済みのバイト列と一致しなければ落とす。
+  demos-dont-rot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - run: npm install
+      - run: npm run gifs
+      - run: npm run banner
+      - run: npm run diagram
+      - run: npm run showcase
+      - name: verify demos match committed bytes
+        run: git diff --exit-code demo/
