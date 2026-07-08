@@ -1,11 +1,17 @@
 /**
  * hello.mjs — umeplay 初回起動のオンボーディング。
  * Undertale 風の会話ボックス（白の二重線）で挨拶し、タイプライター演出のあと
- * 「あそぶ/つくる/ながめる/やめる」を ♥ カーソルで選ばせる。
+ * 「PLAY/BUILD/WATCH/BYE」を ♥ カーソルで選ばせる。
  *
  *   npm run hello
  *
- * 非TTY（CI・パイプ経由）では会話ボックスもキー入力も出さず、案内文だけ出して exit 0。
+ * UI は EN 主役（想定オーディエンスは海外が主）。タイプライター行は英語、その下に
+ * dim であしらいの日本語を1行添える。非TTY（CI・パイプ経由）では会話ボックスも
+ * キー入力も出さず、英語の案内文だけ出して exit 0。
+ *
+ * UMEPLAY_CONTEXT=package のとき（npx 経由の bin から渡される契約）は案内コマンドを
+ * `npx umeplay <sub>` 形式に切り替える。未設定 or "repo" なら従来の `npm run <sub>` 形式。
+ * BUILD は package コンテキストではリポジトリ clone を案内する（workshop はリポジトリが要る）。
  */
 import { existsSync } from "node:fs";
 import { join, resolve } from "node:path";
@@ -19,18 +25,31 @@ const WHITE = "\x1b[97m";
 const DIM = "\x1b[2m";
 const MAGENTA = "\x1b[35m";
 
+const CONTEXT = process.env.UMEPLAY_CONTEXT === "package" ? "package" : "repo";
+function cmd(sub) {
+  return CONTEXT === "package" ? `npx umeplay ${sub}` : `npm run ${sub}`;
+}
+const REPO_CLONE_HINT = "git clone https://github.com/UMEBOSHIISAN/umeplay.git";
+
+// EN 主役 + JP dim 併記（タイプライターは EN 行のみ・JP は静かな添え書き）
 const GREETING_LINES = [
-  "* うめぷれい へ ようこそ。",
-  "* ここは たんまつで あそびが はえる ばしょ。",
-  "* さあ、なにを する?",
+  { en: "* Welcome to umeplay.", jp: "ようこそ。" },
+  { en: "* This is where terminal toys grow.", jp: "たんまつで あそびが はえる ばしょ。" },
+  { en: "* So, what shall we do?", jp: "さあ、なにを する?" },
 ];
 
-const CHOICES = [
-  { key: "あそぶ", desc: "ぜんぶの おもちゃを じゅんばんに みてまわる" },
-  { key: "つくる", desc: "npm run workshop で ぶひんを えらんで おもちゃを はやそう" },
-  { key: "ながめる", desc: "ショーケースを ひらく (demo/index.html)" },
-  { key: "やめる", desc: "また あそぼうね" },
-];
+function buildChoices() {
+  const buildDesc =
+    CONTEXT === "package"
+      ? `building needs the repo -> ${REPO_CLONE_HINT}`
+      : `${cmd("workshop")} -- pick parts and grow a toy`;
+  return [
+    { key: "PLAY", label: "PLAY (あそぶ)", desc: "watch every toy, one after another" },
+    { key: "BUILD", label: "BUILD (つくる)", desc: buildDesc },
+    { key: "WATCH", label: "WATCH (ながめる)", desc: "open the showcase (demo/index.html)" },
+    { key: "BYE", label: "BYE (やめる)", desc: "see you next time" },
+  ];
+}
 
 function sleep(ms) {
   return new Promise((r) => setTimeout(r, ms));
@@ -71,8 +90,8 @@ function boxBottom(inner) {
 function boxEmpty(inner) {
   console.log(`${WHITE}║${RESET}${" ".repeat(inner + 2)}${WHITE}║${RESET}`);
 }
-function boxLineFrame(shown, inner) {
-  return `${WHITE}║ ${RESET}${padEndVisual(shown, inner)}${WHITE} ║${RESET}`;
+function boxLineFrame(shown, inner, contentColor = "") {
+  return `${WHITE}║ ${RESET}${contentColor}${padEndVisual(shown, inner)}${RESET}${WHITE} ║${RESET}`;
 }
 
 async function typeLine(text, inner, ms = 24) {
@@ -84,12 +103,19 @@ async function typeLine(text, inner, ms = 24) {
   }
   process.stdout.write("\n");
 }
+function printDimLine(text, inner) {
+  console.log(boxLineFrame(text, inner, DIM));
+}
 
-async function showGreeting(lines) {
-  const inner = Math.max(...lines.map(stringWidth), 28);
+async function showGreeting(pairs) {
+  const allTexts = pairs.flatMap((p) => [p.en, p.jp]);
+  const inner = Math.max(...allTexts.map(stringWidth), 28);
   boxTop(inner);
   boxEmpty(inner);
-  for (const line of lines) await typeLine(line, inner);
+  for (const { en, jp } of pairs) {
+    await typeLine(en, inner);
+    printDimLine(jp, inner);
+  }
   boxEmpty(inner);
   boxBottom(inner);
 }
@@ -99,7 +125,7 @@ function renderChoices(choices, selected) {
   return choices
     .map((c, i) => {
       const cursor = i === selected ? `${MAGENTA}♥${RESET}` : " ";
-      return ` ${cursor} ${i + 1}) ${c.key}  ${DIM}${c.desc}${RESET}`;
+      return ` ${cursor} ${i + 1}) ${c.label}  ${DIM}${c.desc}${RESET}`;
     })
     .join("\n");
 }
@@ -129,7 +155,7 @@ function pickChoice(choices) {
     function onKey(str, key) {
       if (key?.ctrl && key.name === "c") {
         cleanup();
-        console.log(`\n${WHITE}* また あそぼうね。${RESET}`);
+        console.log(`\n${WHITE}* See you next time.${RESET}`);
         process.exit(130);
       }
       if (key?.name === "up") {
@@ -159,11 +185,11 @@ function pickChoice(choices) {
   });
 }
 
-async function runChoice(index) {
-  const choice = CHOICES[index];
+async function runChoice(choices, index) {
+  const choice = choices[index];
   switch (choice.key) {
-    case "あそぶ": {
-      console.log(`${WHITE}* あそぶ を えらんだ！${RESET}`);
+    case "PLAY": {
+      console.log(`${WHITE}* PLAY selected!${RESET}`);
       const child = spawn(process.execPath, [join(root, "tools", "tour.mjs")], {
         stdio: "inherit",
       });
@@ -171,26 +197,30 @@ async function runChoice(index) {
       process.exit(code);
       break;
     }
-    case "つくる": {
-      console.log(`${WHITE}* npm run workshop で ぶひんを えらんで おもちゃを はやそう。${RESET}`);
-      process.exit(0);
-      break;
-    }
-    case "ながめる": {
-      const indexPath = join(root, "demo", "index.html");
-      if (process.platform === "darwin" && existsSync(indexPath)) {
-        const child = spawn("open", [indexPath], { stdio: "ignore", detached: true });
-        child.unref();
-        console.log(`${WHITE}* ショーケースを ひらいた。${RESET}`);
+    case "BUILD": {
+      if (CONTEXT === "package") {
+        console.log(`${WHITE}* Building needs the repo -> ${RESET}${REPO_CLONE_HINT}`);
       } else {
-        console.log(`${WHITE}* ショーケースは ここ:${RESET} ${indexPath}`);
+        console.log(`${WHITE}* ${cmd("workshop")} -- pick parts and grow a toy.${RESET}`);
       }
       process.exit(0);
       break;
     }
-    case "やめる":
+    case "WATCH": {
+      const indexPath = join(root, "demo", "index.html");
+      if (process.platform === "darwin" && existsSync(indexPath)) {
+        const child = spawn("open", [indexPath], { stdio: "ignore", detached: true });
+        child.unref();
+        console.log(`${WHITE}* Opened the showcase.${RESET}`);
+      } else {
+        console.log(`${WHITE}* The showcase is here:${RESET} ${indexPath}`);
+      }
+      process.exit(0);
+      break;
+    }
+    case "BYE":
     default: {
-      console.log(`${WHITE}* また あそぼうね。${RESET}`);
+      console.log(`${WHITE}* See you next time.${RESET}`);
       process.exit(0);
     }
   }
@@ -198,18 +228,23 @@ async function runChoice(index) {
 
 async function main() {
   if (!process.stdin.isTTY) {
-    console.log("umeplay へようこそ。対話端末（TTY）でないので案内だけ:");
-    console.log("  npm run tour      -- 全おもちゃを順番に自動再生");
-    console.log("  npm run workshop  -- ぶひんを選んでおもちゃを生やす");
-    console.log("  npm run play      -- 個別のおもちゃ一覧");
+    const buildLine =
+      CONTEXT === "package"
+        ? `  building needs the repo -> ${REPO_CLONE_HINT}`
+        : `  ${cmd("workshop")}  -- pick parts and grow a toy`;
+    console.log("Welcome to umeplay. No interactive terminal (TTY) here, so just the basics:");
+    console.log(`  ${cmd("tour")}      -- watch every toy, one after another`);
+    console.log(buildLine);
+    console.log(`  ${cmd("play")}      -- list of individual toys`);
     process.exit(0);
     return;
   }
 
   await showGreeting(GREETING_LINES);
   console.log("");
-  const index = await pickChoice(CHOICES);
-  await runChoice(index);
+  const choices = buildChoices();
+  const index = await pickChoice(choices);
+  await runChoice(choices, index);
 }
 
 main();

@@ -153,6 +153,12 @@ function drawText(buf, x0, y0, text, colorIdx, scale) {
   }
 }
 
+/** フォント側に太字がないので1pxずらして二度描く疑似ボールド（主役タグライン用）。 */
+function drawTextBold(buf, x0, y0, text, colorIdx, scale) {
+  drawText(buf, x0, y0, text, colorIdx, scale);
+  drawText(buf, x0 + 1, y0, text, colorIdx, scale);
+}
+
 /** 文字ごとに色を変えるテキスト（ロゴ用）。colors は空白以外の文字数ぶん。開始 index を回すと色が流れる。 */
 function drawRainbowText(buf, x0, y0, text, colors, scale, colorOffset = 0) {
   let x = x0;
@@ -250,11 +256,16 @@ const LOGO_COLORS = LOGO_COLOR_NAMES.map(C);
 // font8x8 の basic/ext-latin/greek/box/block/hiragana のみを焼き込んでいて漢字を一切持たない
 // （カタカナはひらがなへの音写のみ）。全文字が実グリフを持つ、意味を保ったひらがな表現を使う
 // （「組み立てキット」の部分は英語タグライン側で表現されるため落とす）。
+// v4（2026-07-08 human裁定）: 海外オーディエンス主想定のため主役を英語に反転。
+// ENタグラインを主見出しに、ひらがなは「ひらがなが泳ぐ端末」という海外勢へのチャームポイントとして
+// 小さく1行だけ残す（消さない）。
 const JP_TAGLINE = "たんまつで あそびが はえる";
 const EN_TAGLINE = "A construction kit where terminal toys grow";
+const enLines = wrapWords(EN_TAGLINE, WIDTH - MARGIN * 2, SCALE);
 
-// Undertale 風コマンド行のパロディ。「つくる」を選択中という体でハートカーソルを添える。
-const COMMAND_WORDS = ["あそぶ", "つくる", "ながめる"];
+// Undertale 風コマンド行のパロディ。本場が英語圏の演出なので英語に統一（本物度が上がる）。
+// "BUILD" を選択中という体でハートカーソルを添える。
+const COMMAND_WORDS = ["PLAY", "BUILD", "WATCH"];
 const COMMAND_CURSOR_INDEX = 1;
 
 // 魚群（ascii-aquarium 由来のモチーフ・大小3種）。flip() で右向き→左向きを作る。
@@ -305,29 +316,31 @@ const CELL = 8 * SCALE; // 24
 const CELL_TINY = 8 * SCALE_TINY; // 16
 const CELL_BOX = 8 * SCALE_BOX; // 16
 const LOGO_CELL = 8 * SCALE_LOGO; // 48
-const SKY_HEIGHT = 64; // 星・音符・星座線・天気ヴィネットが同居する帯
+const SKY_HEIGHT = 56; // 星・音符・星座線・天気ヴィネットが同居する帯
 
 // 会話ボックスの寸法を先に計算する（内容から逆算。オーバーヘッドを手で仮置きしない）。
+// ENタグラインは主見出し側に昇格したため、ボックス内はコマンド行のみ。
 const BOX_WIDTH = WIDTH - MARGIN * 2 - 32;
 const BOX_X = Math.floor((WIDTH - BOX_WIDTH) / 2);
 const BOX_PAD = 10;
-const BOX_ROW_GAP = 8;
 const HEART_PX = 3;
 const BOX_BORDER_OVERHEAD = 3 + 3 + 2; // drawDoubleBox の OUTER+GAP_PX+INNER
-const BOX_TAGLINE_H = CELL_BOX;
 const BOX_COMMAND_H = Math.max(CELL_BOX, heartHeight(HEART_PX));
-const BOX_HEIGHT =
-  BOX_BORDER_OVERHEAD * 2 + BOX_PAD * 2 + BOX_TAGLINE_H + BOX_ROW_GAP + BOX_COMMAND_H;
+const BOX_HEIGHT = BOX_BORDER_OVERHEAD * 2 + BOX_PAD * 2 + BOX_COMMAND_H;
 
-const GRID_HEIGHT = 34;
+const GRID_HEIGHT = 30;
 
 let y = MARGIN;
 const Y_SKY = y;
 y += SKY_HEIGHT + GAP;
 const Y_LOGO = y;
 y += LOGO_CELL + GAP;
-const Y_JP = y;
+const Y_EN1 = y;
+y += CELL;
+const Y_EN2 = y;
 y += CELL + GAP;
+const Y_JP = y;
+y += CELL_BOX + GAP;
 const Y_WATER = y;
 y += CELL;
 const Y_FISH1 = y;
@@ -446,8 +459,11 @@ const GRID_HLINES = 4;
 const GRID_VLINES = 9;
 
 // --- 静的レイヤー（毎フレーム同一なので1回だけ描く） ---------------------
+// v4: ENタグラインを主見出し(太字白・2行)に、ひらがなは小さく1行だけ(海外勢へのチャームポイント)。
 const staticBuf = new Uint8Array(WIDTH * HEIGHT);
-drawText(staticBuf, centerX(JP_TAGLINE, SCALE), Y_JP, JP_TAGLINE, C("dim"), SCALE);
+drawTextBold(staticBuf, centerX(enLines[0], SCALE), Y_EN1, enLines[0], C("white"), SCALE);
+if (enLines[1]) drawTextBold(staticBuf, centerX(enLines[1], SCALE), Y_EN2, enLines[1], C("white"), SCALE);
+drawText(staticBuf, centerX(JP_TAGLINE, SCALE_BOX), Y_JP, JP_TAGLINE, C("dim"), SCALE_BOX);
 
 // --- フレーム構築 ---------------------------------------------------------
 function buildFrame(f) {
@@ -529,13 +545,12 @@ function buildFrame(f) {
     drawText(buf, x, fish.y, str, C(fish.color), SCALE);
   }
 
-  // RPG 会話ボックス: 白の二重枠 + EN タグライン + コマンド行（ハートカーソル付き）
+  // RPG 会話ボックス: 白の二重枠 + コマンド行（ハートカーソル付き）。ENタグラインは
+  // v4 で主見出し側に昇格したためボックス内には置かない。
   drawDoubleBox(buf, BOX_X, Y_BOX, BOX_WIDTH, BOX_HEIGHT, C("white"));
-  const innerX0 = BOX_X + BOX_BORDER_OVERHEAD + BOX_PAD;
   const innerY0 = Y_BOX + BOX_BORDER_OVERHEAD + BOX_PAD;
-  drawText(buf, innerX0, innerY0, EN_TAGLINE, C("white"), SCALE_BOX);
   let cx = BOX_X + Math.floor((BOX_WIDTH - COMMAND_ROW_WIDTH) / 2);
-  const cy = innerY0 + BOX_TAGLINE_H + BOX_ROW_GAP;
+  const cy = innerY0;
   for (let i = 0; i < COMMAND_WORDS.length; i++) {
     if (i === COMMAND_CURSOR_INDEX) {
       const cursorBeat = f % 8 < 4 ? HEART_PX : HEART_PX + 1;

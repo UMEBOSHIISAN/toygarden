@@ -36,6 +36,7 @@
     "play": "node tools/play.mjs",
     "banner": "node tools/banner.mjs",
     "diagram": "node tools/diagram.mjs",
+    "frontier": "node tools/frontier.mjs",
     "new": "node tools/new-toy.mjs",
     "workshop": "node tools/workshop.mjs",
     "hello": "node tools/hello.mjs",

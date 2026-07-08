@@ -7,6 +7,10 @@
  *
  * 操作（TTYのみ・複雑にしない簡易版）: Ctrl+C = 今のおもちゃをスキップ / q = ツアー終了
  * 非TTY（CI・パイプ経由）では各おもちゃをフルの8秒表示し、キー操作は受け付けない。
+ *
+ * UI は EN 主役（想定オーディエンスは海外が主）。幕間の tagline だけ manifest の日本語のまま。
+ * UMEPLAY_CONTEXT=package のとき（npx 経由の bin から渡される契約）は終了画面の案内コマンドを
+ * `npx umeplay <sub>` 形式に切り替える。未設定 or "repo" なら従来の `npm run <sub>` 形式。
  */
 import { build } from "esbuild";
 import { readdirSync, existsSync, readFileSync } from "node:fs";
@@ -24,6 +28,11 @@ const RESET = "\x1b[0m";
 const YELLOW = "\x1b[33m";
 const WHITE = "\x1b[97m";
 const DIM = "\x1b[2m";
+
+const CONTEXT = process.env.UMEPLAY_CONTEXT === "package" ? "package" : "repo";
+function cmd(sub) {
+  return CONTEXT === "package" ? `npx umeplay ${sub}` : `npm run ${sub}`;
+}
 
 const DURATION_MS = 8000;
 const INTERLUDE_MS = 1000;
@@ -102,7 +111,7 @@ async function runApp(name) {
       logLevel: "silent",
     });
   } catch (err) {
-    console.error(`${DIM}(${name} のビルドに失敗。スキップ: ${err.message}${RESET})`);
+    console.error(`${DIM}(build failed for ${name}, skipping: ${err.message}${RESET})`);
     return "next";
   }
 
@@ -129,13 +138,13 @@ process.on("SIGTERM", () => process.exit(0));
 
 async function main() {
   if (apps.length === 0) {
-    console.log("おもちゃが見つからない。apps/ を確認して。");
+    console.log("No toys found. Check apps/.");
     process.exit(1);
   }
 
-  console.log(`${WHITE}umeplay ツアー — ${apps.length}本を8秒ずつ${RESET}`);
+  console.log(`${WHITE}umeplay tour — ${apps.length} toys, 8s each${RESET}`);
   if (process.stdin.isTTY) {
-    console.log(`${DIM}(Ctrl+C でスキップ / q でツアー終了)${RESET}`);
+    console.log(`${DIM}(Ctrl+C to skip / q to end tour)${RESET}`);
   }
 
   const visited = [];
@@ -149,7 +158,7 @@ async function main() {
 
   const pick = visited[visited.length - 1] ?? apps[0];
   console.log("");
-  console.log(`${WHITE}* ツアーおわり! きにいったのは ${DIM}npm run play ${pick}${RESET}`);
+  console.log(`${WHITE}* Tour's over! If you liked one: ${DIM}${cmd("play")} ${pick}${RESET}`);
 }
 
 main();
