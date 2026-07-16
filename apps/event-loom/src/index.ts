@@ -30,6 +30,10 @@ export function label(e: PlayEvent): string {
       return color(DIM, `◎ ${e.activity}`);
     case "sys.pulse":
       return color(DIM, `⚡ busy:${(e.busyness * 100).toFixed(0)}%`);
+    case "clock.tick":
+      return color(DIM, "◷ tick");
+    case "clock.chime":
+      return color(YELLOW, `♪ ${e.hour}:00`);
   }
 }
 

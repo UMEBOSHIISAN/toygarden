@@ -172,6 +172,10 @@ export function labelFor(e: PlayEvent): string {
       return `focus:${e.activity}`;
     case "sys.pulse":
       return `CPU ${Math.round(e.busyness * 100)}%`;
+    case "clock.tick":
+      return "TICK";
+    case "clock.chime":
+      return `CHIME ${e.hour}:00`;
   }
 }
 

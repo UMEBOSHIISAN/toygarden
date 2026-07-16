@@ -36,6 +36,10 @@ function demoLabel(e: PlayEvent): string {
       return color(DIM, `o ${e.activity}`);
     case "sys.pulse":
       return color(DIM, `~ busy:${(e.busyness * 100).toFixed(0)}%`);
+    case "clock.tick":
+      return color(DIM, "* tick");
+    case "clock.chime":
+      return color(YELLOW, `ding ${e.hour}:00`);
   }
 }
 
