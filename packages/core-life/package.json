@@ -1,0 +1,18 @@
+{
+  "name": "@toygarden/core-life",
+  "version": "0.0.0",
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "toygarden": {
+    "role": "transform",
+    "tagline": "Cellular automata: Life and 1D rules, stepping worlds forward.",
+    "taglineJa": "セル・オートマトン: ライフゲームと1次元ルールで世界を1歩進める。",
+    "produces": [],
+    "consumes": [],
+    "status": "shipped"
+  },
+  "dependencies": {
+    "@toygarden/contracts": "*"
+  }
+}

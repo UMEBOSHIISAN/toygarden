@@ -1,0 +1,21 @@
+{
+  "name": "@toygarden/core-clock",
+  "version": "0.0.0",
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "toygarden": {
+    "role": "source",
+    "tagline": "Time as events: ticks, hourly chimes, date-seeded picks.",
+    "taglineJa": "時間をイベントに: tick・時報・日付シード。",
+    "produces": [
+      "clock.tick",
+      "clock.chime"
+    ],
+    "consumes": [],
+    "status": "shipped"
+  },
+  "dependencies": {
+    "@toygarden/contracts": "*"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "name": "@toygarden/core-lsystem",
+  "version": "0.0.0",
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "toygarden": {
+    "role": "transform",
+    "tagline": "L-system growth: plants unfold from a few rewrite rules.",
+    "taglineJa": "L-system 成長エンジン: 少しの書き換え規則から植物が展開する。",
+    "produces": [],
+    "consumes": [],
+    "status": "shipped"
+  },
+  "dependencies": {
+    "@toygarden/contracts": "*"
+  }
+}
