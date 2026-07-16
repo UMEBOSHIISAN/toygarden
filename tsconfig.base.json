@@ -25,7 +25,9 @@
       "@toygarden/core-sysmon": ["packages/core-sysmon/src/index.ts"],
       "@toygarden/core-save": ["packages/core-save/src/index.ts"],
       "@toygarden/core-dice": ["packages/core-dice/src/index.ts"],
-      "@toygarden/core-noise": ["packages/core-noise/src/index.ts"]
+      "@toygarden/core-noise": ["packages/core-noise/src/index.ts"],
+      "@toygarden/core-life": ["packages/core-life/src/index.ts"],
+      "@toygarden/core-lsystem": ["packages/core-lsystem/src/index.ts"]
     }
   }
 }

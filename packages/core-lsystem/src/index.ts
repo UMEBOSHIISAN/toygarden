@@ -1,2 +1,2 @@
-// stub; implementation lands via Codex B1 batch (20260716)
-export {};
+export { expand, turtle, PRESETS } from "./lsystem.js";
+export type { Segment } from "./lsystem.js";

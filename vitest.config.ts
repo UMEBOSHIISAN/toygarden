@@ -20,6 +20,8 @@ export default defineConfig({
       "@toygarden/core-save": resolve(root, "packages/core-save/src/index.ts"),
       "@toygarden/core-dice": resolve(root, "packages/core-dice/src/index.ts"),
       "@toygarden/core-noise": resolve(root, "packages/core-noise/src/index.ts"),
+      "@toygarden/core-life": resolve(root, "packages/core-life/src/index.ts"),
+      "@toygarden/core-lsystem": resolve(root, "packages/core-lsystem/src/index.ts"),
     },
   },
   test: {
