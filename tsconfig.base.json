@@ -23,7 +23,9 @@
       "@toygarden/core-focus-log": ["packages/core-focus-log/src/index.ts"],
       "@toygarden/core-termgif": ["packages/core-termgif/src/index.ts"],
       "@toygarden/core-sysmon": ["packages/core-sysmon/src/index.ts"],
-      "@toygarden/core-save": ["packages/core-save/src/index.ts"]
+      "@toygarden/core-save": ["packages/core-save/src/index.ts"],
+      "@toygarden/core-dice": ["packages/core-dice/src/index.ts"],
+      "@toygarden/core-noise": ["packages/core-noise/src/index.ts"]
     }
   }
 }

@@ -18,6 +18,8 @@ export default defineConfig({
       "@toygarden/core-termgif": resolve(root, "packages/core-termgif/src/index.ts"),
       "@toygarden/core-sysmon": resolve(root, "packages/core-sysmon/src/index.ts"),
       "@toygarden/core-save": resolve(root, "packages/core-save/src/index.ts"),
+      "@toygarden/core-dice": resolve(root, "packages/core-dice/src/index.ts"),
+      "@toygarden/core-noise": resolve(root, "packages/core-noise/src/index.ts"),
     },
   },
   test: {

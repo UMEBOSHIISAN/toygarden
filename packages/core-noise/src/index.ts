@@ -1,2 +1,1 @@
-// stub; implementation lands via Codex B1 batch (20260716)
-export {};
+export { noise1, noise2, fbm1, fbm2 } from "./noise.js";
