@@ -13,6 +13,8 @@
     "verbatimModuleSyntax": true,
     "baseUrl": ".",
     "paths": {
+      "@toygarden/core-clock": ["packages/core-clock/src/index.ts"],
+      "@toygarden/core-stats": ["packages/core-stats/src/index.ts"],
       "@toygarden/contracts": ["contracts/index.ts"],
       "@toygarden/core-events": ["packages/core-events/src/index.ts"],
       "@toygarden/core-device": ["packages/core-device/src/index.ts"],

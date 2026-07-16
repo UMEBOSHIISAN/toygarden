@@ -7,6 +7,8 @@ const root = process.cwd();
 export default defineConfig({
   resolve: {
     alias: {
+      "@toygarden/core-clock": resolve(root, "packages/core-clock/src/index.ts"),
+      "@toygarden/core-stats": resolve(root, "packages/core-stats/src/index.ts"),
       "@toygarden/contracts": resolve(root, "contracts/index.ts"),
       "@toygarden/core-events": resolve(root, "packages/core-events/src/index.ts"),
       "@toygarden/core-device": resolve(root, "packages/core-device/src/index.ts"),

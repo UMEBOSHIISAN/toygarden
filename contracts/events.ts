@@ -17,7 +17,9 @@ export type PlayEvent =
   | { kind: "deploy.success" }
   | { kind: "task.done"; project: string }
   | { kind: "focus.activity"; activity: string; at: number } // focus-cam ログ由来（at = epoch ms）
-  | { kind: "sys.pulse"; busyness: number; cpuRatio: number; memRatio: number; loadRatio: number }; // core-sysmon 由来
+  | { kind: "sys.pulse"; busyness: number; cpuRatio: number; memRatio: number; loadRatio: number } // core-sysmon 由来
+  | { kind: "clock.tick"; at: number } // core-clock 由来（at = epoch ms）
+  | { kind: "clock.chime"; hour: number; at: number }; // 毎時 0 分の時報
 
 export type PlayEventKind = PlayEvent["kind"];
 
