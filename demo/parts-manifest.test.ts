@@ -1,0 +1,4 @@
+// parts-manifest.test.ts — manifest validation (stub; implementation lands via Codex task 20260716_toygarden_parts_manifest_p1)
+import { describe, it } from "vitest";
+
+describe.todo("parts manifest");
