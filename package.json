@@ -33,6 +33,7 @@
     "gifs": "node tools/gifcast.mjs",
     "showcase": "node tools/showcase.mjs",
     "play": "node tools/play.mjs",
+    "parts": "node tools/parts.mjs",
     "banner": "node tools/banner.mjs",
     "logo": "node tools/logo.mjs",
     "diagram": "node tools/diagram.mjs",

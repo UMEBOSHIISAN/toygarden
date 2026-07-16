@@ -4,6 +4,14 @@
   "type": "module",
   "main": "src/index.ts",
   "types": "src/index.ts",
+  "toygarden": {
+    "role": "voice",
+    "tagline": "Turns events into 8-bit chiptune blips.",
+    "taglineJa": "イベントを8bitチップチューンの音にする。",
+    "produces": [],
+    "consumes": ["*"],
+    "status": "shipped"
+  },
   "dependencies": {
     "@toygarden/contracts": "*"
   }

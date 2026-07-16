@@ -4,6 +4,14 @@
   "type": "module",
   "main": "src/index.ts",
   "types": "src/index.ts",
+  "toygarden": {
+    "role": "fabric",
+    "tagline": "Fail-soft JSON persistence: keep your toy's memory safe.",
+    "taglineJa": "fail-soft な JSON 永続化。おもちゃの記憶を守る。",
+    "produces": [],
+    "consumes": [],
+    "status": "shipped"
+  },
   "dependencies": {
     "@toygarden/contracts": "*"
   }

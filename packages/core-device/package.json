@@ -4,6 +4,14 @@
   "type": "module",
   "main": "src/index.ts",
   "types": "src/index.ts",
+  "toygarden": {
+    "role": "body",
+    "tagline": "One HAL for tiny panel devices (M5Stack, Ajazz).",
+    "taglineJa": "小さなパネルデバイス(M5Stack, Ajazz)をひとつのHALで。",
+    "produces": [],
+    "consumes": [],
+    "status": "shipped"
+  },
   "dependencies": {
     "@toygarden/contracts": "*"
   }
